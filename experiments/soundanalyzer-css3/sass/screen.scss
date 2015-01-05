@@ -13,7 +13,7 @@
   right: 0;
   z-index: 20;
   background: #222;
-  transition: background 0.05s ease-out;
+  @include transition(background 0.05s ease-out);
 
 }
 
@@ -40,7 +40,7 @@
   position: absolute;
   cursor: pointer;
 
-  @include transform-origin(50% 50%);
+  @include transform-origin(50%, 50%);
   @include transform-style(preserve-3d);
 
   width: 120px;
@@ -57,7 +57,7 @@
   border: 0px solid #fff;
   background: #c82222;
 
-  @include transform-origin(50% 50%);
+  @include transform-origin(50%, 50%);
 
   opacity: 1;
   padding: 0px;
@@ -137,34 +137,39 @@
 	}
 }
 
-
+$widthscope: 10px;
+$elements: 64;
+$marginscope: 1px;
 .scope {
 	position: fixed;
-	top: 50%;
+	top: 40%;
 	left: 50%;
-	width: 120px;
-	height: 120px;
+	height: 400px;
+	width: ($elements * $widthscope) + ($marginscope * $elements);
+	margin-left: -1 * ((($elements * $widthscope) + ($marginscope * $elements)) / 2);
+	margin-top: -200px;
+	@include transform(rotateX(180deg));
 	ul {
+		position: relative;
 		margin: 0;
 		padding: 0;
+		
 		li {
+		  @include transition(background 0.05s ease-out);
 		  display: block;
-		  position: absolute;
+		  position: relative;
 		  bottom: 0;
-		  left: 0;
-		  width: 4px;
+		  margin-left: $marginscope;
+		  margin-bottom: 0;
+		  width: $widthscope;
 		  background: #fff;
-		  margin-bottom: 200px;
 		  min-height: 1px;
-		  @include transform-origin(50% 100%);
+		  float: left;
 
-		  @for $i from 1 through 64 {
-		  	&.scope-single-#{$i} {
-		  		$deg: (360 / 64) * $i;
-		  		@include transform(rotate(#{$deg}deg));
-		  	}
-		  }
 		}
+	}
+	&.trigger ul li {
+		background:#c82222;
 	}
 }
 

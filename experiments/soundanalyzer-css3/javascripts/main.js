@@ -86,9 +86,11 @@ var SoundCloudAudioSource = function(player) {
           if (audioSource.volume - audioSource.volumePrev > 100 || audioSource.volume - audioSource.volumePrev < -100 ) {
             $('.fullscreen').css('background', '#fff');
             $('.cube').addClass('trigger');
+            $('.scope').addClass('trigger');
           } else {
             $('.fullscreen').css('background', '#222');
             $('.cube').removeClass('trigger');
+            $('.scope').removeClass('trigger');
           }
           audioSource.volumePrev = audioSource.volume;
           requestAnimFrame(draw);
