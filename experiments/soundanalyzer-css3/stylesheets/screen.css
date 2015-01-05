@@ -1,0 +1,304 @@
+/* Welcome to Compass.
+ * In this file you should write your main styles. (or centralize your imports)
+ * Import this file using the following HTML or equivalent:
+ * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+/* line 5, ../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+/* line 22, ../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+html {
+  line-height: 1;
+}
+
+/* line 24, ../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+ol, ul {
+  list-style: none;
+}
+
+/* line 26, ../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* line 28, ../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+caption, th, td {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle;
+}
+
+/* line 30, ../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+q, blockquote {
+  quotes: none;
+}
+/* line 103, ../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+q:before, q:after, blockquote:before, blockquote:after {
+  content: "";
+  content: none;
+}
+
+/* line 32, ../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+a img {
+  border: none;
+}
+
+/* line 116, ../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
+  display: block;
+}
+
+/* line 8, ../sass/screen.scss */
+.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 20;
+  background: #222;
+  transition: background 0.05s ease-out;
+}
+
+/* line 20, ../sass/screen.scss */
+.intro {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  padding: 0 1em;
+  width: 100%;
+  margin-left: -50%;
+}
+
+/* line 29, ../sass/screen.scss */
+.plane {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  z-index: 5;
+  -moz-perspective: 500px;
+  -webkit-perspective: 500px;
+  perspective: 500px;
+  -moz-transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  margin: auto;
+}
+
+/* line 39, ../sass/screen.scss */
+.cube {
+  position: absolute;
+  cursor: pointer;
+  -moz-transform-origin: 50% 50% 50%;
+  -ms-transform-origin: 50% 50% 50%;
+  -webkit-transform-origin: 50% 50% 50%;
+  transform-origin: 50% 50% 50%;
+  -moz-transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  width: 120px;
+  height: 120px;
+  top: 0;
+  left: 0;
+}
+
+/* line 53, ../sass/screen.scss */
+.face {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border: 0px solid #fff;
+  background: #c82222;
+  -moz-transform-origin: 50% 50% 50%;
+  -ms-transform-origin: 50% 50% 50%;
+  -webkit-transform-origin: 50% 50% 50%;
+  transform-origin: 50% 50% 50%;
+  opacity: 1;
+  padding: 0px;
+  -webkit-touch-callout: none;
+  user-select: none;
+  -moz-transition: all 0.05s ease-out;
+  -o-transition: all 0.05s ease-out;
+  -webkit-transition: all 0.05s ease-out;
+  transition: all 0.05s ease-out;
+}
+/* line 70, ../sass/screen.scss */
+.face.x {
+  background: #dc2e2e;
+  -moz-transform: rotateX(90deg) translateZ(60px);
+  -ms-transform: rotateX(90deg) translateZ(60px);
+  -webkit-transform: rotateX(90deg) translateZ(60px);
+  transform: rotateX(90deg) translateZ(60px);
+}
+/* line 75, ../sass/screen.scss */
+.face.y {
+  background: #ae1e1e;
+  -moz-transform: rotateY(90deg) translateZ(60px);
+  -ms-transform: rotateY(90deg) translateZ(60px);
+  -webkit-transform: rotateY(90deg) translateZ(60px);
+  transform: rotateY(90deg) translateZ(60px);
+}
+/* line 80, ../sass/screen.scss */
+.face.z {
+  -moz-transform: translateZ(60px);
+  -ms-transform: translateZ(60px);
+  -webkit-transform: translateZ(60px);
+  transform: translateZ(60px);
+}
+/* line 84, ../sass/screen.scss */
+.face.x.d {
+  -moz-transform: rotateX(90deg) translateZ(-60px);
+  -ms-transform: rotateX(90deg) translateZ(-60px);
+  -webkit-transform: rotateX(90deg) translateZ(-60px);
+  transform: rotateX(90deg) translateZ(-60px);
+}
+/* line 88, ../sass/screen.scss */
+.face.y.l {
+  -moz-transform: rotateY(90deg) translateZ(-60px);
+  -ms-transform: rotateY(90deg) translateZ(-60px);
+  -webkit-transform: rotateY(90deg) translateZ(-60px);
+  transform: rotateY(90deg) translateZ(-60px);
+}
+/* line 92, ../sass/screen.scss */
+.face.z.b {
+  -moz-transform: translateZ(-60px);
+  -ms-transform: translateZ(-60px);
+  -webkit-transform: translateZ(-60px);
+  transform: translateZ(-60px);
+}
+
+/* Pulse */
+/* line 99, ../sass/screen.scss */
+.trigger .face {
+  border: 10px solid #fff;
+}
+/* line 102, ../sass/screen.scss */
+.trigger .face.x {
+  -moz-transform: rotateX(90deg) translateZ(80px);
+  -ms-transform: rotateX(90deg) translateZ(80px);
+  -webkit-transform: rotateX(90deg) translateZ(80px);
+  transform: rotateX(90deg) translateZ(80px);
+}
+/* line 106, ../sass/screen.scss */
+.trigger .face.y {
+  -moz-transform: rotateY(90deg) translateZ(80px);
+  -ms-transform: rotateY(90deg) translateZ(80px);
+  -webkit-transform: rotateY(90deg) translateZ(80px);
+  transform: rotateY(90deg) translateZ(80px);
+}
+/* line 110, ../sass/screen.scss */
+.trigger .face.z {
+  -moz-transform: translateZ(80px);
+  -ms-transform: translateZ(80px);
+  -webkit-transform: translateZ(80px);
+  transform: translateZ(80px);
+}
+/* line 114, ../sass/screen.scss */
+.trigger .face.x.d {
+  -moz-transform: rotateX(90deg) translateZ(-80px);
+  -ms-transform: rotateX(90deg) translateZ(-80px);
+  -webkit-transform: rotateX(90deg) translateZ(-80px);
+  transform: rotateX(90deg) translateZ(-80px);
+}
+/* line 118, ../sass/screen.scss */
+.trigger .face.y.l {
+  -moz-transform: rotateY(90deg) translateZ(-80px);
+  -ms-transform: rotateY(90deg) translateZ(-80px);
+  -webkit-transform: rotateY(90deg) translateZ(-80px);
+  transform: rotateY(90deg) translateZ(-80px);
+}
+/* line 122, ../sass/screen.scss */
+.trigger .face.z.b {
+  -moz-transform: translateZ(-80px);
+  -ms-transform: translateZ(-80px);
+  -webkit-transform: translateZ(-80px);
+  transform: translateZ(-80px);
+}
+
+/* line 127, ../sass/screen.scss */
+.cuberotate {
+  -moz-animation: cuberotate 15s infinite linear;
+  -webkit-animation: cuberotate 15s infinite linear;
+  animation: cuberotate 15s infinite linear;
+}
+
+@-moz-keyframes cuberotate {
+  0% {
+    -moz-transform: rotateX(-25deg) rotateY(-45deg) rotateZ(0deg);
+    transform: rotateX(-25deg) rotateY(-45deg) rotateZ(0deg);
+  }
+  100% {
+    -moz-transform: rotateX(335deg) rotateY(315deg) rotateZ(360deg);
+    transform: rotateX(335deg) rotateY(315deg) rotateZ(360deg);
+  }
+}
+@-webkit-keyframes cuberotate {
+  0% {
+    -webkit-transform: rotateX(-25deg) rotateY(-45deg) rotateZ(0deg);
+    transform: rotateX(-25deg) rotateY(-45deg) rotateZ(0deg);
+  }
+  100% {
+    -webkit-transform: rotateX(335deg) rotateY(315deg) rotateZ(360deg);
+    transform: rotateX(335deg) rotateY(315deg) rotateZ(360deg);
+  }
+}
+@keyframes cuberotate {
+  0% {
+    -moz-transform: rotateX(-25deg) rotateY(-45deg) rotateZ(0deg);
+    -ms-transform: rotateX(-25deg) rotateY(-45deg) rotateZ(0deg);
+    -webkit-transform: rotateX(-25deg) rotateY(-45deg) rotateZ(0deg);
+    transform: rotateX(-25deg) rotateY(-45deg) rotateZ(0deg);
+  }
+  100% {
+    -moz-transform: rotateX(335deg) rotateY(315deg) rotateZ(360deg);
+    -ms-transform: rotateX(335deg) rotateY(315deg) rotateZ(360deg);
+    -webkit-transform: rotateX(335deg) rotateY(315deg) rotateZ(360deg);
+    transform: rotateX(335deg) rotateY(315deg) rotateZ(360deg);
+  }
+}
+/* line 141, ../sass/screen.scss */
+.scope {
+  position: fixed;
+  top: 6%;
+  left: 40%;
+  transform: rotate(-90deg);
+}
+/* line 147, ../sass/screen.scss */
+.scope ul {
+  margin: 0;
+  padding: 0;
+}
+/* line 150, ../sass/screen.scss */
+.scope ul li {
+  display: block;
+  height: 4px;
+  background: #fff;
+  margin-bottom: 1px;
+  min-width: 1px;
+}
+
+/* line 160, ../sass/screen.scss */
+audio {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+}

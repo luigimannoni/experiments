@@ -1,0 +1,164 @@
+/* Welcome to Compass.
+ * In this file you should write your main styles. (or centralize your imports)
+ * Import this file using the following HTML or equivalent:
+ * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+
+@import "compass/reset";
+@import "compass/css3";
+.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 20;
+  background: #222;
+  transition: background 0.05s ease-out;
+
+}
+
+.intro {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  padding: 0 1em;
+  width: 100%;
+
+  margin-left: -50%;
+}
+.plane {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  z-index: 5;
+  @include perspective(500px);
+  @include transform-style(preserve-3d);
+  margin: auto;
+}
+
+.cube {
+  position: absolute;
+  cursor: pointer;
+
+  @include transform-origin(50% 50%);
+  @include transform-style(preserve-3d);
+
+  width: 120px;
+  height: 120px;
+
+  top: 0;
+  left: 0;
+}
+
+.face {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border: 0px solid #fff;
+  background: #c82222;
+
+  @include transform-origin(50% 50%);
+
+  opacity: 1;
+  padding: 0px;
+
+  -webkit-touch-callout: none;
+  user-select: none;
+
+  @include transition(all 0.05s ease-out);
+
+ 	&.x {
+	  background: #dc2e2e;
+	  @include transform(rotateX(90deg) translateZ(60px));
+	}
+
+	&.y {
+	  background: #ae1e1e;
+	  @include transform(rotateY(90deg) translateZ(60px));
+	}
+
+	&.z {
+	  @include transform(translateZ(60px));
+	}
+
+	&.x.d {
+	  @include transform(rotateX(90deg) translateZ(-60px));
+	}
+
+	&.y.l {
+	  @include transform(rotateY(90deg) translateZ(-60px));
+	}
+
+	&.z.b {
+	  @include transform(translateZ(-60px));
+	}
+}
+
+
+/* Pulse */
+.trigger .face {
+	border: 10px solid #fff;
+
+	&.x {
+	  @include transform(rotateX(90deg) translateZ(80px));
+	}
+
+	&.y {
+	  @include transform(rotateY(90deg) translateZ(80px));
+	}
+
+	&.z {
+	  @include transform(translateZ(80px));
+	}
+
+	&.x.d {
+	  @include transform(rotateX(90deg) translateZ(-80px));
+	}
+
+	&.y.l {
+	  @include transform(rotateY(90deg) translateZ(-80px));
+	}
+
+	&.z.b {
+	  @include transform(translateZ(-80px));
+	}
+}
+
+.cuberotate {
+	@include animation(cuberotate 15s infinite linear);
+}
+
+@include keyframes (cuberotate) {
+	0% {
+    	@include transform(rotateX(-25deg) rotateY(-45deg) rotateZ(0deg));
+	}
+	100% {
+		@include transform(rotateX(335deg) rotateY(315deg) rotateZ(360deg));
+	}
+}
+
+
+.scope {
+	position: fixed;
+	top: 6%;
+	left: 40%;
+
+	transform: rotate(-90deg);  
+	ul {
+		margin: 0;
+		padding: 0;
+		li {
+		  display: block;
+		  height: 4px;
+		  background: #fff;
+		  margin-bottom: 1px;
+		  min-width: 1px;
+		}
+	}
+}
+
+audio {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+}
