@@ -140,19 +140,30 @@
 
 .scope {
 	position: fixed;
-	top: 6%;
-	left: 40%;
-
-	transform: rotate(-90deg);  
+	top: 50%;
+	left: 50%;
+	width: 120px;
+	height: 120px;
 	ul {
 		margin: 0;
 		padding: 0;
 		li {
 		  display: block;
-		  height: 4px;
+		  position: absolute;
+		  bottom: 0;
+		  left: 0;
+		  width: 4px;
 		  background: #fff;
-		  margin-bottom: 1px;
-		  min-width: 1px;
+		  margin-bottom: 200px;
+		  min-height: 1px;
+		  @include transform-origin(50% 100%);
+
+		  @for $i from 1 through 64 {
+		  	&.scope-single-#{$i} {
+		  		$deg: (360 / 64) * $i;
+		  		@include transform(rotate(#{$deg}deg));
+		  	}
+		  }
 		}
 	}
 }

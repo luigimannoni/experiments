@@ -81,7 +81,7 @@ var SoundCloudAudioSource = function(player) {
           // Beat
           var mental = (Math.min(Math.max((Math.tan(audioSource.volumeHi/6500) * 0.5), -20), 2) * -1);
           $('.scope ul li').each(function(count){
-            $(this).css('width', audioSource.streamData[count]);
+            $(this).css('height', audioSource.streamData[count]);
           });
           if (audioSource.volume - audioSource.volumePrev > 100 || audioSource.volume - audioSource.volumePrev < -100 ) {
             $('.fullscreen').css('background', '#fff');
