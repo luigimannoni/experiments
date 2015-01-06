@@ -83,7 +83,7 @@ var SoundCloudAudioSource = function(player) {
           $('.scope ul li').each(function(count){
             $(this).css('height', audioSource.streamData[count]);
           });
-          if (audioSource.volume - audioSource.volumePrev > 100 || audioSource.volume - audioSource.volumePrev < -100 ) {
+          if (audioSource.volumeHi - audioSource.volumePrev > 50 || audioSource.volumeHi - audioSource.volumePrev < -50 ) {
             $('.fullscreen').css('background', '#fff');
             $('.cube').addClass('trigger');
             $('.scope').addClass('trigger');
@@ -92,15 +92,13 @@ var SoundCloudAudioSource = function(player) {
             $('.cube').removeClass('trigger');
             $('.scope').removeClass('trigger');
           }
-          audioSource.volumePrev = audioSource.volume;
+          audioSource.volumePrev = audioSource.volumeHi;
           requestAnimFrame(draw);
       };
 
       this.init = function(options) {
           audioSource = options.audioSource;
-          var container = document.getElementById(options.containerId);
-          console.log(audioSource);
-         
+          var container = document.getElementById(options.containerId);        
           draw();
       };
   };
