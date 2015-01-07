@@ -58,7 +58,7 @@ var render = function () {
   
   camera.position.x = mouseX * 0.005;
   camera.position.y = -mouseY * 0.005;
-  camera.lookAt(plane.position);
+  camera.lookAt(group.position);
 
   renderer.render(scene, camera);
   requestAnimationFrame(render);  
