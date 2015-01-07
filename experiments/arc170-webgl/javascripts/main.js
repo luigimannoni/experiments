@@ -46,7 +46,7 @@ scene.add( light );
 var directionalLight = new THREE.DirectionalLight( 0xeeeeee, 1 );
 directionalLight.position.set( 1, 1, 1 );
 scene.add( directionalLight );
-camera.position.z = 3;
+camera.position.z = 1;
 
 var time = new THREE.Clock();
 
