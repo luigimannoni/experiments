@@ -2,7 +2,9 @@ var mouseX, mouseY, arcSpaceship;
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
 
+renderer.setClearColor( 0x222222, 0 ); // background
 var renderer = new THREE.WebGLRenderer();
+
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
@@ -46,18 +48,6 @@ directionalLight.position.set( 1, 1, 1 );
 scene.add( directionalLight );
 camera.position.z = 3;
 
-// Plane 
-var planeGeometry = new THREE.PlaneBufferGeometry( 100, 100, 1, 1 );
-var wallMaterial = new THREE.MeshBasicMaterial( { 
-  color: 0x222222
-} );
-
-var plane = new THREE.Mesh(
-  planeGeometry, wallMaterial
-);
-plane.position.z = -2;
-
-scene.add(plane);
 var time = new THREE.Clock();
 
 var render = function () {  
