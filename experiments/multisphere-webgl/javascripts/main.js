@@ -29,10 +29,10 @@ camera.lookAt(scene.position);
 var sphereWireframeInner = new THREE.Mesh(
   new THREE.DodecahedronGeometry( 36, 2 ),
   new THREE.MeshLambertMaterial({ 
-    color: 0xff5555,
-    ambient: 0x990000,
+    color: 0xff0000,
+    ambient: 0xff0000,
     wireframe: true,
-    wireframeLinewidth: 0.5,
+    wireframeLinewidth: 3,
     transparent: true, 
     //alphaMap: THREE.ImageUtils.loadTexture( 'javascripts/alphamap.jpg' ),
     shininess: 0
@@ -44,8 +44,8 @@ scene.add(sphereWireframeInner);
 var sphereWireframeOuter = new THREE.Mesh(
   new THREE.DodecahedronGeometry( 56, 2 ),
   new THREE.MeshLambertMaterial({ 
-    color: 0x5555ff,
-    ambient: 0x000099,
+    color: 0x2C75FF,
+    ambient: 0x536878,
     wireframe: true,
     wireframeLinewidth: 0.5,
     transparent: true,
@@ -60,8 +60,8 @@ scene.add(sphereWireframeOuter);
 var sphereGlassInner = new THREE.Mesh(
   new THREE.SphereGeometry( 26, 32, 32 ),
   new THREE.MeshPhongMaterial({ 
-    color: 0x0000ff,
-    ambient: 0x0000ff,
+    color: 0x2C75FF,
+    ambient: 0x536878,
     transparent: true,
     shininess: 0,
     alphaMap: THREE.ImageUtils.loadTexture( 'javascripts/twirlalphamap.jpg' ),
@@ -78,6 +78,7 @@ var sphereGlassOuter = new THREE.Mesh(
     ambient: 0xff0000,
     transparent: true,
     shininess: 0,
+    blending: THREE.Additive,
     alphaMap: THREE.ImageUtils.loadTexture( 'javascripts/twirlalphamap.jpg' ),
     //side: THREE.BackSide
   })
@@ -86,7 +87,7 @@ scene.add(sphereGlassOuter);
 
 // Particles
 var geometry = new THREE.Geometry();
-for (i = 0; i < 512; i++) {
+for (i = 0; i < 1024; i++) {
   
   var x = -1 + Math.random() * 2;
   var y = -1 + Math.random() * 2;
@@ -97,9 +98,9 @@ for (i = 0; i < 512; i++) {
   z *= d;
    
   var vertex = new THREE.Vector3(
-         x * 60,
-         y * 60,
-         z * 60
+         x * 64,
+         y * 64,
+         z * 64
   );
    
   geometry.vertices.push(vertex);
@@ -108,9 +109,10 @@ for (i = 0; i < 512; i++) {
 
 
 var particlesOuter = new THREE.ParticleSystem(geometry, new THREE.ParticleBasicMaterial({
-  size: 2,
-  color: 0xff0000,
+  size: 1.5,
+  color: 0xff2222,
   map: THREE.ImageUtils.loadTexture( 'javascripts/particletextureshaded.png' ),
+  blending: THREE.AdditiveAlpha,
   transparent: true,
   })
 );
@@ -141,8 +143,9 @@ for (i = 0; i < 1024; i++) {
 
 var particlesInner = new THREE.ParticleSystem(geometry, new THREE.ParticleBasicMaterial({
   size: 1,
-  color: 0x0000ff,
+  color: 0x9090ff,
   map: THREE.ImageUtils.loadTexture( 'javascripts/particletextureshaded.png' ),
+  blending: THREE.AdditiveAlpha,
   transparent: true,
   })
 );
@@ -164,8 +167,8 @@ var render = function () {
   sphereGlassOuter.rotation.y += 0.01;
   sphereGlassOuter.rotation.z += 0.01;
 
-  particlesOuter.rotation.y += 0.001;
-  particlesInner.rotation.y += 0.002;
+  particlesOuter.rotation.y += 0.0005;
+  particlesInner.rotation.y -= 0.002;
 
   sphereWireframeInner.material.opacity = Math.abs(Math.cos((time.getElapsedTime()+0.5)/0.9)*0.5);
   sphereWireframeOuter.material.opacity = Math.abs(Math.cos(time.getElapsedTime()/0.9)*0.5);
