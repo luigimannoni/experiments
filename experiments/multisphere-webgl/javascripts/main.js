@@ -1,4 +1,4 @@
-var mouseX, mouseY, arcSpaceship;
+var mouseX = 0, mouseY = 0;
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
 var innerColor = 0xff0000,
@@ -26,10 +26,6 @@ scene.add( light );
 var directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
 directionalLight.position.set( 0, 128, 128 );
 scene.add( directionalLight );
-camera.position.z = -120;
-camera.position.x = 0;
-camera.position.y = 0;
-camera.lookAt(scene.position);
 
 // Sphere Wireframe Inner
 var sphereWireframeInner = new THREE.Mesh(
@@ -111,11 +107,10 @@ for (i = 0; i < 35000; i++) {
 }
 
 
-var particlesOuter = new THREE.ParticleSystem(geometry, new THREE.ParticleBasicMaterial({
+var particlesOuter = new THREE.PointCloud(geometry, new THREE.PointCloudMaterial({
   size: 0.1,
   color: outerColor,
   //map: THREE.ImageUtils.loadTexture( 'javascripts/particletextureshaded.png' ),
-  blending: THREE.AdditiveAlpha,
   transparent: true,
   })
 );
@@ -144,11 +139,10 @@ for (i = 0; i < 35000; i++) {
 }
 
 
-var particlesInner = new THREE.ParticleSystem(geometry, new THREE.ParticleBasicMaterial({
+var particlesInner = new THREE.PointCloud(geometry, new THREE.PointCloudMaterial({
   size: 0.1,
   color: innerColor,
   //map: THREE.ImageUtils.loadTexture( 'javascripts/particletextureshaded.png' ),
-  blending: THREE.AdditiveAlpha,
   transparent: true,
   })
 );
@@ -170,9 +164,19 @@ var starField = new THREE.PointCloud(geometry, new THREE.PointCloudMaterial({
 );
 scene.add(starField);
 
+
+camera.position.z = -110;
+camera.position.x = mouseX * 0.05;
+camera.position.y = -mouseY * 0.05;
+camera.lookAt(scene.position);
+
 var time = new THREE.Clock();
 
 var render = function () {  
+  camera.position.x = mouseX * 0.05;
+  camera.position.y = -mouseY * 0.05;
+  camera.lookAt(scene.position);
+
   sphereWireframeInner.rotation.x += 0.002;
   sphereWireframeInner.rotation.z += 0.002;
   
@@ -190,6 +194,19 @@ var render = function () {
   
   starField.rotation.y -= 0.002;
 
+  var innerShift = Math.abs(Math.cos(( (time.getElapsedTime()+2.5) / 20)));
+  var outerShift = Math.abs(Math.cos(( (time.getElapsedTime()+5) / 10)));
+
+  starField.material.color.setHSL(Math.abs(Math.cos((time.getElapsedTime() / 10))), 1, 0.5);
+
+  sphereWireframeOuter.material.color.setHSL(0, 1, outerShift);
+  sphereGlassOuter.material.color.setHSL(0, 1, outerShift);
+  particlesOuter.material.color.setHSL(0, 1, outerShift);
+
+  sphereWireframeInner.material.color.setHSL(0.08, 1, innerShift);
+  particlesInner.material.color.setHSL(0.08, 1, innerShift);
+  sphereGlassInner.material.color.setHSL(0.08, 1, innerShift);
+
   sphereWireframeInner.material.opacity = Math.abs(Math.cos((time.getElapsedTime()+0.5)/0.9)*0.5);
   sphereWireframeOuter.material.opacity = Math.abs(Math.cos(time.getElapsedTime()/0.9)*0.5);
 
@@ -197,10 +214,6 @@ var render = function () {
   directionalLight.position.x = Math.cos(time.getElapsedTime()/0.5)*128;
   directionalLight.position.y = Math.cos(time.getElapsedTime()/0.5)*128;
   directionalLight.position.z = Math.sin(time.getElapsedTime()/0.5)*128;
-
-  camera.position.x = mouseX * 0.05;
-  camera.position.y = -mouseY * 0.05;
-  camera.lookAt(scene.position);
 
   renderer.render(scene, camera);
   requestAnimationFrame(render);  
