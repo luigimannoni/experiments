@@ -49,19 +49,22 @@ var sphereWireframeInner = new THREE.Mesh(
     shininess: 0
   })
 );
-scene.add(sphereWireframeInner);
+//scene.add(sphereWireframeInner);
 
 // Sphere Wireframe Outer
+var hexagonTexture = THREE.ImageUtils.loadTexture( 'javascripts/hexagongrid.jpg' );
+hexagonTexture.wrapS = hexagonTexture.wrapT = THREE.RepeatWrapping;
+hexagonTexture.repeat.set( 4, 2 );
+
 var sphereWireframeOuter = new THREE.Mesh(
-  new THREE.DodecahedronGeometry( 56, 1 ),
+  new THREE.SphereGeometry( 56, 128, 128 ),
   new THREE.MeshLambertMaterial({ 
     color: 0x2C75FF,
     ambient: 0x536878,
-    wireframe: true,
-    wireframeLinewidth: 0.5,
     transparent: true,
-    alphaMap: THREE.ImageUtils.loadTexture( 'javascripts/alphamap.jpg' ),
-    shininess: 0 
+    alphaMap: hexagonTexture,
+    shininess: 0,
+    //side: THREE.DoubleSide, 
   })
 );
 scene.add(sphereWireframeOuter);
@@ -78,12 +81,13 @@ var sphereGlassInner = new THREE.Mesh(
     opacity: 0.5,
     //alphaMap: THREE.ImageUtils.loadTexture( 'javascripts/twirlalphamap.jpg' ),
     envMap: cubecam.renderTarget,
+    reflectivity: 0.85,
     //side: THREE.DoubleSide, 
     depthWrite: false, 
     depthTest: false,
   })
 );
-scene.add(sphereGlassInner);
+//scene.add(sphereGlassInner);
 
 // Sphere Glass Outer
 var sphereGlassOuter = new THREE.Mesh(
@@ -97,11 +101,11 @@ var sphereGlassOuter = new THREE.Mesh(
     //alphaMap: THREE.ImageUtils.loadTexture( 'javascripts/twirlalphamap.jpg' ),
     envMap: cubecam.renderTarget,
     //side: THREE.DoubleSide, 
-    depthWrite: false, 
-    depthTest: false,
+    //depthWrite: false, 
+    //depthTest: false,
   })
 );
-scene.add(sphereGlassOuter);
+//scene.add(sphereGlassOuter);
 
 // Sphere Core
 var sphereCore = new THREE.Mesh(
@@ -112,11 +116,11 @@ var sphereCore = new THREE.Mesh(
     shininess: 0,
   })
 );
-scene.add(sphereCore);
+//scene.add(sphereCore);
 
 // Particles
 var geometry = new THREE.Geometry();
-for (i = 0; i < 1024; i++) {
+for (i = 0; i < 256000; i++) {
   
   var x = -1 + Math.random() * 2;
   var y = -1 + Math.random() * 2;
@@ -127,9 +131,9 @@ for (i = 0; i < 1024; i++) {
   z *= d;
    
   var vertex = new THREE.Vector3(
-         x * 64,
-         y * 64,
-         z * 64
+         x * 57,
+         y * 57,
+         z * 57
   );
    
   geometry.vertices.push(vertex);
@@ -138,9 +142,11 @@ for (i = 0; i < 1024; i++) {
 
 
 var particlesOuter = new THREE.PointCloud(geometry, new THREE.PointCloudMaterial({
-  size: 1.5,
-  color: 0xff2222,
+  size: 0.5,
+  color: 0x2C75FF,
   map: THREE.ImageUtils.loadTexture( 'javascripts/particletextureshaded.png' ),
+  sizeAttenuation: true,
+  alphaTest: 0.2,
   transparent: true,
   })
 );
@@ -159,9 +165,9 @@ for (i = 0; i < 1024; i++) {
   z *= d;
    
   var vertex = new THREE.Vector3(
-         x * 50,
-         y * 50,
-         z * 50
+         x * 57,
+         y * 57,
+         z * 57
   );
    
   geometry.vertices.push(vertex);
@@ -173,10 +179,12 @@ var particlesInner = new THREE.PointCloud(geometry, new THREE.PointCloudMaterial
   size: 1,
   color: 0x9090ff,
   map: THREE.ImageUtils.loadTexture( 'javascripts/particletextureshaded.png' ),
+  sizeAttenuation: true,
+  alphaTest: 0.2,
   transparent: true,
   })
 );
-scene.add(particlesInner);
+//scene.add(particlesInner);
 
 // The smaller globes around...
 var smallerGlobesGeometry = new THREE.Geometry();
@@ -191,34 +199,34 @@ for (i = 0; i < 5; i++) {
   z *= d;
    
   var vertex = new THREE.Vector3(
-         x * 66,
-         y * 66,
-         z * 66
+         x * 70,
+         y * 70,
+         z * 70
   );
    
   smallerGlobesGeometry.vertices.push(vertex);
 
 }
 var smallerGlobes = new THREE.PointCloud(smallerGlobesGeometry, new THREE.PointCloudMaterial({
-  size: 4,
+  size: 16,
   color: 0xffffff,
   map: THREE.ImageUtils.loadTexture( 'javascripts/particletextureshaded.png' ),
+  sizeAttenuation: true,
+  alphaTest: 0.2,
   transparent: true,
   })
 );
 scene.add(smallerGlobes);
 
 var renderModel = new THREE.RenderPass( scene, camera );
-var effectBloom = new THREE.BloomPass( 2.5, 2, 0.01, 1024 );
-var effectFilm = new THREE.FilmPass( 0.9, 0.9, 2048, false );
+var effectGlitch = new THREE.GlitchPass( );
 
-effectFilm.renderToScreen = true;
+effectGlitch.renderToScreen = true;
 
 composer = new THREE.EffectComposer( renderer );
 
 composer.addPass( renderModel );
-composer.addPass( effectBloom );
-composer.addPass( effectFilm );
+composer.addPass( effectGlitch );
 
 var time = new THREE.Clock();
 /*
@@ -243,24 +251,18 @@ marker.update = function () {
 };*/
 
 var render = function () {  
-  sphereWireframeInner.rotation.x += 0.002;
-  sphereWireframeInner.rotation.z += 0.002;
+  sphereWireframeInner.rotation.y += 0.002;
+  //sphereWireframeInner.rotation.z += 0.002;
   
-  sphereWireframeOuter.rotation.x += 0.001;
-  sphereWireframeOuter.rotation.z += 0.001;
+  sphereWireframeOuter.rotation.y += 0.002;
   
-  sphereGlassInner.rotation.y += 0.005;
-  sphereGlassInner.rotation.z += 0.005;
-
   sphereGlassOuter.rotation.y += 0.01;
-  sphereGlassOuter.rotation.z += 0.01;
+  
 
-  particlesOuter.rotation.y += 0.0005;
-  particlesInner.rotation.y -= 0.002;
-
-  sphereWireframeInner.material.opacity = Math.abs(Math.cos((time.getElapsedTime()+0.5)/0.9)*0.5);
-  sphereWireframeOuter.material.opacity = Math.abs(Math.cos(time.getElapsedTime()/0.9)*0.5);
-
+  particlesOuter.rotation.y += 0.001;
+  
+  smallerGlobes.rotation.y += 0.0005;
+  
   redLight.position.x = Math.cos(time.getElapsedTime()/0.5)*128;
   redLight.position.y = Math.cos(time.getElapsedTime()/0.5)*128;
   redLight.position.z = Math.sin(time.getElapsedTime()/0.5)*128;
