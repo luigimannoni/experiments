@@ -10,7 +10,8 @@ document.body.appendChild(renderer.domElement);
 
 controls = new THREE.TrackballControls( camera );
 controls.target = scene.position;
-
+controls.minDistance = 50;
+controls.maxDistance = 150;
 // Mesh
 var group = new THREE.Group();
 scene.add(group);
@@ -170,6 +171,35 @@ var particlesInner = new THREE.PointCloud(geometry, new THREE.PointCloudMaterial
 );
 scene.add(particlesInner);
 
+// The smaller globes around...
+var geometry = new THREE.Geometry();
+for (i = 0; i < 5; i++) {
+  
+  var x = -1 + Math.random() * 2;
+  var y = -1 + Math.random() * 2;
+  var z = -1 + Math.random() * 2;
+  var d = 1 / Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
+  x *= d;
+  y *= d;
+  z *= d;
+   
+  var vertex = new THREE.Vector3(
+         x * 66,
+         y * 66,
+         z * 66
+  );
+   
+  geometry.vertices.push(vertex);
+
+}
+var smallerGlobes = new THREE.PointCloud(geometry, new THREE.PointCloudMaterial({
+  size: 4,
+  color: 0xffffff,
+  map: THREE.ImageUtils.loadTexture( 'javascripts/particletextureshaded.png' ),
+  transparent: true,
+  })
+);
+scene.add(smallerGlobes);
 
 var renderModel = new THREE.RenderPass( scene, camera );
 var effectBloom = new THREE.BloomPass( 2.5, 2, 0.01, 1024 );
