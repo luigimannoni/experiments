@@ -2,7 +2,9 @@
  * In this file you should write your main styles. (or centralize your imports)
  * Import this file using the following HTML or equivalent:
  * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
-
+@import url(http://fonts.googleapis.com/css?family=Roboto);
 @import "compass/reset";
-body {margin: 0}
+body {margin: 0; font-family: Roboto, Helvetica, Arial, Sans-serif;}
 canvas {position: absolute; top: 0;left: 0;bottom: 0;right: 0;}
+audio {position: fixed; bottom: 10px; z-index: 1000; width: 100%;}
+.label {font-size: 22px;padding: 20px 10px;background:rgba(0,0,0,0.6);color:#fff;position:absolute;top: 0;z-index: 10;}
