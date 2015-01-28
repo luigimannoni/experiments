@@ -11,7 +11,7 @@
  * Below the well commented dark magic.
  *
  *
- * Allowed to fork, play with this, post ut on your website, show to your mum as long you give credit to the original owners.
+ * Allowed to fork, play with this, post it on your website, show to your mum as long you give credit to the original owners.
  *
  * Luigi Mannoni (http://luigimannoni.com)
  * Twitter: @mashermack 
