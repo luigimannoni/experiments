@@ -212,7 +212,7 @@ scene.add( whiteLight );
 
 
 // Cubes
-var cubeDimension = 45, cubeRows = 10, cubeColumns = 10, cubePadding = 3, cubes = [];
+var cubeDimension = 45, cubeRows = 10, cubeColumns = 10, cubePadding = 3, cubes = [], cubesWireframe = [];
 var cubeGeometry = new THREE.BoxGeometry(cubeDimension, 1, cubeDimension);
 
 for (var column = 0; column < cubeColumns; column++) {
@@ -222,8 +222,9 @@ for (var column = 0; column < cubeColumns; column++) {
       new THREE.MeshLambertMaterial({ 
           color: 0x2C75FF,
           ambient: 0x2222c8,
-          transparent: false, 
-          shininess: 100
+          transparent: true,
+          shininess: 85,
+          opacity: 0.3
         }) // Guess I need to embed in it?
       );
     var cubeOffset = 0;
@@ -236,12 +237,46 @@ for (var column = 0; column < cubeColumns; column++) {
 
     group.add(cube);
 
-    cubes.push(cube);    
+    cubes.push(cube);  
+
+    var cube = new THREE.Mesh(cubeGeometry, 
+      new THREE.MeshLambertMaterial({ 
+          color: 0x2C75FF,
+          ambient: 0x2222c8,
+          transparent: false,
+          wireframe: true,
+          wireframeLinewidth: 4
+        }) // Guess I need to embed in it?
+      );
+    var cubeOffset = 0;
+    if((column%2) == 1) {
+      cubeOffset = cubeDimension + 0;
+    }
+
+    cube.position.x = (column * cubeDimension) + (cubePadding * column);
+    cube.position.z = (row * cubeDimension) + (cubePadding * row);
+
+    group.add(cube);
+
+    cubesWireframe.push(cube);  
+
   }
 }
 
 camera.position.z = -45;
 controls.target = cubes[45].position;
+
+var renderModel = new THREE.RenderPass( scene, camera );
+var effectBloom = new THREE.BloomPass( 1.5, 2, 0.01, 1024 );
+var effectFilm = new THREE.FilmPass( 0.9, 0.9, 2048, false );
+
+effectFilm.renderToScreen = true;
+
+composer = new THREE.EffectComposer( renderer );
+
+composer.addPass( renderModel );
+composer.addPass( effectBloom );
+composer.addPass( effectFilm );
 
 var time = new THREE.Clock();
 var rowCounter = 0;
@@ -266,8 +301,17 @@ var render = function () {
     if(!!cubes[i]) {
       var hue = audioSource.streamData[i]
       cubes[i].scale.y = (audioSource.streamData[i] + 0.1) / 3;
+      cubes[i].position.y = ((audioSource.streamData[i] + 0.1) / 3) / 2;
+
       cubes[i].material.color.setHSL(0.27 / 255 * (255 - audioSource.streamData[i]), 1, 0.6);
       cubes[i].material.ambient.setHSL(0.27 / 255 * (255 - audioSource.streamData[i]), 1, 0.5);
+
+
+      cubesWireframe[i].scale.y = (audioSource.streamData[i] + 0.1) / 3;
+      cubesWireframe[i].position.y = ((audioSource.streamData[i] + 0.1) / 3) / 2;
+
+      cubesWireframe[i].material.color.setHSL(0.27 / 255 * (255 - audioSource.streamData[i]), 1, 0.6);
+      cubesWireframe[i].material.ambient.setHSL(0.27 / 255 * (255 - audioSource.streamData[i]), 1, 0.5);
     }
   };
   //console.log(audioSource.streamData);
@@ -284,8 +328,11 @@ var render = function () {
   audioSource.volumePrev = audioSource.volumeHi;*/
 
   controls.update();
-  renderer.render(scene, camera);
+  //renderer.render(scene, camera);
+  renderer.clear();
+  composer.render(time.getElapsedTime());  
   requestAnimationFrame(render);  
+  
 
 };
 
@@ -300,14 +347,11 @@ function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
+
+  composer.reset();
 }
 
 function onDocumentMouseMove( event ) {
   mouseX = event.clientX - window.innerWidth/2;
   mouseY = event.clientY - window.innerHeight/2;
 }
-
-
-
-
-
