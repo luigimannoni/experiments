@@ -8,6 +8,7 @@ By [Luigi Mannoni](http://www.luigimannoni.com)
 * [StackOverflow](http://stackoverflow.com/users/1774938/mack)
 
 ###WebGL Experiments
+* [Soundcloud analyzer](http://luigimannoni.github.io/experiments/soundanalyzer-webgl/)
 * [GLSL Shaders on a Cube](http://luigimannoni.github.io/experiments/cubeshaders-webgl/)
 * [Cubemapping with interactive mouse camera](http://luigimannoni.github.io/experiments/cubemouse-webgl/)
 * [Spiral generated through particles](http://luigimannoni.github.io/experiments/spiral-webgl/)
@@ -15,7 +16,7 @@ By [Luigi Mannoni](http://www.luigimannoni.com)
 * [Globe/Molecule (wireframed)](http://luigimannoni.github.io/experiments/molecule-webgl/)
 * [Globe/Particles (plastic)](http://luigimannoni.github.io/experiments/multisphere-webgl/)
 * [Hexagon Globe](http://luigimannoni.github.io/experiments/hexoplanet-webgl/)
-* [Soundcloud analyzer (WIP)](http://luigimannoni.github.io/experiments/hexagonplane-webgl/)
+* [Another soundcloud analyzer (WIP)](http://luigimannoni.github.io/experiments/hexagonplane-webgl/)
 
 ###HTML5 Experiments
 * [Soundcloud analyzer](http://luigimannoni.github.io/experiments/soundanalyzer-css3/)
