@@ -14,7 +14,7 @@ By [Luigi Mannoni](http://www.luigimannoni.com)
 * [ARC-170 Spaceship JSON model loader](http://luigimannoni.github.io/experiments/arc170-webgl/)
 * [Globe/Molecule (wireframed)](http://luigimannoni.github.io/experiments/molecule-webgl/)
 * [Globe/Particles (plastic)](http://luigimannoni.github.io/experiments/multisphere-webgl/)
-* [Haxagon Globe](http://luigimannoni.github.io/experiments/hexoplanet-webgl/)
+* [Hexagon Globe](http://luigimannoni.github.io/experiments/hexoplanet-webgl/)
 * [Soundcloud analyzer (WIP)](http://luigimannoni.github.io/experiments/hexagonplane-webgl/)
 
 ###HTML5 Experiments
