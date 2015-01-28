@@ -188,15 +188,15 @@ function deg2rad(_degrees) {
 var mouseX = 0, mouseY = 0, composer, controls;
 
 var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera(65, window.innerWidth/window.innerHeight, 0.1, 1000);
-//scene.fog = new THREE.Fog(0x000000, 150, 650);
+var camera = new THREE.PerspectiveCamera(65, window.innerWidth/window.innerHeight, 0.1, 5000);
+scene.fog = new THREE.Fog(0x000000, 600, 1500);
 
 var renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setClearColor( 0x000000, 0 ); // background
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-controls = new THREE.TrackballControls( camera );
+//controls = new THREE.TrackballControls( camera );
 
 var group = new THREE.Group();
 scene.add( group );
@@ -205,14 +205,23 @@ scene.add( group );
 var light = new THREE.AmbientLight( 0x909090 ); // soft white light
 scene.add( light );
 
-// Mesh
-var whiteLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
-whiteLight.position.set( 0, 128, 128 );
-scene.add( whiteLight );
+// Plane 
+var planeGeometry = new THREE.PlaneGeometry( 10000, 10000 );
+var planeMaterial = new THREE.MeshPhongMaterial( { 
+  color: 0x111111,
+  ambient: 0x000000,
+} );
 
+var plane = new THREE.Mesh(
+  planeGeometry, planeMaterial
+);
+plane.position.y = -2;
+plane.rotation.x = deg2rad(-90);
+
+scene.add(plane);
 
 // Cubes
-var cubeDimension = 45, cubeRows = 10, cubeColumns = 10, cubePadding = 3, cubes = [], cubesWireframe = [];
+var cubeDimension = 45, cubeRows = 10, cubeColumns = 10, cubePadding = 3, cubes = [], cubesWireframe = [], cubesLight = [];
 var cubeGeometry = new THREE.BoxGeometry(cubeDimension, 1, cubeDimension);
 
 for (var column = 0; column < cubeColumns; column++) {
@@ -224,7 +233,7 @@ for (var column = 0; column < cubeColumns; column++) {
           ambient: 0x2222c8,
           transparent: true,
           shininess: 85,
-          opacity: 0.3
+          opacity: 0.45
         }) // Guess I need to embed in it?
       );
     var cubeOffset = 0;
@@ -263,8 +272,10 @@ for (var column = 0; column < cubeColumns; column++) {
   }
 }
 
-camera.position.z = -45;
-controls.target = cubes[45].position;
+camera.position.z = -65;
+camera.position.y = 65;
+
+//controls.target = cubes[45].position;
 
 var renderModel = new THREE.RenderPass( scene, camera );
 var effectBloom = new THREE.BloomPass( 1.5, 2, 0.01, 1024 );
@@ -295,8 +306,9 @@ var render = function () {
     rowCounter = 0;
   }
   */
+  camera.position.x = ( (Math.cos(time.getElapsedTime() / 4)) * 350) + cubes[45].position.x;
+  camera.position.z = ( (Math.sin(time.getElapsedTime() / 4)) * 350) + cubes[45].position.z;
 
-  var mental = (Math.min(Math.max((Math.tan(audioSource.volumeHi/6500) * 0.5)-20), 2) * -1);
   for (var i = audioSource.streamData.length - 1; i >= 0; i--) {
     if(!!cubes[i]) {
       var hue = audioSource.streamData[i]
@@ -314,21 +326,16 @@ var render = function () {
       cubesWireframe[i].material.ambient.setHSL(0.27 / 255 * (255 - audioSource.streamData[i]), 1, 0.5);
     }
   };
-  //console.log(audioSource.streamData);
-  /*
-  if (audioSource.volumeHi - audioSource.volumePrev > 50 || audioSource.volumeHi - audioSource.volumePrev < -50 ) {
-    $('.fullscreen').css('background', '#fff');
-    $('.cube').addClass('trigger');
-    $('.scope').addClass('trigger');
-  } else {
-    $('.fullscreen').css('background', '#222');
-    $('.cube').removeClass('trigger');
-    $('.scope').removeClass('trigger');
-  }
-  audioSource.volumePrev = audioSource.volumeHi;*/
 
-  controls.update();
+  var mental = (Math.min(Math.max((Math.tan(audioSource.volumeHi/6500) * 0.5)), 2));
+  console.log(mental);
+  plane.material.ambient.setHSL(0, 0, mental);
+  //console.log(audioSource.streamData);
+  //audioSource.volumePrev = audioSource.volumeHi;
+
+  //controls.update();
   //renderer.render(scene, camera);
+  camera.lookAt(cubes[45].position);
   renderer.clear();
   composer.render(time.getElapsedTime());  
   requestAnimationFrame(render);  
