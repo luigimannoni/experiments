@@ -166,17 +166,17 @@ scene.add(starField);
 
 camera.position.z = -110;
 
-var renderModel = new THREE.RenderPass( scene, camera );
-var effectBloom = new THREE.BloomPass( 2.5, 50, 0.01, 1024 );
+/*var renderModel = new THREE.RenderPass( scene, camera );
+var effectBloom = new THREE.BloomPass( 2.5, 4, 0.01, 1024 );
 var effectFilm = new THREE.FilmPass( 0.90, 0.9, 2048, false );
 
-effectFilm.renderToScreen = true;
+effectFilm.renderToScreen = false;
 
 composer = new THREE.EffectComposer( renderer );
 
 composer.addPass( renderModel );
 composer.addPass( effectBloom );
-composer.addPass( effectFilm );
+composer.addPass( effectFilm );*/
 
 
 var time = new THREE.Clock();
@@ -224,9 +224,9 @@ var render = function () {
   directionalLight.position.y = Math.cos(time.getElapsedTime()/0.5)*128;
   directionalLight.position.z = Math.sin(time.getElapsedTime()/0.5)*128;
 
-  //renderer.render(scene, camera);
-  renderer.clear();
-  composer.render(time.getElapsedTime());
+  renderer.render(scene, camera);
+  //renderer.clear();
+  //composer.render(time.getElapsedTime());
   requestAnimationFrame(render);  
 };
 
