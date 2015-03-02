@@ -3,7 +3,7 @@ var postprocessing = { enabled : true };
 var screenSpacePosition = new THREE.Vector3();
 var sunPosition = new THREE.Vector3( 0, 120, 1000 );
 var bgColor = 0x000000;
-var sunColor = 0x00ffee;
+var sunColor = 0xffee00;
 
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 0.1, 10000);
@@ -15,10 +15,16 @@ var renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-controls = new THREE.TrackballControls( camera );
+controls = new THREE.OrbitControls( camera );
+controls.addEventListener( 'change', render );
 controls.target = scene.position;
 controls.minDistance = 120;
-controls.maxDistance = 200;
+controls.maxDistance = 500;
+controls.minPolarAngle = 0; // radians
+controls.maxPolarAngle = Math.PI; // radians
+controls.minAzimuthAngle = 0; // radians
+controls.maxAzimuthAngle = Math.PI; // radians
+
 
 var materialDepth = new THREE.MeshDepthMaterial();
 var materialScene = new THREE.MeshBasicMaterial( { color: 0x000000, shading: THREE.FlatShading } );
