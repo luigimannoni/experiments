@@ -122,6 +122,7 @@ var render = function () {
   var h = d.getHours();
   var m = d.getMinutes();
   var s = d.getSeconds();
+  var ms = d.getMilliseconds();
   if (h > 12) {
     h = h - 12;
   }
@@ -150,6 +151,7 @@ var render = function () {
       
     }, 4000)
   }
+  //spotLight.position.x = Math.cos( 6 * ((1/(3600*12)) * ((3600*h) + (60*m) + s) - 0.5) );
   /*
   camera.position.x = mouseX * 0.00005;
   camera.position.y = -mouseY * 0.00005;
