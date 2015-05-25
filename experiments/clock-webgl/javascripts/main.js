@@ -90,12 +90,15 @@ var dirhelp = new THREE.DirectionalLightHelper(directionalLight, 10);
 scene.add(dirhelp);*/
 camera.position.z = 4;
 
-var spotLight = new THREE.SpotLight( 0xffffff, 5 );
-spotLight.position.set( 0, 1.5, -4.5 );
+var spotLight = new THREE.SpotLight( 0xffffff, 10 );
+spotLight.position.set( 0, 8, -12.5 );
 
 spotLight.shadowCameraNear  = 0.01;   
 spotLight.castShadow    = true;
 spotLight.shadowDarkness  = 1;
+spotLight.shadowMapWidth = 1024;
+spotLight.shadowMapHeight = 1024;
+
 //spotLight.shadowCameraVisible = true;
 
 
@@ -119,10 +122,12 @@ var render = function () {
   var h = d.getHours();
   var m = d.getMinutes();
   var s = d.getSeconds();
+  if (h > 12) {
+    h = h - 12;
+  }
 
-  hours.rotation.z = deg2rad(360/12 * h);
-  minutes.rotation.z = deg2rad(360/60 * m);
-
+  hours.rotation.z = deg2rad( (360/(3600*12)) * ((3600*h) + (60*m) + s) );
+  minutes.rotation.z = deg2rad( (360/3600) * ((60*m) + s) );
 
   if (m == 59 && s == 40 && chimeTout == false) {
     chimeTout = true;
@@ -132,6 +137,18 @@ var render = function () {
   if (m == 00 && s == 00 && bongTout == false) {
     bongTout = true;
     bell.play('bong');
+    var bongCount = h;
+    bongTout = setInterval(function(){
+      bongCount--;
+      if (bongCount > 0) {
+        bell.play('bong');
+      } 
+      else {
+        bongTout = false;
+        chimeTout = false;  
+      }
+      
+    }, 4000)
   }
   /*
   camera.position.x = mouseX * 0.00005;
