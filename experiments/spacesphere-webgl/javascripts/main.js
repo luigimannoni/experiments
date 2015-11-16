@@ -404,86 +404,72 @@ var time = new THREE.Clock();
 var mybeatsampler = new BeatSampler(audioSource);
 
 
-var bS, rS, glS, tS;
-  bS = new BrowserStats();
-  glS = new glStats();
-  tS = new threeStats( renderer );
-  rS = new rStats( {
-    CSSPath: '../../libs/rstats/',
-    values: {
-        frame: { caption: 'Total frame time (ms)', over: 16, average: true, avgMs: 100 },
-        fps: { caption: 'Framerate (FPS)', below: 30 },
-        calls: { caption: 'Calls (three.js)', over: 3000 },
-        raf: { caption: 'Time since last rAF (ms)', average: true, avgMs: 100 },
-        rstats: { caption: 'rStats update (ms)', average: true, avgMs: 100 },
-        texture: { caption: 'GenTex', average: true, avgMs: 100 },
-        mental: { caption: 'Mental Var', over: 0.8 },
-        volumeLow: { caption: 'Volume Low', over: 4000 },
-        volumeHigh: { caption: 'Volume High', over: 4000 },
-    },
-    groups: [
-        { caption: 'Framerate', values: [ 'fps', 'raf' ] },
-        { caption: 'Frame Budget', values: [ 'frame', 'texture', 'setup', 'render' ] }
-    ],
-    fractions: [
-        { base: 'frame', steps: [ 'texture', 'setup', 'render' ] }
-    ],
-    plugins: [
-        bS,
-        tS,
-        glS
-    ]
-  } );
+// var bS, rS, glS, tS;
+//   bS = new BrowserStats();
+//   glS = new glStats();
+//   tS = new threeStats( renderer );
+//   rS = new rStats( {
+//     CSSPath: '../../libs/rstats/',
+//     values: {
+//         frame: { caption: 'Total frame time (ms)', over: 16, average: true, avgMs: 100 },
+//         fps: { caption: 'Framerate (FPS)', below: 30 },
+//         calls: { caption: 'Calls (three.js)', over: 3000 },
+//         raf: { caption: 'Time since last rAF (ms)', average: true, avgMs: 100 },
+//         rstats: { caption: 'rStats update (ms)', average: true, avgMs: 100 },
+//         texture: { caption: 'GenTex', average: true, avgMs: 100 },
+//         mental: { caption: 'Mental Var', over: 0.8 },
+//         volumeLow: { caption: 'Volume Low', over: 4000 },
+//         volumeHigh: { caption: 'Volume High', over: 4000 },
+//     },
+//     groups: [
+//         { caption: 'Framerate', values: [ 'fps', 'raf' ] },
+//         { caption: 'Frame Budget', values: [ 'frame', 'texture', 'setup', 'render' ] }
+//     ],
+//     fractions: [
+//         { base: 'frame', steps: [ 'texture', 'setup', 'render' ] }
+//     ],
+//     plugins: [
+//         bS,
+//         tS,
+//         glS
+//     ]
+//   } );
 
 
 var render = function () {
 
-rS( 'frame' ).start();
-    glS.start();
-    
-    rS( 'rAF' ).tick();
-    rS( 'FPS' ).frame();
-    rS( 'setup' ).start();
-    rS( 'setup' ).end();
-  
-    rS( 'render' ).start();
-    renderer.render(scene, camera);
+  // rS( 'frame' ).start();
+  //   glS.start();
+  //   
+  //   rS( 'rAF' ).tick();
+  //   rS( 'FPS' ).frame();
+  //   rS( 'setup' ).start();
+  //   rS( 'setup' ).end();
+  // 
+  //   rS( 'render' ).start();
+  renderer.render(scene, camera);
+  var innerShift = Math.abs(Math.cos(( (time.getElapsedTime()+2.5) / 20))) / 10;
+  var outerShift = Math.abs(Math.cos(( (time.getElapsedTime()+5) / 10)));
 
   if (audioCtxCheck && player.paused == false) {
     // Audio Context is supported
     var mental = mybeatsampler.getCurrentMental();
     var volume = mybeatsampler.getVolumes();
-    rS( 'mental' ).set(mental);
-    rS( 'volumeLow' ).set(volume.low);
-    rS( 'volumeHigh' ).set(volume.high);
+  //  rS( 'mental' ).set(mental);
+  //  rS( 'volumeLow' ).set(volume.low);
+  //  rS( 'volumeHigh' ).set(volume.high);
     uniforms.time.value += 0.02 + (mental*0.1);  
     
-    sphereOuter.rotation.x += 0.001;
-    sphereOuter.rotation.z += 0.001;
-
     sphereOuter.scale.set(1+(mental*0.1), 1+(mental*0.1), 1+(mental*0.1));
 
-    starField.rotation.y -= 0.002;
-
-    var innerShift = Math.abs(Math.cos(( (time.getElapsedTime()+2.5) / 20))) / 10;
-    var outerShift = Math.abs(Math.cos(( (time.getElapsedTime()+5) / 10)));
-    
-    rS( 'innerShift' ).set(innerShift);
-    rS( 'outerShift' ).set(outerShift);
+  //  rS( 'innerShift' ).set(innerShift);
+  //  rS( 'outerShift' ).set(outerShift);
 
     for (var i = 0; i < materials.length; i++) {
         materials[i].color.setHSL(innerShift, 1, 0.5);
         materials[i].opacity = 1 / 255 * audioSource.streamData[i];  
     }
 
-    icoEdgeHelper.material.color.setHSL(innerShift, 1, 0.5);
-    particlesInner.material.color.setHSL(innerShift, 1, 0.5);
-
-    //starField.material.opacity = 
-
-    directionalLight.position.x = Math.cos(time.getElapsedTime()/0.5)*128;
-    directionalLight.position.y = Math.cos(time.getElapsedTime()/0.5)*128;
-    directionalLight.position.z = Math.sin(time.getElapsedTime()/0.5)*128;
 
     /*    rS( 'shuffling' ).start();    
     if (parseInt(time.getElapsedTime())%10 == 0) {
@@ -498,22 +484,38 @@ rS( 'frame' ).start();
   }
   else {
     // Fallback for no support for AudioContext
+    uniforms.time.value += 0.02;  
+
+    for (var i = 0; i < materials.length; i++) {
+        materials[i].color.setHSL(innerShift, 1, 0.5);
+        materials[i].opacity = outerShift;  
+    }
+
   }  
 
+  icoEdgeHelper.material.color.setHSL(innerShift, 1, 0.5);
+  particlesInner.material.color.setHSL(innerShift, 1, 0.5);
 
-  rS( 'render' ).end();
-  rS( 'frame' ).end();
+  directionalLight.position.x = Math.cos(time.getElapsedTime()/0.5)*128;
+  directionalLight.position.y = Math.cos(time.getElapsedTime()/0.5)*128;
+  directionalLight.position.z = Math.sin(time.getElapsedTime()/0.5)*128;
+
+  starField.rotation.y -= 0.002;
+  sphereOuter.rotation.x += 0.001;
+  sphereOuter.rotation.z += 0.001;
+
+
+  // rS( 'render' ).end();
+  // rS( 'frame' ).end();
 
   controls.update();
   
-  rS( 'rStats' ).start();
-  rS().update();
-  rS( 'rStats' ).end();
+  // rS( 'rStats' ).start();
+  // rS().update();
+  // rS( 'rStats' ).end();
   
   requestAnimationFrame(render);  
 };
-
-console.log(icosahedronGeometry.faces[0]);
 
 render(); // Ciao
 
