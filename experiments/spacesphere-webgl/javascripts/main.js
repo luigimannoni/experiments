@@ -223,6 +223,9 @@ var BeatSampler = function(_audioSource, _player, _config) {
   this.getCurrentMental = function() {
     return (Math.min(Math.max((Math.tan(audioSource.volumeHi/6500) * 0.5)), 2)); 
   }
+  this.getVolumes = function() {
+    return {low: audioSource.volumeHi, high: audioSource.volumeHi}; 
+  }
 
 }
 /**
@@ -316,38 +319,17 @@ var imageLoader = new THREE.TextureLoader();
 var sphereOuter = new THREE.Group();
 var icosahedronGeometry = new THREE.IcosahedronGeometry( outerSize, 3 );
 
-var traMat = new THREE.MeshPhongMaterial( { color: innerColor, shading: THREE.FlatShading, side: THREE.DoubleSide, transparent: true, opacity: 0.8 } ),
-    traMat2 = new THREE.MeshPhongMaterial( { color: innerColor, shading: THREE.FlatShading, side: THREE.DoubleSide, transparent: true, opacity: 1 } ),
-    traMat3 = new THREE.MeshPhongMaterial( { color: innerColor, shading: THREE.FlatShading, side: THREE.DoubleSide, transparent: true, opacity: 0.1 } ),
-    sunMat = new THREE.ShaderMaterial( {
-      uniforms: uniforms,
-      vertexShader: document.getElementById( 'vertexNoise' ).textContent,
-      fragmentShader: document.getElementById( 'fragmentNoise' ).textContent
-    });
-
 // materials
-materials = [
-    traMat,
-    traMat2,
-    traMat3,
-    traMat,
-    traMat2,
-    traMat3,
-];
+var materials = [];
 
-var matCopy = [
-    traMat,
-    traMat2,
-    traMat3,
-    traMat,
-    traMat2,
-    traMat3,
-];
 
+for (var i = 0; i < 64; i++) {
+  materials.push(new THREE.MeshPhongMaterial( { color: innerColor, shading: THREE.FlatShading, side: THREE.DoubleSide, transparent: true, opacity: 0.8 } ));
+};
 
 // assign material to each face
 for( var i = 0; i < icosahedronGeometry.faces.length; i++ ) {
-    icosahedronGeometry.faces[ i ].materialIndex = THREE.Math.randInt(0, 5);
+    icosahedronGeometry.faces[ i ].materialIndex = THREE.Math.randInt(0, 63);
 }
 
 icosahedronGeometry.sortFacesByMaterialIndex(); // optional, to reduce draw calls
@@ -434,7 +416,10 @@ var bS, rS, glS, tS;
         calls: { caption: 'Calls (three.js)', over: 3000 },
         raf: { caption: 'Time since last rAF (ms)', average: true, avgMs: 100 },
         rstats: { caption: 'rStats update (ms)', average: true, avgMs: 100 },
-        texture: { caption: 'GenTex', average: true, avgMs: 100 }
+        texture: { caption: 'GenTex', average: true, avgMs: 100 },
+        mental: { caption: 'Mental Var', over: 0.8 },
+        volumeLow: { caption: 'Volume Low', over: 4000 },
+        volumeHigh: { caption: 'Volume High', over: 4000 },
     },
     groups: [
         { caption: 'Framerate', values: [ 'fps', 'raf' ] },
@@ -467,12 +452,17 @@ rS( 'frame' ).start();
   if (audioCtxCheck && player.paused == false) {
     // Audio Context is supported
     var mental = mybeatsampler.getCurrentMental();
-    
-    uniforms.time.value += 0.02;  
+    var volume = mybeatsampler.getVolumes();
+    rS( 'mental' ).set(mental);
+    rS( 'volumeLow' ).set(volume.low);
+    rS( 'volumeHigh' ).set(volume.high);
+    uniforms.time.value += 0.02 + (mental*0.1);  
     
     sphereOuter.rotation.x += 0.001;
     sphereOuter.rotation.z += 0.001;
-    
+
+    sphereOuter.scale.set(1+(mental*0.1), 1+(mental*0.1), 1+(mental*0.1));
+
     starField.rotation.y -= 0.002;
 
     var innerShift = Math.abs(Math.cos(( (time.getElapsedTime()+2.5) / 20))) / 10;
@@ -483,7 +473,7 @@ rS( 'frame' ).start();
 
     for (var i = 0; i < materials.length; i++) {
         materials[i].color.setHSL(innerShift, 1, 0.5);
-        materials[i].opacity = Math.abs(Math.cos(time.getElapsedTime()/i+1)*1);  
+        materials[i].opacity = 1 / 255 * audioSource.streamData[i];  
     }
 
     icoEdgeHelper.material.color.setHSL(innerShift, 1, 0.5);
