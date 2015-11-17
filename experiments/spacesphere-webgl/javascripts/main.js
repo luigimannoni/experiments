@@ -65,11 +65,9 @@ else {
         totalHi += self.streamData[i];
       }
       self.volumeHi = totalHi;
-      requestAnimationFrame(sampleAudioStream);
     };
 
-    requestAnimationFrame(sampleAudioStream);
-
+    setInterval(sampleAudioStream, 20);
 
     // Public properties and methods
     this.volume = 0;
@@ -187,47 +185,22 @@ else {
   });
 
 
-  var trackUrl = 'https://soundcloud.com/mhd-underground/mehdispoz-space-travel-unrelease';
-  loadAndUpdate(trackUrl);      
-  
+  // On load, check to see if there is a track token in the URL, and if so, load that automatically
+  if (window.location.hash) {
+    var trackUrl = 'https://soundcloud.com/' + window.location.hash.substr(1);
+    loadAndUpdate(trackUrl);
+  }
+  else {
+  var trackUrl = 'https://soundcloud.com/' + 'mhd-underground/mehdispoz-space-travel-unrelease';
+    loadAndUpdate(trackUrl);      
+  }
 } 
 
 // Since I suck at trigonometry I'll just convert radii into degrees.
 function deg2rad(_degrees) {
   return (_degrees * Math.PI / 180);
 }
-/**
- * BeatSampler.js
- */
 
-var BeatSampler = function(_audioSource, _player, _config) {
-  // AudioSource created from the context?
-  if ( typeof(_config) == 'null' || typeof(_config) == 'undefined' ) {
-    _config = {};
-  }
-  var audioSource = _audioSource,
-      player = _player;
-  
-  var defaults = {
-    channels:   256,
-    decay:      3.00,    
-    threshold:  0.90,    
-  };
-  
-  var config = Object.create(defaults);
-  Object.keys(_config).map(function (prop) {
-    prop in config && (config[prop] = _config[prop]);
-  });  
-
-  
-  this.getCurrentMental = function() {
-    return (Math.min(Math.max((Math.tan(audioSource.volumeHi/6500) * 0.5)), 2)); 
-  }
-  this.getVolumes = function() {
-    return {low: audioSource.volumeHi, high: audioSource.volumeHi}; 
-  }
-
-}
 /**
  * WebGL Logic
  */
@@ -253,7 +226,7 @@ controls.minDistance = 120;
 controls.maxDistance = 650;
 //
 var imageLoader = new THREE.TextureLoader();
-
+imageLoader.setCrossOrigin('anonymous');
 // Mesh
   var group = new THREE.Group();
   scene.add(group);
@@ -272,7 +245,7 @@ var imageLoader = new THREE.TextureLoader();
   var directions  = ['right1', 'left2', 'top3', 'bottom4', 'front5', 'back6'];
   for (var i = 0; i < 6; i++) {
     materialArray.push( new THREE.MeshBasicMaterial({
-      map: imageLoader.load( 'javascripts/bluenebula1024_' + directions[i] + '.png' ),
+      map: imageLoader.load( '//luigimannoni.github.io/experiments/spacesphere-webgl/javascripts/bluenebula1024_' + directions[i] + '.png' ),
       side: THREE.BackSide
     }));
   }
@@ -320,16 +293,18 @@ var sphereOuter = new THREE.Group();
 var icosahedronGeometry = new THREE.IcosahedronGeometry( outerSize, 3 );
 
 // materials
-var materials = [];
+var materials = [],
+  matCopy = [];
 
 
-for (var i = 0; i < 64; i++) {
+for (var i = 0; i < 89; i++) {
   materials.push(new THREE.MeshPhongMaterial( { color: innerColor, shading: THREE.FlatShading, side: THREE.DoubleSide, transparent: true, opacity: 0.8 } ));
+  matCopy.push(new THREE.MeshPhongMaterial( { color: innerColor, shading: THREE.FlatShading, side: THREE.DoubleSide, transparent: true, opacity: 0.8 } ));
 };
 
 // assign material to each face
 for( var i = 0; i < icosahedronGeometry.faces.length; i++ ) {
-    icosahedronGeometry.faces[ i ].materialIndex = THREE.Math.randInt(0, 63);
+    icosahedronGeometry.faces[ i ].materialIndex = THREE.Math.randInt(0, materials.length-1 );
 }
 
 icosahedronGeometry.sortFacesByMaterialIndex(); // optional, to reduce draw calls
@@ -351,7 +326,7 @@ var icosahedronOuter = new THREE.Mesh(
     transparent: true,
     shading: THREE.FlatShading,
     opacity: 1,
-    //alphaMap: imageLoader.load( 'javascripts/alphamap.jpg' ),
+    //alphaMap: imageLoader.load( '//luigimannoni.github.io/experiments/spacesphere-webgl/javascripts/alphamap.jpg' ),
     shininess: 0 
   })
 );*/
@@ -372,7 +347,7 @@ icoGeometryBuffer.fromGeometry(icosahedronOuter.geometry);
 var particlesInner = new THREE.Points(icoGeometryBuffer, new THREE.PointsMaterial({
   size: 2,
   color: innerColor,
-  map: imageLoader.load( 'javascripts/particletexture.png' ),
+  map: imageLoader.load( '//luigimannoni.github.io/experiments/spacesphere-webgl/javascripts/particletexture.png' ),
   transparent: true,
   })
 );
@@ -391,7 +366,7 @@ for (i = 0; i < 5000; i++) {
 var starField = new THREE.Points(geometry, new THREE.PointsMaterial({
   size: 10,
   color: 0xffffff,
-  map: imageLoader.load( 'javascripts/particletextureshaded.png' ),
+  map: imageLoader.load( '//luigimannoni.github.io/experiments/spacesphere-webgl/javascripts/particletextureshaded.png' ),
   transparent: true
   })
 );
@@ -401,8 +376,6 @@ scene.add(starField);
 camera.position.z = -110;
 
 var time = new THREE.Clock();
-var mybeatsampler = new BeatSampler(audioSource);
-
 
 // var bS, rS, glS, tS;
 //   bS = new BrowserStats();
@@ -450,36 +423,42 @@ var render = function () {
   renderer.render(scene, camera);
   var innerShift = Math.abs(Math.cos(( (time.getElapsedTime()+2.5) / 20))) / 10;
   var outerShift = Math.abs(Math.cos(( (time.getElapsedTime()+5) / 10)));
+  var superShift = Math.abs(Math.cos(( (time.getElapsedTime()+5) / 20)));
 
   if (audioCtxCheck && player.paused == false) {
     // Audio Context is supported
-    var mental = mybeatsampler.getCurrentMental();
-    var volume = mybeatsampler.getVolumes();
+    var mental = (Math.min(Math.max((Math.tan(audioSource.volumeHi/6500) * 0.5)), 2));
+    var volume = {
+    low: audioSource.volumeLo,
+    high: audioSource.volumeHi,
+  };
   //  rS( 'mental' ).set(mental);
   //  rS( 'volumeLow' ).set(volume.low);
   //  rS( 'volumeHigh' ).set(volume.high);
     uniforms.time.value += 0.02 + (mental*0.1);  
     
-    sphereOuter.scale.set(1+(mental*0.1), 1+(mental*0.1), 1+(mental*0.1));
+    sphereOuter.scale.set(1+(mental*0.3), 1+(mental*0.3), 1+(mental*0.3));
+  icoEdgeHelper.material.color.setHSL(superShift, 1, mental);
+    particlesInner.material.color.setHSL(superShift, 1, mental);
 
   //  rS( 'innerShift' ).set(innerShift);
   //  rS( 'outerShift' ).set(outerShift);
 
     for (var i = 0; i < materials.length; i++) {
-        materials[i].color.setHSL(innerShift, 1, 0.5);
+        materials[i].color.setHSL(superShift, 1 / 255 * audioSource.streamData[i], 0.5);
         materials[i].opacity = 1 / 255 * audioSource.streamData[i];  
     }
 
 
-    /*    rS( 'shuffling' ).start();    
-    if (parseInt(time.getElapsedTime())%10 == 0) {
-      for( var i = 0; i < icosahedronOuter.material.materials.length; i++ ) {
-        var applyThis = THREE.Math.randInt(0, 5); 
+    //    rS( 'shuffling' ).start();    
+    if (mental > 0.7) {
+      for( var i = 0; i < materials.length; i++ ) {
+        var applyThis = THREE.Math.randInt(0, materials.length-1); 
         icosahedronOuter.material.materials[i] = matCopy[applyThis];
       }
     }
-    rS( 'shuffling' ).end();
-    */
+    // rS( 'shuffling' ).end();
+    
     
   }
   else {
@@ -490,16 +469,15 @@ var render = function () {
         materials[i].color.setHSL(innerShift, 1, 0.5);
         materials[i].opacity = outerShift;  
     }
-
-  }  
-
   icoEdgeHelper.material.color.setHSL(innerShift, 1, 0.5);
-  particlesInner.material.color.setHSL(innerShift, 1, 0.5);
+    particlesInner.material.color.setHSL(innerShift, 1, 0.5);
+  }  
 
   directionalLight.position.x = Math.cos(time.getElapsedTime()/0.5)*128;
   directionalLight.position.y = Math.cos(time.getElapsedTime()/0.5)*128;
   directionalLight.position.z = Math.sin(time.getElapsedTime()/0.5)*128;
-
+  
+  skybox.rotation.y -= 0.0005;
   starField.rotation.y -= 0.002;
   sphereOuter.rotation.x += 0.001;
   sphereOuter.rotation.z += 0.001;
