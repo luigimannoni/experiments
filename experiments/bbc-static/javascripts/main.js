@@ -30,14 +30,15 @@ scene.add( directionalLight );
 
 // Sphere Wireframe Inner
 var sphereRedDash = new THREE.Mesh(
-  new THREE.SphereGeometry( innerSize, 2 ),
+  new THREE.SphereGeometry( innerSize, 32, 32 ),
   new THREE.MeshLambertMaterial({ 
     color: 0xff0000,
     ambient: 0xff0000,
     transparent: true, 
     alphaTest: 0.5,
     alphaMap: imageLoader.load( '//luigimannoni.github.io/assets/alpha-4px-stripe.png' ),
-    shininess: 0
+    shininess: 0,
+    side: THREE.DoubleSide,
   })
 );
 scene.add(sphereRedDash);
