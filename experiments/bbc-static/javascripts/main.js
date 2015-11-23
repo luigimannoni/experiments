@@ -16,6 +16,16 @@ document.body.appendChild(renderer.domElement);
 var imageLoader = new THREE.TextureLoader();
 imageLoader.setCrossOrigin('anonymous');
 
+var alpha = {
+  stripe2px: imageLoader.load( '//luigimannoni.github.io/assets/alpha-2px-stripe.png' ),
+  world: imageLoader.load( '//luigimannoni.github.io/assets/alpha-world.png' ),
+};
+
+alpha.stripe2px.wrapT = alpha.stripe2px.wrapS = THREE.RepeatWrapping;
+alpha.stripe2px.repeat.set( 1, 2 );
+
+
+
 // Grouped Mesh
 var globe = new THREE.Group();
 scene.add(globe);
@@ -28,20 +38,35 @@ var directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
 directionalLight.position.set( 0, 128, 128 );
 scene.add( directionalLight );
 
-// Sphere Wireframe Inner
+// Red Dash
 var sphereRedDash = new THREE.Mesh(
   new THREE.SphereGeometry( innerSize, 32, 32 ),
   new THREE.MeshLambertMaterial({ 
     color: 0xff0000,
     ambient: 0xff0000,
     transparent: true, 
-    alphaTest: 0.5,
-    alphaMap: imageLoader.load( '//luigimannoni.github.io/assets/alpha-4px-stripe.png' ),
+    alphaTest: 0.99,
+    alphaMap: alpha.stripe2px,
     shininess: 0,
     side: THREE.DoubleSide,
   })
 );
-scene.add(sphereRedDash);
+globe.add(sphereRedDash);
+
+// World
+var sphereWorld = new THREE.Mesh(
+  new THREE.SphereGeometry( innerSize, 32, 32 ),
+  new THREE.MeshLambertMaterial({ 
+    color: 0xff0000,
+    ambient: 0xff0000,
+    transparent: true, 
+    alphaTest: 0.99,
+    alphaMap: alpha.world,
+    shininess: 0,
+    side: THREE.DoubleSide,
+  })
+);
+globe.add(sphereWorld);
 
 
 
@@ -53,6 +78,9 @@ var render = function () {
 
   var innerShift = Math.abs(Math.cos(( (time.getElapsedTime()+2.5) / 20)));
   var outerShift = Math.abs(Math.cos(( (time.getElapsedTime()+5) / 10)));
+
+  alpha.stripe2px.offset.y = time.getElapsedTime() / 2;
+  alpha.world.offset.x = time.getElapsedTime() / 10;
 
   renderer.render(scene, camera);
   requestAnimationFrame(render);  
