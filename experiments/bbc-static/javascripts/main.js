@@ -25,7 +25,7 @@ alpha.stripe2px.wrapT = alpha.stripe2px.wrapS = THREE.RepeatWrapping;
 alpha.stripe2px.repeat.set( 1, 2 );
 
 alpha.world.wrapT = alpha.world.wrapS = THREE.RepeatWrapping;
-alpha.world.repeat.set( 4, 2 );
+alpha.world.repeat.set( 2, 1 );
 
 
 
@@ -58,12 +58,12 @@ globe.add(sphereRedDash);
 
 // World
 var sphereWorld = new THREE.Mesh(
-  new THREE.SphereGeometry( innerSize, 32, 32 ),
+  new THREE.IcosahedronGeometry( innerSize, 4 ),
   new THREE.MeshLambertMaterial({ 
     color: 0xff0000,
     ambient: 0xff0000,
     transparent: true, 
-    alphaTest: 0.99,
+    alphaTest: 0.5,
     alphaMap: alpha.world,
     shininess: 0,
     side: THREE.DoubleSide,
@@ -84,7 +84,7 @@ var render = function () {
 
   alpha.stripe2px.offset.y = time.getElapsedTime() / 2;
   alpha.world.offset.x = time.getElapsedTime() / 20;
-  alpha.world.offset.y = time.getElapsedTime() / 20;
+  //alpha.world.offset.y = time.getElapsedTime() / 20;
 
   renderer.render(scene, camera);
   requestAnimationFrame(render);  
