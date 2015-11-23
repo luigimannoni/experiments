@@ -24,6 +24,9 @@ var alpha = {
 alpha.stripe2px.wrapT = alpha.stripe2px.wrapS = THREE.RepeatWrapping;
 alpha.stripe2px.repeat.set( 1, 2 );
 
+alpha.world.wrapT = alpha.world.wrapS = THREE.RepeatWrapping;
+alpha.world.repeat.set( 4, 2 );
+
 
 
 // Grouped Mesh
@@ -80,7 +83,8 @@ var render = function () {
   var outerShift = Math.abs(Math.cos(( (time.getElapsedTime()+5) / 10)));
 
   alpha.stripe2px.offset.y = time.getElapsedTime() / 2;
-  alpha.world.offset.x = time.getElapsedTime() / 10;
+  alpha.world.offset.x = time.getElapsedTime() / 20;
+  alpha.world.offset.y = time.getElapsedTime() / 20;
 
   renderer.render(scene, camera);
   requestAnimationFrame(render);  
