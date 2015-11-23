@@ -7,7 +7,7 @@ var innerSize = 55,
     outerSize = 60;    
 
 var renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setClearColor( 0xffffff, 0 ); // background
+renderer.setClearColor( 0xffffff ); // background
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
