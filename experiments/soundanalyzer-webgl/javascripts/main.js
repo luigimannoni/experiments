@@ -6,7 +6,7 @@
  * I haven't tested Firefox but unless you're running an ancient version I am pretty confident this works on FF too.
  * 
  * Built with Mrdoob's Threejs (http://threejs.org), keyboard and probably LSD.
- * Using Michael Bromley's code to grab music from Soundcloud and analyze it (https://github.com/michaelbromley/soundcloud-visualizer)
+ * Inspired from Michael Bromley's Soundcloud Visualizer (https://github.com/michaelbromley/soundcloud-visualizer)
  *
  * Below the well commented dark magic.
  *
@@ -18,15 +18,10 @@
  * More experiments on:
  * Codepen: http://codepen.io/luigimannoni
  * Github: https://github.com/luigimannoni/luigimannoni.github.io
+ * Last update on 01/12/2015 - Refactored code
  * Last update on 18/06/2015 - Fixed CrossOrigin bug
  * Last update on 29/07/2015 - Added warning
  */
-
-/**
- * Michael Bromley's Soundcloud Analyzer
- * https://github.com/michaelbromley/soundcloud-visualizer)
- */
-
 
 var player =  document.getElementById('player');
 var soundcloudClient = '26095b994cc185bc665f4c9fcce8f211';
@@ -61,135 +56,6 @@ SC.get('/tracks/125438024').then(function(track) {
   
 
 });
-
-var audioCtxCheck = false;
-/*
-var audioCtxCheck = window.AudioContext || window.webkitAudioContext;
-if (!audioCtxCheck) {
-  document.getElementById('warning').style.display = 'block';
-  document.getElementById('player').style.display = 'none';
-}
-else {
-
-  var SoundCloudAudioSource = function(player) {
-    var self = this;
-    var analyser;
-    var audioCtx = new (window.AudioContext || window.webkitAudioContext);
-    analyser = audioCtx.createAnalyser();
-    analyser.fftSize = 256;
-
-    var source = audioCtx.createMediaElementSource(player);
-    source.connect(analyser);
-    analyser.connect(audioCtx.destination);
-
-    var sampleAudioStream = function() {
-      analyser.getByteFrequencyData(self.streamData);
-      // Calculate an overall volume value
-      var total = 0;
-      for (var i = 0; i < 64; i++) { // Get the volume from the first 64 bins
-        total += self.streamData[i];
-      }
-      self.volume = total;
-
-      var totalLow = 0;
-      for (var i = 0; i < 31; i++) { // Get the volume from the first 32 bins
-        totalLow += self.streamData[i];
-      }
-      self.volumeLow = totalLow;
-
-      var totalHi = 0;
-      for (var i = 31; i < 64; i++) { // Get the volume from the second 32 bins
-        totalHi += self.streamData[i];
-      }
-      self.volumeHi = totalHi;
-    };
-
-    setInterval(sampleAudioStream, 20);
-
-    // Public properties and methods
-    this.volume = 0;
-    this.volumeLow = 0;
-    this.volumeHi = 0;
-    this.streamData = new Uint8Array(256);
-
-    this.playStream = function(streamUrl) {
-
-    }
-  };
-  var Visualizer = function() {
-    var audioSource;
-      this.init = function(options) {
-          audioSource = options.audioSource;
-          var container = document.getElementById(options.containerId);        
-      };
-  };
-
-  var SoundcloudLoader = function(player,uiUpdater) {
-    var self = this;
-    var client_id = "26095b994cc185bc665f4c9fcce8f211"; // to get an ID go to http://developers.soundcloud.com/
-    this.sound = {};
-    this.streamUrl = "";
-    this.errorMessage = "";
-    this.player = player;
-
-    this.loadStream = function(track_url, successCallback, errorCallback) {
-        SC.initialize({
-            client_id: client_id
-        });
-        SC.get('/resolve', { url: track_url }, function(sound) {
-            if (sound.errors) {
-                self.errorMessage = "";
-                for (var i = 0; i < sound.errors.length; i++) {
-                    self.errorMessage += sound.errors[i].error_message + '<br>';
-                }
-                self.errorMessage += 'Make sure the URL has the correct format: https://soundcloud.com/user/title-of-the-track';
-                errorCallback();
-            } else {            
-                self.sound = sound;
-                self.streamUrl = function(){ return sound.stream_url + '?client_id=' + client_id; };
-                var audioData = request.response;
-
-                
-                successCallback();
-            }
-        });
-    };
-
-
-    this.directStream = function(direction){
-        if(direction=='toggle'){
-            if (this.player.paused) {
-                this.player.play();
-            } else {
-                this.player.pause();
-            }
-        }
-    }
-
-
-  };
-
-
-  var visualizer = new Visualizer();
-  
-  var loader = new SoundcloudLoader(player);
-
-  var audioSource = new SoundCloudAudioSource(player);
-  var loadAndUpdate = function(trackUrl) {
-    loader.loadStream(trackUrl,
-        function() {
-            audioSource.playStream(loader.streamUrl());
-        }, function(){});
-  };
-
-  visualizer.init({
-    containerId: 'visualizer',
-    audioSource: audioSource
-  });
-
-  var trackUrl = 'https://soundcloud.com/' + 'mhd-underground/mehdispoz-space-travel-unrelease';
-  loadAndUpdate(trackUrl);      
-} */
 
 // Since I suck at trigonometry I'll just convert radii into degrees.
 function deg2rad(_degrees) {
@@ -325,11 +191,11 @@ var render = function () {
     // It's not an ideal beat detector but it works!
 
     var avgVolume = 0;
-    for (var i = 31; i < 64; i++) { // Get the volume from the second 32 bins
+    for (var i = 0; i < 128; i++) { // Get the volume from the first 128 bins
       avgVolume += dataArray[i];
     }
 
-    var mental = (Math.min(Math.max((Math.tan(avgVolume/(255*24)) * 0.5)), 2)); 
+    var mental = (Math.min(Math.max((Math.tan( (avgVolume/(255*128) * 3) ) * 0.5)), 2)); 
     console.log(avgVolume, mental);
 
     camera.position.y = 65 + (120 * mental); // Make the camera bounce on rhythm
