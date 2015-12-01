@@ -195,7 +195,7 @@ var render = function () {
       avgVolume += dataArray[i];
     }
 
-    var mental = (Math.min(Math.max((Math.tan( (avgVolume/(255*128) * 3) ) * 0.5)), 2)); 
+    var mental = (Math.min(Math.max((Math.tan( (avgVolume/(255*128) * 1.8) ) * 0.5)), 2)); 
     console.log(avgVolume, mental);
 
     camera.position.y = 65 + (120 * mental); // Make the camera bounce on rhythm
