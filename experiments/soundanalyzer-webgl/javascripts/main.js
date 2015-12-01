@@ -27,6 +27,43 @@
  * https://github.com/michaelbromley/soundcloud-visualizer)
  */
 
+
+var player =  document.getElementById('player');
+var soundcloudClient = '26095b994cc185bc665f4c9fcce8f211';
+
+SC.initialize({
+  client_id: soundcloudClient,
+  redirect_uri: '',
+});
+
+
+var audioCtx = new (window.audioContext || window.webkitAudioContext)();
+var analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 256;
+var bufferLength = analyser.fftSize;
+var dataArray = new Uint8Array(bufferLength);
+
+
+var source = audioCtx.createMediaElementSource(player);
+source.connect(analyser);
+analyser.connect(audioCtx.destination);
+
+SC.get('/tracks/125438024').then(function(track) {
+  player.crossOrigin = 'anonymous';
+
+  console.log(track);
+  streamUrl = track.stream_url + '?client_id=' + soundcloudClient;
+  
+  player.setAttribute('src', streamUrl);
+  player.play();
+
+  console.log('preanalizer');
+  
+
+});
+
+var audioCtxCheck = false;
+/*
 var audioCtxCheck = window.AudioContext || window.webkitAudioContext;
 if (!audioCtxCheck) {
   document.getElementById('warning').style.display = 'block';
@@ -74,14 +111,9 @@ else {
     this.volumeLow = 0;
     this.volumeHi = 0;
     this.streamData = new Uint8Array(256);
+
     this.playStream = function(streamUrl) {
-        // Get the input stream from the audio element
-        player.addEventListener('ended', function(){
-            self.directStream('coasting');
-        });
-        player.crossOrigin = 'anonymous';
-        player.setAttribute('src', streamUrl);
-        player.play();
+
     }
   };
   var Visualizer = function() {
@@ -100,12 +132,6 @@ else {
     this.errorMessage = "";
     this.player = player;
 
-    /**
-     * Loads the JSON stream data object from the URL of the track (as given in the location bar of the browser when browsing Soundcloud),
-     * and on success it calls the callback passed to it (for example, used to then send the stream_url to the audiosource object).
-     * @param track_url
-     * @param callback
-     */
     this.loadStream = function(track_url, successCallback, errorCallback) {
         SC.initialize({
             client_id: client_id
@@ -118,20 +144,13 @@ else {
                 }
                 self.errorMessage += 'Make sure the URL has the correct format: https://soundcloud.com/user/title-of-the-track';
                 errorCallback();
-            } else {
+            } else {            
+                self.sound = sound;
+                self.streamUrl = function(){ return sound.stream_url + '?client_id=' + client_id; };
+                var audioData = request.response;
 
-                if(sound.kind=="playlist"){
-                    self.sound = sound;
-                    self.streamPlaylistIndex = 0;
-                    self.streamUrl = function(){
-                        return sound.tracks[self.streamPlaylistIndex].stream_url + '?client_id=' + client_id;
-                    }
-                    successCallback();
-                }else{
-                    self.sound = sound;
-                    self.streamUrl = function(){ return sound.stream_url + '?client_id=' + client_id; };
-                    successCallback();
-                }
+                
+                successCallback();
             }
         });
     };
@@ -145,21 +164,6 @@ else {
                 this.player.pause();
             }
         }
-        else if(this.sound.kind=="playlist"){
-            if(direction=='coasting') {
-                this.streamPlaylistIndex++;
-            }else if(direction=='forward') {
-                if(this.streamPlaylistIndex>=this.sound.track_count-1) this.streamPlaylistIndex = 0;
-                else this.streamPlaylistIndex++;
-            }else{
-                if(this.streamPlaylistIndex<=0) this.streamPlaylistIndex = this.sound.track_count-1;
-                else this.streamPlaylistIndex--;
-            }
-            if(this.streamPlaylistIndex>=0 && this.streamPlaylistIndex<=this.sound.track_count-1) {
-               this.player.setAttribute('src',this.streamUrl());
-               this.player.play();
-            }
-        }
     }
 
 
@@ -167,11 +171,10 @@ else {
 
 
   var visualizer = new Visualizer();
-  var player =  document.getElementById('player');
+  
   var loader = new SoundcloudLoader(player);
 
   var audioSource = new SoundCloudAudioSource(player);
-  var form = document.getElementById('form');
   var loadAndUpdate = function(trackUrl) {
     loader.loadStream(trackUrl,
         function() {
@@ -184,17 +187,9 @@ else {
     audioSource: audioSource
   });
 
-
-  // On load, check to see if there is a track token in the URL, and if so, load that automatically
-  if (window.location.hash) {
-    var trackUrl = 'https://soundcloud.com/' + window.location.hash.substr(1);
-    loadAndUpdate(trackUrl);
-  }
-  else {
-  var trackUrl = 'https://soundcloud.com/' + 'shockone/polygon-shockone-vip';
-    loadAndUpdate(trackUrl);      
-  }
-} 
+  var trackUrl = 'https://soundcloud.com/' + 'mhd-underground/mehdispoz-space-travel-unrelease';
+  loadAndUpdate(trackUrl);      
+} */
 
 // Since I suck at trigonometry I'll just convert radii into degrees.
 function deg2rad(_degrees) {
@@ -310,25 +305,40 @@ composer.addPass( effectFilm );
 var time = new THREE.Clock();
 var centerCube = 40;
 // Render function
+
+var audioSource = {
+  volumeHi: 0,
+  volumeLow: 0,
+  streamData: [0, 0],
+};
 var render = function () {  
   camera.position.x = ( (Math.cos(time.getElapsedTime() / 4)) * 350) + cubes[centerCube].position.x; // X Cos wave around the center cube (I know, I should calculate the center of the group instead)
   camera.position.z = ( (Math.sin(time.getElapsedTime() / 4)) * 350) + cubes[centerCube].position.z; // Z Sin wave around center cube, now my camera goes around. PS. 350 is the distance of the camera.
 
   
-  if (audioCtxCheck) {
+  if (audioCtx) {
+    analyser.getByteFrequencyData(dataArray);
+    
+    //console.log(dataArray[0]);
 
     // I recycled the mental var, this should go from 0 to 1 and jumps in between with the music
     // It's not an ideal beat detector but it works!
-    var mental = (Math.min(Math.max((Math.tan(audioSource.volumeHi/6500) * 0.5)), 2)); 
+
+    var avgVolume = 0;
+    for (var i = 31; i < 64; i++) { // Get the volume from the second 32 bins
+      avgVolume += dataArray[i];
+    }
+
+    var mental = (Math.min(Math.max((Math.tan(avgVolume/(255*32)) * 0.5)), 2)); 
 
     camera.position.y = 65 + (120 * mental); // Make the camera bounce on rhythm
 
-    for (var i = audioSource.streamData.length - 1; i >= 0; i--) {
+    for (var i = dataArray.length - 1; i >= 0; i--) {
       // My error here is: I am still doing a full cycle for the streamData array while I should pick only as many channel as my cube matrix
       // I have left this just in case I wanted to increase the data channels
       if(!!cubes[i]) { // Need to save javascript into crashing
 
-        var currentAudioChannelVolume = audioSource.streamData[i]; // Makes more sense than streamData
+        var currentAudioChannelVolume = dataArray[i]; // Makes more sense than streamData
 
         cubes[i].scale.y = (currentAudioChannelVolume + 0.1) / 3; // Makes cube taller with the volume
         cubes[i].position.y = ((currentAudioChannelVolume + 0.1) / 3) / 2; // Since scale works in 2 ways (Y axis and -Y axis) I compensate by applying half position onto the Y axis
@@ -362,11 +372,11 @@ var render = function () {
   }
   else {
     for (var i = cubes.length - 1; i >= 0; i--) {
-      cubes[i].scale.y = (Math.sin(time.getElapsedTime() + (i/cubes.length)) * 30) + 30.01; 
-      cubes[i].position.y = ((Math.sin(time.getElapsedTime() + (i/cubes.length)) * 30) + 30.01) / 2; 
+      cubes[i].scale.y = (Math.sin(time.getElapsedTime() + ((i*4)/cubes.length)) * 30) + 30.01; 
+      cubes[i].position.y = ((Math.sin(time.getElapsedTime() + ((i*4)/cubes.length)) * 30) + 30.01) / 2; 
 
-      cubesWireframe[i].scale.y = (Math.sin(time.getElapsedTime() + (i/cubes.length)) * 30) + 30.01; 
-      cubesWireframe[i].position.y = ((Math.sin(time.getElapsedTime() + (i/cubes.length)) * 30) + 30.01) / 2; 
+      cubesWireframe[i].scale.y = (Math.sin(time.getElapsedTime() + ((i*4)/cubes.length)) * 30) + 30.01; 
+      cubesWireframe[i].position.y = ((Math.sin(time.getElapsedTime() + ((i*4)/cubes.length)) * 30) + 30.01) / 2; 
 
     }
   }  
