@@ -26,10 +26,11 @@
 var player =  document.getElementById('player');
 var soundcloudClient = '26095b994cc185bc665f4c9fcce8f211';
 
+/*
 SC.initialize({
   client_id: soundcloudClient,
   redirect_uri: '',
-});
+});*/
 
 
 var audioCtx = new (window.audioContext || window.webkitAudioContext)();
@@ -39,10 +40,11 @@ var bufferLength = analyser.fftSize;
 var dataArray = new Uint8Array(bufferLength);
 
 
-var source = audioCtx.createMediaElementSource(player);
+var source = audioCtx.createBufferSource(player);
 source.connect(analyser);
 analyser.connect(audioCtx.destination);
 
+/*
 SC.get('/tracks/125438024').then(function(track) {
   player.crossOrigin = 'anonymous';
 
@@ -55,7 +57,37 @@ SC.get('/tracks/125438024').then(function(track) {
   console.log('preanalizer');
   
 
-});
+});*/
+
+var request = new XMLHttpRequest();
+streamUrl = 'javascripts/shockone.mp3';
+
+request.open("GET", streamUrl, true);
+request.responseType = "arraybuffer";
+
+request.onload = function() { 
+    audioCtx.decodeAudioData(
+        request.response,
+        function(b) {
+            audioBuffer = b;
+            //player.setAttribute('src', streamUrl);
+            //player.play();
+
+            source.buffer = audioBuffer;
+            source.loop = true;
+
+            source.start(0.0);
+            document.getElementById('loading').style.display = 'none';
+        },
+        
+        function(buffer) {
+          document.getElementById('warning').style.display = 'block';          
+        }
+    );
+}
+
+request.send();
+
 
 // Since I suck at trigonometry I'll just convert radii into degrees.
 function deg2rad(_degrees) {
