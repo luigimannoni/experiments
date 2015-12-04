@@ -96,6 +96,7 @@ function deg2rad(_degrees) {
 
 // Init values
 var mouseX = 0, mouseY = 0, composer, controls;
+var activeCamera = 0;
 
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(65, window.innerWidth/window.innerHeight, 0.1, 5000);
@@ -202,6 +203,7 @@ composer.addPass( effectFilm );
 
 var time = new THREE.Clock();
 var centerCube = 40;
+var beat = false;
 // Render function
 
 var audioSource = {
@@ -210,8 +212,54 @@ var audioSource = {
   streamData: [0, 0],
 };
 var render = function () {  
-  camera.position.x = ( (Math.cos(time.getElapsedTime() / 4)) * 350) + cubes[centerCube].position.x; // X Cos wave around the center cube (I know, I should calculate the center of the group instead)
-  camera.position.z = ( (Math.sin(time.getElapsedTime() / 4)) * 350) + cubes[centerCube].position.z; // Z Sin wave around center cube, now my camera goes around. PS. 350 is the distance of the camera.
+  var avgVolume = 0;
+  for (var i = 0; i < 128; i++) { // Get the volume from the first 128 bins
+    avgVolume += dataArray[i];
+  }
+  var mental = (Math.min(Math.max((Math.tan( (avgVolume/(255*128) * 1.8) ) * 0.5)), 2)); 
+
+  if (mental > 0.7 && beat == false) {
+    beat = true;
+    activeCamera++;
+    if (activeCamera > 2) {
+      activeCamera = 0;
+    }
+  } 
+  if (mental < 0.65) {
+    beat = false;
+  }
+
+  console.log(mental);
+  
+  switch (activeCamera) {
+    case 1:
+      camera.position.x = cubes[centerCube].position.x; // X Cos wave around the center cube (I know, I should calculate the center of the group instead)
+      camera.position.z = cubes[centerCube].position.z; // Z Sin wave around center cube, now my camera goes around. PS. 350 is the distance of the camera.
+      camera.position.y = 265 + (120 * mental); // Make the camera bounce on rhythm
+      
+      camera.lookAt(cubes[centerCube].position); // Comment this if you want to enable controls, otherwise it crashes badly
+      break;
+    case 2:
+      camera.position.x = ( (Math.cos(time.getElapsedTime() / 8)) * cubeDimension/1.5) + cubes[centerCube].position.x; // X Cos wave around the center cube (I know, I should calculate the center of the group instead)
+      camera.position.z = ( (Math.sin(time.getElapsedTime() / 8)) * cubeDimension/1.5) + cubes[centerCube].position.z; // Z Sin wave around center cube, now my camera goes around. PS. 350 is the distance of the camera.
+      camera.position.y = 0; // Make the camera bounce on rhythm
+
+      camera.lookAt(cubes[centerCube].position); // Comment this if you want to enable controls, otherwise it crashes badly
+      
+      break;
+    case 0:
+    default:
+      camera.position.x = ( (Math.cos(time.getElapsedTime() / 4)) * 350) + cubes[centerCube].position.x; // X Cos wave around the center cube (I know, I should calculate the center of the group instead)
+      camera.position.z = ( (Math.sin(time.getElapsedTime() / 4)) * 350) + cubes[centerCube].position.z; // Z Sin wave around center cube, now my camera goes around. PS. 350 is the distance of the camera.
+      camera.position.y = 65 + (120 * mental); // Make the camera bounce on rhythm
+      
+      camera.lookAt(cubes[centerCube].position); // Comment this if you want to enable controls, otherwise it crashes badly
+
+      break;
+  }
+
+  // camera.position.x = ( (Math.cos(time.getElapsedTime() / 4)) * 350) + cubes[centerCube].position.x; // X Cos wave around the center cube (I know, I should calculate the center of the group instead)
+  // camera.position.z = ( (Math.sin(time.getElapsedTime() / 4)) * 350) + cubes[centerCube].position.z; // Z Sin wave around center cube, now my camera goes around. PS. 350 is the distance of the camera.
 
   
   if (audioCtx) {
@@ -222,15 +270,10 @@ var render = function () {
     // I recycled the mental var, this should go from 0 to 1 and jumps in between with the music
     // It's not an ideal beat detector but it works!
 
-    var avgVolume = 0;
-    for (var i = 0; i < 128; i++) { // Get the volume from the first 128 bins
-      avgVolume += dataArray[i];
-    }
+    
 
-    var mental = (Math.min(Math.max((Math.tan( (avgVolume/(255*128) * 1.8) ) * 0.5)), 2)); 
-    console.log(avgVolume, mental);
+    //console.log(avgVolume, mental);
 
-    camera.position.y = 65 + (120 * mental); // Make the camera bounce on rhythm
 
     for (var i = dataArray.length - 1; i >= 0; i--) {
       // My error here is: I am still doing a full cycle for the streamData array while I should pick only as many channel as my cube matrix
@@ -279,7 +322,6 @@ var render = function () {
 
     }
   }  
-  camera.lookAt(cubes[centerCube].position); // Comment this if you want to enable controls, otherwise it crashes badly
   
   renderer.clear(); // Comment this if you want to switch off postprocessing
   composer.render(time.getElapsedTime()); // Comment this if you want to switch off postprocessing
@@ -289,6 +331,18 @@ var render = function () {
 
 render(); // Ciao
 
+function cameraRender() {
+  switch (activeCamera) {
+    case 1:
+
+      break;
+    case 2:
+      break;
+    default:
+
+      break;
+  }  
+}
 
 
 // Mouse and resize events
