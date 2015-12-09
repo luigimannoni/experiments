@@ -38,7 +38,7 @@ analyser.connect(audioCtx.destination);
 
 
 var request = new XMLHttpRequest();
-streamUrl = 'javascripts/shockone.mp3';
+streamUrl = 'javascripts/275579f6d4e3fd7bccbb0db65119fe33.ogg';
 
 request.open("GET", streamUrl, true);
 request.responseType = "arraybuffer";
