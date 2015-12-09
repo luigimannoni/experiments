@@ -24,14 +24,6 @@
  */
 
 var player =  document.getElementById('player');
-var soundcloudClient = '26095b994cc185bc665f4c9fcce8f211';
-
-/*
-SC.initialize({
-  client_id: soundcloudClient,
-  redirect_uri: '',
-});*/
-
 
 var audioCtx = new (window.audioContext || window.webkitAudioContext)();
 var analyser = audioCtx.createAnalyser();
@@ -40,24 +32,10 @@ var bufferLength = analyser.fftSize;
 var dataArray = new Uint8Array(bufferLength);
 
 
-var source = audioCtx.createBufferSource(player);
+var source = audioCtx.createBufferSource();
 source.connect(analyser);
 analyser.connect(audioCtx.destination);
 
-/*
-SC.get('/tracks/125438024').then(function(track) {
-  player.crossOrigin = 'anonymous';
-
-  console.log(track);
-  streamUrl = track.stream_url + '?client_id=' + soundcloudClient;
-  
-  player.setAttribute('src', streamUrl);
-  player.play();
-
-  console.log('preanalizer');
-  
-
-});*/
 
 var request = new XMLHttpRequest();
 streamUrl = 'javascripts/shockone.mp3';
@@ -70,8 +48,6 @@ request.onload = function() {
         request.response,
         function(b) {
             audioBuffer = b;
-            //player.setAttribute('src', streamUrl);
-            //player.play();
 
             source.buffer = audioBuffer;
             source.loop = true;
@@ -87,6 +63,8 @@ request.onload = function() {
 }
 
 request.send();
+
+
 
 
 // Since I suck at trigonometry I'll just convert radii into degrees.
@@ -206,62 +184,37 @@ var centerCube = 40;
 var beat = false;
 // Render function
 
-var audioSource = {
+var data = {
   volumeHi: 0,
   volumeLow: 0,
   streamData: [0, 0],
+  mental: 0,
+  threshold: 75,
+  avgVolume: 0,
+  camera: 0,
+  autocam: true
 };
+
+// Dat.GUI
+var gui = new dat.GUI();
+
+gui.add(data, "mental").min(0).max(100).step(1).listen();
+gui.add(data, "threshold").min(0).max(100).step(1).listen();
+gui.add(data, "camera").min(0).max(2).step(1).listen();
+gui.add(data, "avgVolume").listen();
+gui.add(data, "autocam");
+
+
 var render = function () {  
-  var avgVolume = 0;
+  data.avgVolume = 0;
   for (var i = 0; i < 128; i++) { // Get the volume from the first 128 bins
-    avgVolume += dataArray[i];
+    data.avgVolume += dataArray[i];
   }
-  var mental = (Math.min(Math.max((Math.tan( (avgVolume/(255*128) * 1.8) ) * 0.5)), 2)); 
+  data.mental = (Math.min(Math.max((Math.tan( (data.avgVolume/(255*128) * 1.8) ) * 0.5)), 2)) * 100; 
 
-  if (mental > 0.7 && beat == false) {
-    beat = true;
-    activeCamera++;
-    if (activeCamera > 2) {
-      activeCamera = 0;
-    }
-  } 
-  if (mental < 0.65) {
-    beat = false;
-  }
+  cameraRender();
 
-  console.log(mental);
-  
-  switch (activeCamera) {
-    case 1:
-      camera.position.x = cubes[centerCube].position.x; // X Cos wave around the center cube (I know, I should calculate the center of the group instead)
-      camera.position.z = cubes[centerCube].position.z; // Z Sin wave around center cube, now my camera goes around. PS. 350 is the distance of the camera.
-      camera.position.y = 265 + (120 * mental); // Make the camera bounce on rhythm
-      
-      camera.lookAt(cubes[centerCube].position); // Comment this if you want to enable controls, otherwise it crashes badly
-      break;
-    case 2:
-      camera.position.x = ( (Math.cos(time.getElapsedTime() / 8)) * cubeDimension/1.5) + cubes[centerCube].position.x; // X Cos wave around the center cube (I know, I should calculate the center of the group instead)
-      camera.position.z = ( (Math.sin(time.getElapsedTime() / 8)) * cubeDimension/1.5) + cubes[centerCube].position.z; // Z Sin wave around center cube, now my camera goes around. PS. 350 is the distance of the camera.
-      camera.position.y = 0; // Make the camera bounce on rhythm
 
-      camera.lookAt(cubes[centerCube].position); // Comment this if you want to enable controls, otherwise it crashes badly
-      
-      break;
-    case 0:
-    default:
-      camera.position.x = ( (Math.cos(time.getElapsedTime() / 4)) * 350) + cubes[centerCube].position.x; // X Cos wave around the center cube (I know, I should calculate the center of the group instead)
-      camera.position.z = ( (Math.sin(time.getElapsedTime() / 4)) * 350) + cubes[centerCube].position.z; // Z Sin wave around center cube, now my camera goes around. PS. 350 is the distance of the camera.
-      camera.position.y = 65 + (120 * mental); // Make the camera bounce on rhythm
-      
-      camera.lookAt(cubes[centerCube].position); // Comment this if you want to enable controls, otherwise it crashes badly
-
-      break;
-  }
-
-  // camera.position.x = ( (Math.cos(time.getElapsedTime() / 4)) * 350) + cubes[centerCube].position.x; // X Cos wave around the center cube (I know, I should calculate the center of the group instead)
-  // camera.position.z = ( (Math.sin(time.getElapsedTime() / 4)) * 350) + cubes[centerCube].position.z; // Z Sin wave around center cube, now my camera goes around. PS. 350 is the distance of the camera.
-
-  
   if (audioCtx) {
     analyser.getByteFrequencyData(dataArray);
     
@@ -306,7 +259,7 @@ var render = function () {
       }
     };
 
-    plane.material.ambient.setHSL(0, 0, mental); // HSL
+    plane.material.ambient.setHSL(0, 0, data.mental/100); // HSL
 
 
     // controls.update(); // Uncomment this if you want to enable controls
@@ -332,16 +285,46 @@ var render = function () {
 render(); // Ciao
 
 function cameraRender() {
-  switch (activeCamera) {
-    case 1:
 
+  if (data.mental > data.threshold && beat == false) {
+    beat = true;
+    data.camera++;
+    if (data.camera > 2) {
+      data.camera = 0;
+    }
+  } 
+  if (data.mental < data.threshold) {
+    beat = false;
+  }
+
+
+
+  switch (data.camera) {
+    case 1:
+      camera.position.x = cubes[centerCube].position.x; // X Cos wave around the center cube (I know, I should calculate the center of the group instead)
+      camera.position.z = cubes[centerCube].position.z; // Z Sin wave around center cube, now my camera goes around. PS. 350 is the distance of the camera.
+      camera.position.y = 265 + (120 * data.mental/100); // Make the camera bounce on rhythm
+      
+      camera.lookAt(cubes[centerCube].position); // Comment this if you want to enable controls, otherwise it crashes badly
       break;
     case 2:
+      camera.position.x = ( (Math.cos(time.getElapsedTime() / 8)) * cubeDimension/1.5) + cubes[centerCube].position.x; // X Cos wave around the center cube (I know, I should calculate the center of the group instead)
+      camera.position.z = ( (Math.sin(time.getElapsedTime() / 8)) * cubeDimension/1.5) + cubes[centerCube].position.z; // Z Sin wave around center cube, now my camera goes around. PS. 350 is the distance of the camera.
+      camera.position.y = 0; // Make the camera bounce on rhythm
+
+      camera.lookAt(cubes[centerCube].position); // Comment this if you want to enable controls, otherwise it crashes badly
+      
       break;
+    case 0:
     default:
+      camera.position.x = ( (Math.cos(time.getElapsedTime() / 4)) * 350) + cubes[centerCube].position.x; // X Cos wave around the center cube (I know, I should calculate the center of the group instead)
+      camera.position.z = ( (Math.sin(time.getElapsedTime() / 4)) * 350) + cubes[centerCube].position.z; // Z Sin wave around center cube, now my camera goes around. PS. 350 is the distance of the camera.
+      camera.position.y = 65 + (120 * data.mental/100); // Make the camera bounce on rhythm
+      
+      camera.lookAt(cubes[centerCube].position); // Comment this if you want to enable controls, otherwise it crashes badly
 
       break;
-  }  
+  }
 }
 
 
