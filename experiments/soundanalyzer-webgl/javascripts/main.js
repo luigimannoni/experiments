@@ -218,15 +218,8 @@ var render = function () {
   if (audioCtx) {
     analyser.getByteFrequencyData(dataArray);
     
-    //console.log(dataArray[0]);
-
     // I recycled the mental var, this should go from 0 to 1 and jumps in between with the music
     // It's not an ideal beat detector but it works!
-
-    
-
-    //console.log(avgVolume, mental);
-
 
     for (var i = dataArray.length - 1; i >= 0; i--) {
       // My error here is: I am still doing a full cycle for the streamData array while I should pick only as many channel as my cube matrix

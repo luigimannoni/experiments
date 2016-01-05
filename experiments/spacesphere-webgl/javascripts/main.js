@@ -27,174 +27,47 @@
  * https://github.com/michaelbromley/soundcloud-visualizer)
  */
 
-var audioCtxCheck = window.AudioContext || window.webkitAudioContext;
-if (!audioCtxCheck) {
-  document.getElementById('warning').style.display = 'block';
-  document.getElementById('player').style.display = 'none';
-}
-else {
+var player =  document.getElementById('player');
 
-  var SoundCloudAudioSource = function(player) {
-    var self = this;
-    var analyser;
-    var audioCtx = new (window.AudioContext || window.webkitAudioContext);
-    analyser = audioCtx.createAnalyser();
+var audioCtx = new (window.audioContext || window.webkitAudioContext)();
+var analyser = audioCtx.createAnalyser();
     analyser.fftSize = 256;
-
-    var source = audioCtx.createMediaElementSource(player);
-    source.connect(analyser);
-    analyser.connect(audioCtx.destination);
-
-    var sampleAudioStream = function() {
-      analyser.getByteFrequencyData(self.streamData);
-      // Calculate an overall volume value
-      var total = 0;
-      for (var i = 0; i < 64; i++) { // Get the volume from the first 64 bins
-        total += self.streamData[i];
-      }
-      self.volume = total;
-
-      var totalLow = 0;
-      for (var i = 0; i < 31; i++) { // Get the volume from the first 32 bins
-        totalLow += self.streamData[i];
-      }
-      self.volumeLow = totalLow;
-
-      var totalHi = 0;
-      for (var i = 31; i < 64; i++) { // Get the volume from the second 32 bins
-        totalHi += self.streamData[i];
-      }
-      self.volumeHi = totalHi;
-    };
-
-    setInterval(sampleAudioStream, 20);
-
-    // Public properties and methods
-    this.volume = 0;
-    this.volumeLow = 0;
-    this.volumeHi = 0;
-    this.streamData = new Uint8Array(256);
-    this.playStream = function(streamUrl) {
-        // Get the input stream from the audio element
-        player.addEventListener('ended', function(){
-            self.directStream('coasting');
-        });
-        player.crossOrigin = 'anonymous';
-        player.setAttribute('src', streamUrl);
-        player.play();
-    }
-  };
-  var Visualizer = function() {
-    var audioSource;
-      this.init = function(options) {
-          audioSource = options.audioSource;
-          var container = document.getElementById(options.containerId);        
-      };
-  };
-
-  var SoundcloudLoader = function(player,uiUpdater) {
-    var self = this;
-    var client_id = "26095b994cc185bc665f4c9fcce8f211"; // to get an ID go to http://developers.soundcloud.com/
-    this.sound = {};
-    this.streamUrl = "";
-    this.errorMessage = "";
-    this.player = player;
-
-    /**
-     * Loads the JSON stream data object from the URL of the track (as given in the location bar of the browser when browsing Soundcloud),
-     * and on success it calls the callback passed to it (for example, used to then send the stream_url to the audiosource object).
-     * @param track_url
-     * @param callback
-     */
-    this.loadStream = function(track_url, successCallback, errorCallback) {
-        SC.initialize({
-            client_id: client_id
-        });
-        SC.get('/resolve', { url: track_url }, function(sound) {
-            if (sound.errors) {
-                self.errorMessage = "";
-                for (var i = 0; i < sound.errors.length; i++) {
-                    self.errorMessage += sound.errors[i].error_message + '<br>';
-                }
-                self.errorMessage += 'Make sure the URL has the correct format: https://soundcloud.com/user/title-of-the-track';
-                errorCallback();
-            } else {
-
-                if(sound.kind=="playlist"){
-                    self.sound = sound;
-                    self.streamPlaylistIndex = 0;
-                    self.streamUrl = function(){
-                        return sound.tracks[self.streamPlaylistIndex].stream_url + '?client_id=' + client_id;
-                    }
-                    successCallback();
-                }else{
-                    self.sound = sound;
-                    self.streamUrl = function(){ return sound.stream_url + '?client_id=' + client_id; };
-                    successCallback();
-                }
-            }
-        });
-    };
+var bufferLength = analyser.fftSize;
+var dataArray = new Uint8Array(bufferLength);
 
 
-    this.directStream = function(direction){
-        if(direction=='toggle'){
-            if (this.player.paused) {
-                this.player.play();
-            } else {
-                this.player.pause();
-            }
+var source = audioCtx.createBufferSource();
+source.connect(analyser);
+analyser.connect(audioCtx.destination);
+
+
+var request = new XMLHttpRequest();
+streamUrl = 'javascripts/cb0f73d2846a6b49579434edfd2693f3.ogg';
+
+request.open("GET", streamUrl, true);
+request.responseType = "arraybuffer";
+
+request.onload = function() { 
+    audioCtx.decodeAudioData(
+        request.response,
+        function(b) {
+            audioBuffer = b;
+
+            source.buffer = audioBuffer;
+            source.loop = true;
+
+            source.start(0.0);
+            document.getElementById('loading').style.display = 'none';
+        },
+        
+        function(buffer) {
+          document.getElementById('warning').style.display = 'block';          
         }
-        else if(this.sound.kind=="playlist"){
-            if(direction=='coasting') {
-                this.streamPlaylistIndex++;
-            }else if(direction=='forward') {
-                if(this.streamPlaylistIndex>=this.sound.track_count-1) this.streamPlaylistIndex = 0;
-                else this.streamPlaylistIndex++;
-            }else{
-                if(this.streamPlaylistIndex<=0) this.streamPlaylistIndex = this.sound.track_count-1;
-                else this.streamPlaylistIndex--;
-            }
-            if(this.streamPlaylistIndex>=0 && this.streamPlaylistIndex<=this.sound.track_count-1) {
-               this.player.setAttribute('src',this.streamUrl());
-               this.player.play();
-            }
-        }
-    }
+    );
+}
 
+request.send();
 
-  };
-
-
-  var visualizer = new Visualizer();
-  var player =  document.getElementById('player');
-  var loader = new SoundcloudLoader(player);
-
-  var audioSource = new SoundCloudAudioSource(player);
-  var form = document.getElementById('form');
-  var loadAndUpdate = function(trackUrl) {
-    loader.loadStream(trackUrl,
-        function() {
-            audioSource.playStream(loader.streamUrl());
-        }, function(){});
-  };
-
-  visualizer.init({
-    containerId: 'visualizer',
-    audioSource: audioSource
-  });
-
-
-  // On load, check to see if there is a track token in the URL, and if so, load that automatically
-  if (window.location.hash) {
-    var trackUrl = 'https://soundcloud.com/' + window.location.hash.substr(1);
-    loadAndUpdate(trackUrl);
-  }
-  else {
-  var trackUrl = 'https://soundcloud.com/' + 'mhd-underground/mehdispoz-space-travel-unrelease';
-    loadAndUpdate(trackUrl);      
-  }
-} 
 
 // Since I suck at trigonometry I'll just convert radii into degrees.
 function deg2rad(_degrees) {
@@ -377,88 +250,53 @@ camera.position.z = -110;
 
 var time = new THREE.Clock();
 
-// var bS, rS, glS, tS;
-//   bS = new BrowserStats();
-//   glS = new glStats();
-//   tS = new threeStats( renderer );
-//   rS = new rStats( {
-//     CSSPath: '../../libs/rstats/',
-//     values: {
-//         frame: { caption: 'Total frame time (ms)', over: 16, average: true, avgMs: 100 },
-//         fps: { caption: 'Framerate (FPS)', below: 30 },
-//         calls: { caption: 'Calls (three.js)', over: 3000 },
-//         raf: { caption: 'Time since last rAF (ms)', average: true, avgMs: 100 },
-//         rstats: { caption: 'rStats update (ms)', average: true, avgMs: 100 },
-//         texture: { caption: 'GenTex', average: true, avgMs: 100 },
-//         mental: { caption: 'Mental Var', over: 0.8 },
-//         volumeLow: { caption: 'Volume Low', over: 4000 },
-//         volumeHigh: { caption: 'Volume High', over: 4000 },
-//     },
-//     groups: [
-//         { caption: 'Framerate', values: [ 'fps', 'raf' ] },
-//         { caption: 'Frame Budget', values: [ 'frame', 'texture', 'setup', 'render' ] }
-//     ],
-//     fractions: [
-//         { base: 'frame', steps: [ 'texture', 'setup', 'render' ] }
-//     ],
-//     plugins: [
-//         bS,
-//         tS,
-//         glS
-//     ]
-//   } );
+var data = {
+  volumeHi: 0,
+  volumeLow: 0,
+  streamData: [0, 0],
+  mental: 0,
+  threshold: 75,
+  avgVolume: 0,
+  camera: 0,
+  autocam: true
+};
+
 
 
 var render = function () {
 
-  // rS( 'frame' ).start();
-  //   glS.start();
-  //   
-  //   rS( 'rAF' ).tick();
-  //   rS( 'FPS' ).frame();
-  //   rS( 'setup' ).start();
-  //   rS( 'setup' ).end();
-  // 
-  //   rS( 'render' ).start();
   renderer.render(scene, camera);
   var innerShift = Math.abs(Math.cos(( (time.getElapsedTime()+2.5) / 20))) / 10;
   var outerShift = Math.abs(Math.cos(( (time.getElapsedTime()+5) / 10)));
   var superShift = Math.abs(Math.cos(( (time.getElapsedTime()+5) / 20)));
 
-  if (audioCtxCheck && player.paused == false) {
-    // Audio Context is supported
-    var mental = (Math.min(Math.max((Math.tan(audioSource.volumeHi/6500) * 0.5)), 2));
-    var volume = {
-    low: audioSource.volumeLo,
-    high: audioSource.volumeHi,
-  };
-  //  rS( 'mental' ).set(mental);
-  //  rS( 'volumeLow' ).set(volume.low);
-  //  rS( 'volumeHigh' ).set(volume.high);
-    uniforms.time.value += 0.02 + (mental*0.1);  
-    
-    sphereOuter.scale.set(1+(mental*0.3), 1+(mental*0.3), 1+(mental*0.3));
-  icoEdgeHelper.material.color.setHSL(superShift, 1, mental);
-    particlesInner.material.color.setHSL(superShift, 1, mental);
+  data.avgVolume = 0;
+  for (var i = 0; i < 128; i++) { // Get the volume from the first 128 bins
+    data.avgVolume += dataArray[i];
+  }
+  data.mental = (Math.min(Math.max((Math.tan( (data.avgVolume/(255*128) * 1.8) ) * 0.5)), 2)) * 1; 
 
-  //  rS( 'innerShift' ).set(innerShift);
-  //  rS( 'outerShift' ).set(outerShift);
+
+  if (audioCtx) {
+    // Audio Context is supported
+    analyser.getByteFrequencyData(dataArray);
+    uniforms.time.value += 0.02 + (data.mental*0.1);  
+    
+    sphereOuter.scale.set(1+(data.mental*0.3), 1+(data.mental*0.3), 1+(data.mental*0.3));
+    icoEdgeHelper.material.color.setHSL(superShift, 1, data.mental);
+    particlesInner.material.color.setHSL(superShift, 1, data.mental);
 
     for (var i = 0; i < materials.length; i++) {
-        materials[i].color.setHSL(superShift, 1 / 255 * audioSource.streamData[i], 0.5);
-        materials[i].opacity = 1 / 255 * audioSource.streamData[i];  
+        materials[i].color.setHSL(superShift, 1 / 255 * dataArray[i], 0.5);
+        materials[i].opacity = 1 / 255 * dataArray[i];  
     }
 
-
-    //    rS( 'shuffling' ).start();    
-    if (mental > 0.7) {
+    if (data.mental > 0.7) {
       for( var i = 0; i < materials.length; i++ ) {
         var applyThis = THREE.Math.randInt(0, materials.length-1); 
         icosahedronOuter.material.materials[i] = matCopy[applyThis];
       }
-    }
-    // rS( 'shuffling' ).end();
-    
+    }   
     
   }
   else {
@@ -483,15 +321,8 @@ var render = function () {
   sphereOuter.rotation.z += 0.001;
 
 
-  // rS( 'render' ).end();
-  // rS( 'frame' ).end();
-
   controls.update();
-  
-  // rS( 'rStats' ).start();
-  // rS().update();
-  // rS( 'rStats' ).end();
-  
+    
   requestAnimationFrame(render);  
 };
 

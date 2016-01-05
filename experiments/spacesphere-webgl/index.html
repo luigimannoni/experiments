@@ -6,13 +6,17 @@
 	<script src="../../libs/threejs/threejs.min-r73.js"></script>
 	<script src="../../libs/threejs/controls/TrackballControls.js"></script>
 	<script src="//connect.soundcloud.com/sdk.js"></script>
-	<script src="../../libs/rstats/rStats.js"></script>
-	<script src="../../libs/rstats/rStats.extras.js"></script>	
 	<link href="../../stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
+	<style type="text/css">
+		audio#player {
+			display: none;
+		}
+	</style>
 </head>
 <body>
-	<audio id="player" controls="" autoplay="" preload="" autobuffer=""></audio>
-	<div id="warning">Your browser doesn't support HTML5 AudioContext API, this demo won't run properly. Please use latest Chrome or Firefox on a desktop device</div>
+	<audio id="player" controls="" autoplay="" preload="" autobuffer="" ></audio>
+	<div id="warning">Unable to load audio file. Aborting.</div>
+  	<div id="loading" class="loader">Loading audio file...</div>
 	<script id="fragmentNoise" type="x-shader/x-fragment">
 
 		//
