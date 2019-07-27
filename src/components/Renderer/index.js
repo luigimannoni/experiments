@@ -1,11 +1,7 @@
 import Home from './Home';
-import Babylon from './Babylon';
-import Three from './Three';
-import Matter from './Matter';
+import Experiment from './Experiment';
 
 export default {
   Home,
-  Babylon,
-  Three,
-  Matter,
+  Experiment,
 };

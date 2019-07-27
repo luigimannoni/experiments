@@ -5,21 +5,9 @@ const routes = [
     component: 'Home',
   },
   {
-    path: '/three/:name',
-    component: 'Three',
+    path: '/:type/:name',
+    component: 'Experiment',
   },
-  {
-    path: '/babylon/:name',
-    component: 'Babylon',
-  },
-  {
-    path: '/matter/:name',
-    component: 'Matter',
-  },
-  {
-    path: '/generic/:name',
-    component: 'Generic',
-  },    
 ];
 
 export default routes;
