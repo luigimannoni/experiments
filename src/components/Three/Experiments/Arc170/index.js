@@ -19,7 +19,7 @@ export default class Arc170 extends Base {
     const group = new THREE.Group();
     const loader = new THREE.ObjectLoader();
     
-    loader.load('/assets/arc170/arc170.json', (geometry, materials) => {
+    loader.load(`${process.env.PUBLIC_URL}/assets/arc170/arc170.json`, (geometry, materials) => {
 
       const faceMaterial = new THREE.MeshFaceMaterial( materials );
 
