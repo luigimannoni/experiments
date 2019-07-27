@@ -15,8 +15,10 @@ const Stats = {
 
   unmount: () => {
     // Flush Stats JS
-    statsjs.dom.remove();
-    statsjs = null;
+    if (statsjs !== null) {
+      statsjs.dom.remove();
+      statsjs = null;
+    }
   },
 
   begin: () => {

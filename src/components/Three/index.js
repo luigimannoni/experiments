@@ -1,7 +1,5 @@
-import Base from './Experiments/Base';
-// import Experiment from './Experiment';
+import Arc170 from './Experiments/Arc170';
 
 export default {
-  Base,
-  // Experiment,
+  Arc170,
 };
