@@ -3,10 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "babylonjs": "^4.0.3",
+    "matter-attractors-f": "^0.1.7",
+    "matter-js": "^0.14.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "3.0.1"
+    "react-scripts": "3.0.1",
+    "three": "^0.106.2"
   },
   "scripts": {
     "start": "react-scripts start",
