@@ -1,9 +1,19 @@
-import React, { Component } from 'react';
+import React from 'react';
+import GPU from './Base/GPU';
 
-export default class Three extends Component {
+export default class Three extends GPU {
+  componentDidMount() {
+
+  }
+
   render() {
+    const { match } = this.props;
+    console.log(match);
+    
     return (
-      <p>Three Component</p>
+      <div>
+        <p>Three Component</p>
+      </div>
     );
   }
 }

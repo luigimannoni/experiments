@@ -5,19 +5,19 @@ const routes = [
     component: 'Home',
   },
   {
-    path: '/three',
+    path: '/three/:name',
     component: 'Three',
   },
   {
-    path: '/babylon',
+    path: '/babylon/:name',
     component: 'Babylon',
   },
   {
-    path: '/matter',
+    path: '/matter/:name',
     component: 'Matter',
   },
   {
-    path: '/generic',
+    path: '/generic/:name',
     component: 'Generic',
   },    
 ];
