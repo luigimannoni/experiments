@@ -28,7 +28,6 @@ const PARAMS = {
 
 export default class Molecule extends Base {
   componentDidMount() {
-    console.log(vertex, fragment);
     Base.prototype.componentDidMount();
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 3500);
@@ -67,88 +66,57 @@ export default class Molecule extends Base {
     moon.position.set( 0, 200, 200 );
     scene.add( moon );
 
+
+
     camera.position.z = -120;
-    //camera.lookAt(scene.position);
-
-
 
     const uniforms = {
-      time: { value: 1.0 },
-      scale: { value: new THREE.Vector2(1, 1) },
-      cameraposition: { value: new THREE.Vector3(0., 0., 0.) },
+      time: {
+        value: 1.0
+      },
+      scale: {
+        value: 1.0
+      },
       speed: {
         type: 'f',
         value: 0.1,
       },
-      texScale: {
+      displacement: {
         type: 'f',
         value: 12.0,
       },
-      elevation: {
-        type: 'f',
-        value: 1,
-      },
-      noise_range: {
+      vNoise: {
         type: 'f',
         value: 0,
       },
-      offset: {
-        type: 'f',
-        value: 1,
-      },
-      perlin_passes: {
-        type: 'f',
-        value: 1,
-      },
-      sombrero_amplitude: {
-        type: 'f',
-        value: 0.3,
-      },
-      sombrero_frequency: {
-        type: 'f',
-        value: 10.0,
-      },
-      line_color: {
+      color: {
         type: 'c',
-        value: new THREE.Color('#ffffff'),
+        value: new THREE.Color(PALETTE.DARKBLUE),
       },
-      fogColor: {
+      emissive: {
         type: 'c',
-        value: scene.fog.color,
-      },
-      fogNear: {
-        type: 'f',
-        value: scene.fog.near,
-      },
-      fogFar: {
-        type: 'f',
-        value: scene.fog.far,
-      },
-      screenWidth: {
-        type: 'f',
-        value: window.innerWidth,
-      },
-      screenHeight: {
-        type: 'f',
-        value: window.innerHeight,
-      },
-      fog: {
-        value: true,
-      },
-      pointsize: {
-        type: 'f',
-        value: 25.,
-      },
-      mouse: {
-        value: new THREE.Vector2(.5, .5)
-      }
+        value: new THREE.Color(PALETTE.DARKBLUE),
+      },      
     };
+
+
+
+    // const customShader = new THREE.MeshPhongMaterial({ 
+    //   color: PALETTE.PURPLE,
+    //   specular: PALETTE.DARKBLUE,
+    //   emissive: 0x0,
+    //   shininess: 15,
+    //   opacity: 1,
+    //   uniforms,
+    // });
+
+
+    // customShader.onBeforeCompile = (shader) => {
+    //   shader.vertexShader = vertex;
+    // };
 
     const customShader = new THREE.ShaderMaterial({
       uniforms,
-      fog: true,
-      transparent: true,
-      alphaTest: 0,
       vertexShader: vertex,
       fragmentShader: fragment,
     });
@@ -196,7 +164,6 @@ export default class Molecule extends Base {
     composer.addPass( renderPass );
     composer.addPass( bloomPass );
 
-    console.log(SphereOuterWire.material);
 
     const render = function () {
       Base.prototype.beforeRender();
@@ -226,16 +193,11 @@ export default class Molecule extends Base {
       uniforms.time.value = time / 5;
       const un = Math.cos(time / 1) + 1;
       const unhalf = Math.sin(time / 2);
-      uniforms.elevation.value = 0;
+      uniforms.scale.value = 1;
 
-      uniforms.line_color.value = new THREE.Color(0xffffff);
-      uniforms.sombrero_frequency.value = unhalf * 2 + 15;
-      uniforms.sombrero_amplitude.value = un * 4 + 4;
-      uniforms.elevation.value = unhalf * 2;
-      uniforms.noise_range.value = un * 5 + 2;
+      uniforms.displacement.value = 10;
+      uniforms.vNoise.value = un * 5 + 2;
       uniforms.speed.value = 10;
-      uniforms.offset.value = time;
-      uniforms.cameraposition.value = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z);
 
 
       controls.update();
