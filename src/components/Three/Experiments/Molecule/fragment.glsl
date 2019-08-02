@@ -3,9 +3,12 @@ precision highp int;
 
 uniform vec3 color;
 
+// varying float intensity;
 varying float vNoise;
 
 void main() {
-  gl_FragColor = vec4( color * clamp( vNoise, 0.2, 1.0 ), 1.0 );
+	// vec3 glow = vec3(1., 1., 1.) * intensity;
+
+  gl_FragColor = vec4((color * smoothstep( -2., 2., vNoise )), 1.0 );
 }
   

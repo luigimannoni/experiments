@@ -7,6 +7,7 @@ uniform float time;
 uniform float speed;
 
 varying float vNoise;
+// varying float intensity;
 
 //
 // GLSL textureless classic 3D noise "cnoise",
@@ -112,7 +113,11 @@ float cnoise(vec3 P) {
 }
 
 void main() {
+    // vec3 vNormal = normalize( modelViewMatrix * pos );
+	// vec3 vNormel = normalize( modelViewMatrix * pos );
+	// intensity = pow( c - dot(vNormal, vNormel), p );
+    
     vNoise = cnoise(normalize(position) * scale + ( time * speed ) );
     vec3 pos = position + normal * vNoise * vec3(displacement);
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos,1.0);
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
 }

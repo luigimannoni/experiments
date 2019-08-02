@@ -7,12 +7,12 @@ import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
- 
+
 const vertex = raw('./vertex.glsl');
 const fragment = raw('./fragment.glsl');
 
 const PALETTE = {
-  CYAN: 0x55e7ff, // (85,231,255)
+  CYAN: 0x33a7cc, // (85,231,255)
   BLUE: 0x00ccfd, // (0,204,253)
   PURPLE: 0xff34b3, // (255,52,179)
   DARKBLUE: 0x2011a2, // (32,17,162)
@@ -58,11 +58,11 @@ export default class Molecule extends Base {
     const light = new THREE.AmbientLight( 0x8 );
     scene.add( light );
 
-    const sun = new THREE.PointLight( PALETTE.PURPLE, .5 );
+    const sun = new THREE.PointLight( PALETTE.PURPLE, .2 );
     sun.position.set( 0, -200, -200 );
     scene.add( sun );
 
-    const moon = new THREE.PointLight( PALETTE.DEEPBLUE, 1.5 );
+    const moon = new THREE.PointLight( PALETTE.DEEPBLUE, 0.5 );
     moon.position.set( 0, 200, 200 );
     scene.add( moon );
 
@@ -91,11 +91,11 @@ export default class Molecule extends Base {
       },
       color: {
         type: 'c',
-        value: new THREE.Color(PALETTE.DARKBLUE),
+        value: new THREE.Color(PALETTE.CYAN),
       },
       emissive: {
         type: 'c',
-        value: new THREE.Color(PALETTE.DARKBLUE),
+        value: new THREE.Color(PALETTE.CYAN),
       },      
     };
 
@@ -185,14 +185,12 @@ export default class Molecule extends Base {
 
       SphereOuterWire.material.wireframeLinewidth = Math.abs(Math.cos(time)) * 5;
 
-      bloomPass.exposure = Math.abs(Math.cos(time)) * 1;
-      // bloomPass.threshold = Math.abs(Math.cos(time*2)) * 2;
-      bloomPass.strength = Math.abs(Math.cos(time)) * 2;
-      bloomPass.radius = Math.abs(Math.cos(time*2)) * 1.5;
+      bloomPass.exposure = Math.abs(Math.cos(time)) * .5;
+      bloomPass.strength = Math.abs(Math.cos(time)) * .2 + .5;
 
       uniforms.time.value = time / 5;
       const un = Math.cos(time / 1) + 1;
-      const unhalf = Math.sin(time / 2);
+
       uniforms.scale.value = 1;
 
       uniforms.displacement.value = 10;
