@@ -115,10 +115,17 @@ export default class Molecule extends Base {
     //   shader.vertexShader = vertex;
     // };
 
+    const customUniforms = THREE.UniformsUtils.merge([
+      THREE.ShaderLib.phong.uniforms,
+      uniforms
+    ]);
+    
     const customShader = new THREE.ShaderMaterial({
-      uniforms,
+      uniforms: customUniforms,
       vertexShader: vertex,
-      fragmentShader: fragment,
+      fragmentShader: THREE.ShaderLib.phong.fragmentShader,
+      lights: true,
+      name: 'custom-material'
     });
 
     // Sphere Glass Outer
