@@ -1,13 +1,20 @@
 import { Component } from 'react';
 import Stats from '../../../libs/Stats';
+import GUI from '../../../libs/GUI';
+
 
 export default class Base extends Component {
+  raf = null;
+
   componentDidMount() {
     Stats.mount();
+    GUI.mount();
   }
 
   componentWillUnmount() {
     Stats.unmount();
+    GUI.unmount();
+    cancelAnimationFrame(this.raf);
   }
 
   beforeRender() {
@@ -17,4 +24,9 @@ export default class Base extends Component {
   afterRender() {
     Stats.end();
   }
+
+  // Provide interface to dat.gui;
+  gui() {
+    return GUI.interface();
+  };
 }

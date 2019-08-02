@@ -15,7 +15,7 @@ const PALETTE = {
 
 export default class Arc170 extends Base {
   componentDidMount() {
-    Base.prototype.componentDidMount();
+    super.componentDidMount();
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
@@ -63,14 +63,14 @@ export default class Arc170 extends Base {
     });
 
     const render = () => {
-      Base.prototype.beforeRender();      
+      super.beforeRender();      
 
       controls.update();
       renderer.render(scene, camera);
 
 
-      Base.prototype.afterRender();      
-      requestAnimationFrame(render);  
+      super.afterRender();      
+      super.raf = requestAnimationFrame(render);  
     };
 
     render();

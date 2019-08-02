@@ -1,7 +1,7 @@
 import Arc170 from './Experiments/Arc170';
-import Molecule from './Experiments/Molecule';
+import Displacement from './Experiments/Displacement';
 
 export default {
   Arc170,
-  Molecule,
+  Displacement,
 };

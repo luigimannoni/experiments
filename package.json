@@ -16,7 +16,7 @@
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
     "stats.js": "^0.17.0",
-    "three": "^0.106.2"
+    "three": "^0.107.0"
   },
   "scripts": {
     "start": "react-app-rewired start --scripts-version react-scripts",
@@ -40,6 +40,7 @@
     ]
   },
   "devDependencies": {
-    "babel-loader": "^8.0.5"
+    "babel-loader": "^8.0.5",
+    "node-sass": "^4.12.0"
   }
 }

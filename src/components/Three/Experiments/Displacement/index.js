@@ -26,27 +26,27 @@ const PARAMS = {
   RAD: 2,
 };
 
-export default class Molecule extends Base {
+export default class Displacement extends Base {
+  renderer = null;
+
   componentDidMount() {
-    Base.prototype.componentDidMount();
+    super.componentDidMount();
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 3500);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setClearColor( 0x000000, 0 ); // background
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
-
-    scene.fog = new THREE.Fog( 0x0, 500, 500 );
+    this.renderer = new THREE.WebGLRenderer({ antialias: true });
+    this.renderer.setClearColor( 0x000000, 0 ); // background
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(this.renderer.domElement);
 
     const controls = new TrackballControls( camera );
     controls.target = scene.position;
-    controls.minDistance = 50;
-    controls.maxDistance = 150;
+    controls.minDistance = 125;
+    controls.maxDistance = 225;
 
     // Background
     const background = new THREE.Mesh(
-      new THREE.SphereGeometry( 312, 32, 32 ),
+      new THREE.SphereGeometry( 350, 32, 32 ),
       new THREE.MeshStandardMaterial({ 
         color: PALETTE.DEEPBLUE,
         side: THREE.BackSide,
@@ -58,11 +58,11 @@ export default class Molecule extends Base {
     const light = new THREE.AmbientLight( 0x8 );
     scene.add( light );
 
-    const sun = new THREE.PointLight( PALETTE.PURPLE, .2 );
+    const sun = new THREE.PointLight( PALETTE.PURPLE, .5 );
     sun.position.set( 0, -200, -200 );
     scene.add( sun );
 
-    const moon = new THREE.PointLight( PALETTE.DEEPBLUE, 0.5 );
+    const moon = new THREE.PointLight( PALETTE.DEEPBLUE, 1.5 );
     moon.position.set( 0, 200, 200 );
     scene.add( moon );
 
@@ -91,72 +91,24 @@ export default class Molecule extends Base {
       },
       color: {
         type: 'c',
-        value: new THREE.Color(PALETTE.CYAN),
-      },
-      emissive: {
-        type: 'c',
-        value: new THREE.Color(PALETTE.CYAN),
-      },      
+        value: new THREE.Color(PALETTE.BLUE),
+      },           
     };
 
 
-
-    // const customShader = new THREE.MeshPhongMaterial({ 
-    //   color: PALETTE.PURPLE,
-    //   specular: PALETTE.DARKBLUE,
-    //   emissive: 0x0,
-    //   shininess: 15,
-    //   opacity: 1,
-    //   uniforms,
-    // });
-
-
-    // customShader.onBeforeCompile = (shader) => {
-    //   shader.vertexShader = vertex;
-    // };
-
-    const customUniforms = THREE.UniformsUtils.merge([
-      THREE.ShaderLib.phong.uniforms,
-      uniforms
-    ]);
-    
-    const customShader = new THREE.ShaderMaterial({
-      uniforms: customUniforms,
+    const BlobShader = new THREE.ShaderMaterial({ 
       vertexShader: vertex,
-      fragmentShader: THREE.ShaderLib.phong.fragmentShader,
-      lights: true,
-      name: 'custom-material'
+      fragmentShader: fragment,      
+      uniforms,
     });
 
+
     // Sphere Glass Outer
-    const SphereOuter = new THREE.Mesh(
+    const Blob = new THREE.Mesh(
       new THREE.DodecahedronGeometry( 46, 3 ),
-      customShader
-      // new THREE.MeshPhongMaterial({ 
-      //   color: PALETTE.PURPLE,
-      //   specular: PALETTE.DARKBLUE,
-      //   emissive: 0x0,
-      //   shininess: 15,
-      //   opacity: 1,
-      // })
+      BlobShader
     );
-    scene.add(SphereOuter);
-
-    const SphereOuterWire = new THREE.Mesh(
-      new THREE.DodecahedronGeometry( 46.2, 3 ),
-      customShader
-      // new THREE.MeshPhongMaterial({ 
-      //   color: PALETTE.PURPLE,
-      //   specular: 0xffffff,
-      //   emissive: 0x0,
-      //   shininess: 50,
-      //   opacity: 1,
-      //   wireframe: true,
-      //   wireframeLinewidth: 3,
-      // })
-    );
-    // scene.add(SphereOuterWire);
-
+    scene.add(Blob);
 
     const renderPass = new RenderPass( scene, camera );
     const bloomPass = new UnrealBloomPass( THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
@@ -166,14 +118,14 @@ export default class Molecule extends Base {
     bloomPass.strength = PARAMS.STR;
     bloomPass.radius = PARAMS.RAD;
 
-    const composer = new EffectComposer( renderer );
+    const composer = new EffectComposer( this.renderer );
 
     composer.addPass( renderPass );
     composer.addPass( bloomPass );
 
 
-    const render = function () {
-      Base.prototype.beforeRender();
+    const render = () => {
+      super.beforeRender();
 
       const time = performance.now() / 10e3;
       
@@ -184,13 +136,6 @@ export default class Molecule extends Base {
       moon.position.x = Math.sin(time) * -250;
       moon.position.y = Math.cos(time) * -250;
       moon.position.z = Math.cos(Math.sin(time)) * -250;
-
-
-      SphereOuterWire.rotation.x += Math.abs(Math.cos(time)) / 2e2;
-      SphereOuterWire.rotation.y += Math.abs(Math.sin(time)) / 2e2;
-      SphereOuterWire.rotation.z += Math.abs(Math.sin(Math.cos(time))) / 2e2;
-
-      SphereOuterWire.material.wireframeLinewidth = Math.abs(Math.cos(time)) * 5;
 
       bloomPass.exposure = Math.abs(Math.cos(time)) * .5;
       bloomPass.strength = Math.abs(Math.cos(time)) * .2 + .5;
@@ -208,24 +153,33 @@ export default class Molecule extends Base {
       controls.update();
       composer.render();
 
-      Base.prototype.afterRender();
+      super.afterRender();
       
-      requestAnimationFrame(render);  
+      super.raf = requestAnimationFrame(render);  
     };
 
     render();
 
 
     // Mouse and resize events
-    function onWindowResize() {
+    const onWindowResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      this.renderer.setSize(window.innerWidth, window.innerHeight);
 
       composer.reset();
     }
     window.addEventListener('resize', onWindowResize, false);
 
+
+    // Adds GUI stuff
+    const gui = super.gui();
+    gui.add(uniforms.time, 'value', 0, 100);
+  }
+
+  componentWillUnmount() {
+    super.componentWillUnmount();
+    this.renderer.domElement.remove();
   }
 
   render() {

@@ -3,37 +3,36 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Renderer from './components/Renderer';
 
 import routes from './routes';
-import './App.css';
+import urls from './urls';
+import './App.scss';
 
 export default class App extends Component {
   render() {
     return (
       <Router>
-        <div>
+        <nav className="site-navigator">
           <ul>
-            {routes.map((route, index) => (
+            {urls.map((url, index) => (
               <li key={index}>
-                <Link to={route.path}>{route.component}</Link>
+                <Link to={url.path}>{url.name}</Link>
               </li>
             ))}
           </ul>
-
-          <div className="App">
-            {routes.map((route, index) => {
-              const ComponentName = Renderer[route.component];
-              
-              return (
-                <Route
-                  key={index}
-                  path={route.path}
-                  exact={route.exact}
-                  component={ComponentName}
-                />
-              )
-            })}
-          </div>
-          
-          <hr />
+        </nav> 
+        
+        <div className="App">
+          {routes.map((route, index) => {
+            const ComponentName = Renderer[route.component];
+            
+            return (
+              <Route
+                key={index}
+                path={route.path}
+                exact={route.exact}
+                component={ComponentName}
+              />
+            )
+          })}
         </div>
       </Router>
     );
