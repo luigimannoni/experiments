@@ -19,10 +19,11 @@ const COLORS = {
   BACKGROUND: Palette.Synth.dark,
   LIGHT_1: Palette.Synth.normal,
   LIGHT_2: Palette.Synth.darker,
-  IRRADIATE: false,
+  EQUALIZE: false,
 };
 
-const PARAMS = {
+const BLOOM = {
+  ANIMATE: true,
   EXP: 1,
   STR: 0.9,
   THRES: 0,
@@ -76,10 +77,6 @@ export default class Displacement extends Base {
     const l2 = new THREE.PointLight(COLORS.LIGHT_2, 1.5);
     l2.position.set(0, 200, 200);
     scene.add(l2);
-
-    const l3 = new THREE.PointLight(COLORS.PLASMA, 1.25);
-    l3.position.set(0, 0, 0);
-    scene.add(l3);
 
     camera.position.z = -120;
 
@@ -137,10 +134,9 @@ export default class Displacement extends Base {
       0.85,
     );
 
-    bloomPass.exposure = PARAMS.EXP;
-    bloomPass.threshold = PARAMS.THRES;
-    bloomPass.strength = PARAMS.STR;
-    bloomPass.radius = PARAMS.RAD;
+    bloomPass.threshold = BLOOM.THRES;
+    bloomPass.strength = BLOOM.STR;
+    bloomPass.radius = BLOOM.RAD;
 
     const composer = new EffectComposer(this.renderer);
 
@@ -161,20 +157,13 @@ export default class Displacement extends Base {
       l2.position.y = Math.cos(time) * -250;
       l2.position.z = Math.cos(Math.sin(time)) * -250;
 
-      bloomPass.exposure = Math.abs(Math.cos(time)) * 0.5;
-      bloomPass.strength = Math.abs(Math.cos(time)) * 0.2 + 0.5;
+      if (BLOOM.ANIMATE) {
+        this.renderer.toneMappingExposure = Math.abs(Math.cos(time) / 2) + 0.5;
+        bloomPass.strength = Math.abs(Math.cos(time)) + 0.5;
+        bloomPass.radius = Math.abs(Math.sin(time)) + 0.5;
+      }
 
       uniforms.time.value = time / 5;
-
-      if (COLORS.IRRADIATE) {
-        l1.visible = false;
-        l2.visible = false;
-        l3.visible = true;
-      } else {
-        l1.visible = true;
-        l2.visible = true;
-        l3.visible = false;
-      }
 
       controls.update();
       composer.render();
@@ -199,9 +188,13 @@ export default class Displacement extends Base {
 
     const recolor = () => {
       uniforms.color.value = new THREE.Color(COLORS.PLASMA);
-      l1.color = new THREE.Color(COLORS.LIGHT_1);
-      l2.color = new THREE.Color(COLORS.LIGHT_2);
-      l3.color = new THREE.Color(COLORS.PLASMA);
+      if (COLORS.EQUALIZE) {
+        l1.color = new THREE.Color(COLORS.PLASMA);
+        l2.color = new THREE.Color(COLORS.PLASMA);
+      } else {
+        l1.color = new THREE.Color(COLORS.LIGHT_1);
+        l2.color = new THREE.Color(COLORS.LIGHT_2);
+      }
     };
 
     // Adds GUI stuff
@@ -219,16 +212,15 @@ export default class Displacement extends Base {
     guiColor.addColor(COLORS, 'PLASMA').name('Plasma').onChange(recolor);
     guiColor.addColor(COLORS, 'LIGHT_1').name('Env light 1').onChange(recolor);
     guiColor.addColor(COLORS, 'LIGHT_2').name('Env light 2').onChange(recolor);
-    guiColor.add(COLORS, 'IRRADIATE').name('Irradiate from plasma').onChange(recolor);
+    guiColor.add(COLORS, 'EQUALIZE').name('Env matches plasma').onChange(recolor);
     guiColor.open();
 
     const guiBloom = gui.addFolder('Bloom Effect');
-    guiBloom.add(uniforms.lowStep, 'value', -2, 0).name('Starting elevation');
-    guiBloom.add(uniforms.hiStep, 'value', 0, 2).name('Smoothness');
-    guiBloom.addColor(COLORS, 'PLASMA').name('Plasma').onChange(recolor);
-    guiBloom.addColor(COLORS, 'LIGHT_1').name('Env light 1').onChange(recolor);
-    guiBloom.addColor(COLORS, 'LIGHT_2').name('Env light 2').onChange(recolor);
-    guiBloom.add(COLORS, 'LIGHT_2').name('Irradiate from plasma').onChange(recolor);
+    guiBloom.add(this.renderer, 'toneMappingExposure', 0, 1).step(0.001).name('Exposure').listen();
+    guiBloom.add(bloomPass, 'threshold', 0, 2).step(0.001).name('Cut threshold');
+    guiBloom.add(bloomPass, 'strength', 0, 2).step(0.1).name('Strength').listen();
+    guiBloom.add(bloomPass, 'radius', 0, 2).step(0.1).name('Radius').listen();
+    guiBloom.add(BLOOM, 'ANIMATE').name('Animate bloom');
     guiBloom.open();
   }
 
