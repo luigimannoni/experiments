@@ -4,7 +4,10 @@ let gui = null;
 
 const GUI = {
   mount: () => {
-    gui = new dat.GUI({ resizable: false });
+    gui = new dat.GUI({
+      width: 340,
+      resizable: false,
+    });
     gui.useLocalStorage = true;
   },
 

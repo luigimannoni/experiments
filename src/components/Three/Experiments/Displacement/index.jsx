@@ -17,8 +17,9 @@ const COLORS = {
   LIGHT: Palette.Synth.lighter,
   PLASMA: Palette.Synth.light,
   BACKGROUND: Palette.Synth.dark,
-  OMNI_LIGHT_1: Palette.Synth.normal,
-  OMNI_LIGHT_2: Palette.Synth.darker,
+  LIGHT_1: Palette.Synth.normal,
+  LIGHT_2: Palette.Synth.darker,
+  IRRADIATE: false,
 };
 
 const PARAMS = {
@@ -58,7 +59,7 @@ export default class Displacement extends Base {
     const background = new THREE.Mesh(
       new THREE.SphereGeometry(350, 32, 32),
       new THREE.MeshStandardMaterial({
-        color: COLORS.OMNI_LIGHT_2,
+        color: COLORS.LIGHT_2,
         side: THREE.BackSide,
       }),
     );
@@ -68,14 +69,17 @@ export default class Displacement extends Base {
     const light = new THREE.AmbientLight(0x8);
     scene.add(light);
 
-    const sun = new THREE.PointLight(COLORS.OMNI_LIGHT_1, 0.5);
-    sun.position.set(0, -200, -200);
-    scene.add(sun);
+    const l1 = new THREE.PointLight(COLORS.LIGHT_1, 0.5);
+    l1.position.set(0, -200, -200);
+    scene.add(l1);
 
-    const moon = new THREE.PointLight(COLORS.OMNI_LIGHT_2, 1.5);
-    moon.position.set(0, 200, 200);
-    scene.add(moon);
+    const l2 = new THREE.PointLight(COLORS.LIGHT_2, 1.5);
+    l2.position.set(0, 200, 200);
+    scene.add(l2);
 
+    const l3 = new THREE.PointLight(COLORS.PLASMA, 1.25);
+    l3.position.set(0, 0, 0);
+    scene.add(l3);
 
     camera.position.z = -120;
 
@@ -88,11 +92,19 @@ export default class Displacement extends Base {
       },
       speed: {
         type: 'f',
-        value: 0.1,
+        value: 20.0,
       },
       displacement: {
         type: 'f',
         value: 12.0,
+      },
+      lowStep: {
+        type: 'f',
+        value: -1,
+      },
+      hiStep: {
+        type: 'f',
+        value: 1,
       },
       vNoise: {
         type: 'f',
@@ -103,7 +115,6 @@ export default class Displacement extends Base {
         value: new THREE.Color(COLORS.PLASMA),
       },
     };
-
 
     const BlobShader = new THREE.ShaderMaterial({
       vertexShader: vertex,
@@ -142,26 +153,28 @@ export default class Displacement extends Base {
 
       const time = performance.now() / 10e3;
 
-      sun.position.x = Math.sin(Math.sin(time)) * 250;
-      sun.position.y = Math.sin(Math.cos(time)) * 250;
-      sun.position.z = Math.sin(time) * 250;
+      l1.position.x = Math.sin(Math.sin(time)) * 250;
+      l1.position.y = Math.sin(Math.cos(time)) * 250;
+      l1.position.z = Math.sin(time) * 250;
 
-      moon.position.x = Math.sin(time) * -250;
-      moon.position.y = Math.cos(time) * -250;
-      moon.position.z = Math.cos(Math.sin(time)) * -250;
+      l2.position.x = Math.sin(time) * -250;
+      l2.position.y = Math.cos(time) * -250;
+      l2.position.z = Math.cos(Math.sin(time)) * -250;
 
       bloomPass.exposure = Math.abs(Math.cos(time)) * 0.5;
       bloomPass.strength = Math.abs(Math.cos(time)) * 0.2 + 0.5;
 
       uniforms.time.value = time / 5;
-      const un = Math.cos(time / 1) + 1;
 
-      uniforms.scale.value = 1;
-
-      uniforms.displacement.value = 10;
-      uniforms.vNoise.value = un * 5 + 2;
-      uniforms.speed.value = 10;
-
+      if (COLORS.IRRADIATE) {
+        l1.visible = false;
+        l2.visible = false;
+        l3.visible = true;
+      } else {
+        l1.visible = true;
+        l2.visible = true;
+        l3.visible = false;
+      }
 
       controls.update();
       composer.render();
@@ -184,13 +197,39 @@ export default class Displacement extends Base {
     };
     window.addEventListener('resize', onWindowResize, false);
 
+    const recolor = () => {
+      uniforms.color.value = new THREE.Color(COLORS.PLASMA);
+      l1.color = new THREE.Color(COLORS.LIGHT_1);
+      l2.color = new THREE.Color(COLORS.LIGHT_2);
+      l3.color = new THREE.Color(COLORS.PLASMA);
+    };
 
     // Adds GUI stuff
     const gui = super.gui();
-    gui.add(uniforms.time, 'value', 0, 1).listen();
 
-    gui.addColor(COLORS, 'LIGHT');
-    gui.addColor(uniforms.color, 'value');
+    const guiDisplacement = gui.addFolder('Displacement');
+    guiDisplacement.add(uniforms.scale, 'value', 0, 2).step(0.01).name('Resolution');
+    guiDisplacement.add(uniforms.displacement, 'value', 0, 110).name('Elevation');
+    guiDisplacement.add(uniforms.speed, 'value', 10, 50).name('Morph speed');
+    guiDisplacement.open();
+
+    const guiColor = gui.addFolder('Color Settings');
+    guiColor.add(uniforms.lowStep, 'value', -2, 0).name('Starting elevation');
+    guiColor.add(uniforms.hiStep, 'value', 0, 2).name('Smoothness');
+    guiColor.addColor(COLORS, 'PLASMA').name('Plasma').onChange(recolor);
+    guiColor.addColor(COLORS, 'LIGHT_1').name('Env light 1').onChange(recolor);
+    guiColor.addColor(COLORS, 'LIGHT_2').name('Env light 2').onChange(recolor);
+    guiColor.add(COLORS, 'IRRADIATE').name('Irradiate from plasma').onChange(recolor);
+    guiColor.open();
+
+    const guiBloom = gui.addFolder('Bloom Effect');
+    guiBloom.add(uniforms.lowStep, 'value', -2, 0).name('Starting elevation');
+    guiBloom.add(uniforms.hiStep, 'value', 0, 2).name('Smoothness');
+    guiBloom.addColor(COLORS, 'PLASMA').name('Plasma').onChange(recolor);
+    guiBloom.addColor(COLORS, 'LIGHT_1').name('Env light 1').onChange(recolor);
+    guiBloom.addColor(COLORS, 'LIGHT_2').name('Env light 2').onChange(recolor);
+    guiBloom.add(COLORS, 'LIGHT_2').name('Irradiate from plasma').onChange(recolor);
+    guiBloom.open();
   }
 
   componentWillUnmount() {
