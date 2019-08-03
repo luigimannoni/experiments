@@ -4,8 +4,6 @@ import GUI from '../../../libs/GUI';
 
 
 export default class Base extends Component {
-  raf = null;
-
   componentDidMount() {
     Stats.mount();
     GUI.mount();
@@ -28,5 +26,5 @@ export default class Base extends Component {
   // Provide interface to dat.gui;
   gui() {
     return GUI.interface();
-  };
+  }
 }

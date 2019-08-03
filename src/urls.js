@@ -24,6 +24,6 @@ const urls = [
     name: 'Javascript',
     children: three,
   },
-]
+];
 
 export default urls;

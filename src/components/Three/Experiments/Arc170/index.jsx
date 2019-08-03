@@ -1,9 +1,9 @@
 import React from 'react';
-import Base from '../Base';
-
 import * as THREE from 'three';
-import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
+import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+
+import Base from '../Base';
 
 const PALETTE = {
   CYAN: 0x55e7ff, // (85,231,255)

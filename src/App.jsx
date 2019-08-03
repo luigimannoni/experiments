@@ -1,3 +1,4 @@
+/* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Renderer from './components/Renderer';
@@ -25,24 +26,23 @@ export default class App extends Component {
               </li>
             ))}
           </ul>
-        </nav> 
-        
+        </nav>
+
         <div className="App">
           {routes.map((route, index) => {
             const ComponentName = Renderer[route.component];
-            
+
             return (
               <Route
-                key={index}
+                key={`route-${index}`}
                 path={route.path}
                 exact={route.exact}
                 component={ComponentName}
               />
-            )
+            );
           })}
         </div>
       </Router>
     );
   }
 }
-

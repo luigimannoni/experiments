@@ -6,7 +6,7 @@ const Stats = {
   mount: () => {
     statsjs = new StatsJS();
     statsjs.showPanel(0);
-    document.body.appendChild( statsjs.dom );
+    document.body.appendChild(statsjs.dom);
     statsjs.dom.style.top = 'auto';
     statsjs.dom.style.left = 'auto';
     statsjs.dom.style.bottom = '30px';
@@ -28,6 +28,6 @@ const Stats = {
   end: () => {
     statsjs.end();
   },
-}
+};
 
 export default Stats;

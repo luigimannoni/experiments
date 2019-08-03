@@ -1,10 +1,10 @@
 import * as dat from 'dat.gui';
 
-let gui = null
+let gui = null;
 
 const GUI = {
   mount: () => {
-    gui = new dat.GUI();
+    gui = new dat.GUI({ resizable: false });
     gui.useLocalStorage = true;
   },
 
@@ -17,6 +17,6 @@ const GUI = {
   },
 
   interface: () => gui,
-}
+};
 
 export default GUI;
