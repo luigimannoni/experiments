@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Three from '../Three';
+import Javascript from '../Javascript';
 
 export default class Experiment extends Component {
   static pascalCase(s) {
@@ -15,6 +16,7 @@ export default class Experiment extends Component {
   render() {
     const ComponentMap = {
       Three,
+      Javascript,
     };
 
     const { match } = this.props;

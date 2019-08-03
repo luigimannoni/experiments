@@ -11,6 +11,23 @@ const three = [
   },
 ];
 
+const babylon = [
+  {
+    name: 'Image postprocessing shader',
+    path: '/babylon/image-postprocessing',
+    component: 'Experiment',
+  },
+];
+
+
+const javascript = [
+  {
+    name: 'MatterJS Simple Repulsor',
+    path: '/javascript/matter-repulsor',
+    component: 'Experiment',
+  },
+];
+
 const urls = [
   {
     name: 'Three',
@@ -18,11 +35,11 @@ const urls = [
   },
   {
     name: 'Babylon',
-    children: three,
+    children: babylon,
   },
   {
     name: 'Javascript',
-    children: three,
+    children: javascript,
   },
 ];
 
