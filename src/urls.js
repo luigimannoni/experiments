@@ -1,8 +1,4 @@
-const urls = [
-  {
-    path: '/',
-    component: 'Home',
-  },
+const three = [
   {
     name: 'Displacement shader',
     path: '/three/displacement',
@@ -14,5 +10,20 @@ const urls = [
     component: 'Experiment',
   },
 ];
+
+const urls = [
+  {
+    name: 'Three',
+    children: three,
+  },
+  {
+    name: 'Babylon',
+    children: three,
+  },
+  {
+    name: 'Javascript',
+    children: three,
+  },
+]
 
 export default urls;

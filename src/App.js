@@ -13,8 +13,15 @@ export default class App extends Component {
         <nav className="site-navigator">
           <ul>
             {urls.map((url, index) => (
-              <li key={index}>
-                <Link to={url.path}>{url.name}</Link>
+              <li key={`main-nav-${index}`}>
+                <span>{url.name}</span>
+                <ul>
+                  {url.children.map((child, index) => (
+                    <li key={`sub-nav-${url.name}-${index}`}>
+                      <Link to={child.path}>{child.name}</Link>
+                    </li>
+                  ))}
+                </ul>
               </li>
             ))}
           </ul>
