@@ -2,15 +2,21 @@ import React, { Component } from 'react';
 import Matter from 'matter-js';
 import MatterAttractors from 'matter-attractors-f';
 import GUI from '../../../../libs/GUI';
+import Screen from '../../../../libs/Screen';
 
 export default class MatterRepulsor extends Component {
+  constructor(...args) {
+    super(...args);
+    this.engine = null;
+    this.renderer = null;
+  }
+
   componentDidMount() {
     Matter.use(MatterAttractors);
 
     const {
       Engine,
       Render,
-      Events,
       Composite,
       Composites,
       Constraint,
@@ -19,7 +25,6 @@ export default class MatterRepulsor extends Component {
       World,
       Bodies,
       Body,
-      Common,
     } = Matter;
 
     const worldsize = {
@@ -46,16 +51,16 @@ export default class MatterRepulsor extends Component {
     };
 
 
-    const engine = Engine.create({
+    this.engine = Engine.create({
       positionIterations: 20,
       velocityIterations: 20,
       constraintIterations: 1,
     });
-    engine.world.gravity.y = 0;
+    this.engine.world.gravity.y = 0;
 
-    const render = Render.create({
+    this.renderer = Render.create({
       element: document.body,
-      engine,
+      engine: this.engine,
       options: {
         width: worldsize.width,
         height: worldsize.height,
@@ -210,8 +215,8 @@ export default class MatterRepulsor extends Component {
     });
 
     // add mouse control
-    const mouse = Mouse.create(render.canvas);
-    const mouseConstraint = MouseConstraint.create(engine, {
+    const mouse = Mouse.create(this.renderer.canvas);
+    const mouseConstraint = MouseConstraint.create(this.engine, {
       mouse,
       constraint: {
         stiffness: 0.2,
@@ -221,15 +226,15 @@ export default class MatterRepulsor extends Component {
       },
     });
 
-    World.add(engine.world, [
+    World.add(this.engine.world, [
       grid,
       ...walls,
       logo,
       mouseConstraint,
     ]);
 
-    Engine.run(engine);
-    Render.run(render);
+    Engine.run(this.engine);
+    Render.run(this.renderer);
 
     function setRandomForce() {
       const time = performance.now();
@@ -277,33 +282,7 @@ export default class MatterRepulsor extends Component {
         });
       },
       switchFullscreen: () => {
-        const doc = document;
-        const elm = doc.documentElement;
-        if (elm.requestFullscreen) {
-          if (!doc.fullscreenElement) {
-            elm.requestFullscreen();
-          } else {
-            doc.exitFullscreen();
-          }
-        } else if (elm.mozRequestFullScreen) {
-          if (!doc.mozFullScreen) {
-            elm.mozRequestFullScreen();
-          } else {
-            doc.mozCancelFullScreen();
-          }
-        } else if (elm.msRequestFullscreen) {
-          if (!doc.msFullscreenElement) {
-            elm.msRequestFullscreen();
-          } else {
-            doc.msExitFullscreen();
-          }
-        } else if (elm.webkitRequestFullscreen) {
-          if (!doc.webkitIsFullscreen) {
-            elm.webkitRequestFullscreen();
-          } else {
-            doc.webkitCancelFullscreen();
-          }
-        }
+        Screen.ToggleFullscreen();
       },
     };
 
@@ -325,10 +304,10 @@ export default class MatterRepulsor extends Component {
     guiFolder.grid.add(settings, 'damping', 0, 1).step(0.0001).onChange(updateFuncs.dotsConstraints).name('Damping');
     guiFolder.grid.open();
 
-    guiFolder.render.add(engine.timing, 'timeScale', 1e-3, 1.2).step(1e-3).listen().name('Render speed');
-    guiFolder.render.add(engine.world.gravity, 'scale', 0, 0.001).step(0.0001).name('Gravity force');
-    guiFolder.render.add(engine.world.gravity, 'x', -1, 1).step(0.01).name('Gravity horiz');
-    guiFolder.render.add(engine.world.gravity, 'y', -1, 1).step(0.01).name('Gravity vert');
+    guiFolder.render.add(this.engine.timing, 'timeScale', 1e-3, 1.2).step(1e-3).listen().name('Render speed');
+    guiFolder.render.add(this.engine.world.gravity, 'scale', 0, 0.001).step(0.0001).name('Gravity force');
+    guiFolder.render.add(this.engine.world.gravity, 'x', -1, 1).step(0.01).name('Gravity horiz');
+    guiFolder.render.add(this.engine.world.gravity, 'y', -1, 1).step(0.01).name('Gravity vert');
     guiFolder.render.add(settings, 'randomForceMultiplier', 0, 1).step(0.01).name('Random force');
     guiFolder.render.open();
 
@@ -342,6 +321,19 @@ export default class MatterRepulsor extends Component {
 
 
     updateFuncs.bgColor();
+  }
+
+  componentWillUnmount() {
+    GUI.unmount();
+    Matter.Render.stop(this.renderer);
+    Matter.World.clear(this.engine.world);
+    Matter.Engine.clear(this.engine);
+
+    // Free mem
+    this.renderer.canvas.remove();
+    this.renderer.canvas = null;
+    this.renderer.context = null;
+    this.renderer.textures = {};
   }
 
   render() {

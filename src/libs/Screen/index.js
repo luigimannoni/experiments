@@ -26,7 +26,7 @@ const ToggleFullscreen = () => {
       doc.webkitCancelFullscreen();
     }
   }
-}
+};
 
 export default {
   ToggleFullscreen,

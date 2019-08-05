@@ -5,10 +5,15 @@ const three = [
     component: 'Experiment',
   },
   {
-    name: 'ARC-170 Model Loader',
+    name: 'ARC-170 GLTF Model Loader',
     path: '/three/arc170',
     component: 'Experiment',
   },
+  {
+    name: 'BBC Sphere',
+    path: '/three/bbc-sphere',
+    component: 'Experiment',
+  },  
 ];
 
 const babylon = [

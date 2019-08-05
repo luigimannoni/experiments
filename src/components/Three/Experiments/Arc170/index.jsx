@@ -7,6 +7,11 @@ import Base from '../Base';
 import Palette from '../../../../libs/Palette/index';
 
 export default class Arc170 extends Base {
+  constructor(...args) {
+    super(...args);
+    this.renderer = null;
+  }
+
   componentDidMount() {
     super.componentDidMount();
 
@@ -19,13 +24,13 @@ export default class Arc170 extends Base {
     );
 
     camera.position.x = -220;
-    const renderer = new THREE.WebGLRenderer();
-    renderer.setClearColor(0x222222, 0); // background
+    this.renderer = new THREE.WebGLRenderer();
+    this.renderer.setClearColor(0x222222, 0);
 
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(this.renderer.domElement);
 
-    const controls = new TrackballControls(camera);
+    const controls = new TrackballControls(camera, this.renderer.domElement);
     controls.target = scene.position;
     controls.minDistance = 50;
     controls.maxDistance = 300;
@@ -77,7 +82,7 @@ export default class Arc170 extends Base {
       l2.position.z = Math.cos(Math.sin(time)) * -250;
 
       controls.update();
-      renderer.render(scene, camera);
+      this.renderer.render(scene, camera);
 
 
       super.afterRender();
@@ -91,9 +96,14 @@ export default class Arc170 extends Base {
     const onWindowResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      this.renderer.setSize(window.innerWidth, window.innerHeight);
     };
     window.addEventListener('resize', onWindowResize, false);
+  }
+
+  componentWillUnmount() {
+    super.componentWillUnmount();
+    this.renderer.domElement.remove();
   }
 
   render() {
