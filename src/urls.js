@@ -13,7 +13,7 @@ const three = [
     name: 'BBC Sphere',
     path: '/three/bbc-sphere',
     component: 'Experiment',
-  },  
+  },
 ];
 
 const babylon = [
