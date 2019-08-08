@@ -1,0 +1,67 @@
+/* Welcome to Compass.
+ * In this file you should write your main styles. (or centralize your imports)
+ * Import this file using the following HTML or equivalent:
+ * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+
+@import "compass/reset";
+@import "compass/css3";
+
+body {
+	margin: 0;
+}
+canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	z-index:0;
+}
+audio {
+	position:fixed;
+	bottom:30px;
+	z-index:5;
+	width:100%;
+	left: 0;
+	right: 0;
+}
+#warning {
+	font: 700 12px Consolas, system, monospace;
+	color: #fff;
+	background: #c82222;
+	position: fixed;
+	bottom: 45%;
+	left: 0;
+	right: 0;
+	z-index: 10001;
+	text-align: center;
+	padding: 20px;
+	display: none;
+}
+.loader {
+	font: 700 12px Consolas, system, monospace;
+	color: #fff;
+	background: #2222c8;
+	position: fixed;
+	bottom: 45%;
+	left: 0;
+	right: 0;
+	z-index: 10001;
+	text-align: center;
+	padding: 20px;
+	display: block;
+	@include animation(pulse 1s linear alternate infinite);
+}
+@include keyframes(pulse) {
+	0% {
+		opacity: 0.7;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+// dat.GUI CSS
+.dg.ac {
+	z-index: 100 !important;
+}

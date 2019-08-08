@@ -1,22 +1,28 @@
-luigimannoni.github.io
-======================
+# WebGL/Javascript Experiments 🧪🔬
 
-Collection of HTML5 experiments.
-By [Luigi Mannoni](http://www.luigimannoni.com)
+## Quick start
 
-* Follow on [Twitter](https://twitter.com/mashermack)
-* [StackOverflow](http://stackoverflow.com/users/1774938/mack)
+As usual `npm install` and `npm start` to run the app in the development mode.
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-###WebGL Experiments
-* [Soundcloud analyzer](http://luigimannoni.github.io/experiments/soundanalyzer-webgl/)
-* [GLSL Shaders on a Cube](http://luigimannoni.github.io/experiments/cubeshaders-webgl/)
-* [Cubemapping with interactive mouse camera](http://luigimannoni.github.io/experiments/cubemouse-webgl/)
-* [Spiral generated through particles](http://luigimannoni.github.io/experiments/spiral-webgl/)
-* [ARC-170 Spaceship JSON model loader](http://luigimannoni.github.io/experiments/arc170-webgl/)
-* [Globe/Molecule (wireframed)](http://luigimannoni.github.io/experiments/molecule-webgl/)
-* [Globe/Particles (plastic)](http://luigimannoni.github.io/experiments/multisphere-webgl/)
-* [Hexagon Globe](http://luigimannoni.github.io/experiments/hexoplanet-webgl/)
-* [Another soundcloud analyzer (WIP)](http://luigimannoni.github.io/experiments/hexagonplane-webgl/)
+Run `npm run build` builds the app for production to the `build` folder.
 
-###HTML5 Experiments
-* [Soundcloud analyzer](http://luigimannoni.github.io/experiments/soundanalyzer-css3/)
+----
+
+## List of Experiments
+
+Below a list of the experiments contained in this repository and hosted on github pages
+
+### Three.js
+
+#### Displacement Shader
+
+#### GLTF Loader
+
+### Babylonjs
+
+#### Simple postprocessing image shader
+
+### Generic Javascript experiments
+
+#### MatterJS Repulsor

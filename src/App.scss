@@ -1,0 +1,88 @@
+$baseline: 30px;
+
+body > canvas {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 0;
+}
+
+// Dat GUI
+.dg.ac {
+  z-index: 5;
+}
+
+nav.site-navigator {
+  background-color: rgba(#333, .6);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  line-height: $baseline;
+  z-index: 100;
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+
+    li {
+      padding: 0;
+      margin: 0;
+      position: relative;
+      
+      > ul {
+        flex-direction: column;
+        position: absolute;
+        bottom: 100%;
+        left: 0;
+        width: 18rem;
+        background-color: rgba(#333, .6);
+        display: none;
+      }
+
+      &:hover {
+        span {
+          color: #333;
+          background-color: #aaa; 
+        }
+        > ul {
+          display: block;
+        }
+      }
+
+      a,
+      span {
+        padding: 0 .6rem;
+        line-height: $baseline;
+        display: block;
+        color: #fff;
+        text-transform: uppercase;
+        text-decoration: none;
+        font-weight: bold;
+        font-family: 'Share Tech Mono', 'Consolas', monospace;
+        font-size: .98rem;
+        transition: all 150ms linear;
+
+        &:hover {
+          color: #333;
+          background-color: #fff; 
+        }
+      }
+
+      span {
+        padding-right: 1.2rem;
+
+        &::after {
+          content: ' ▴';
+          position: absolute;
+          top: -5px;
+          right: 5px;
+        }
+      }
+    }
+  }
+}
