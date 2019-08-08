@@ -39,33 +39,33 @@ export default class Arc170 extends Base {
     const background = new THREE.Mesh(
       new THREE.SphereGeometry(312, 32, 32),
       new THREE.MeshStandardMaterial({
-        color: Palette.Lava.lighter,
+        color: 0x0,
         side: THREE.BackSide,
       }),
     );
     scene.add(background);
 
     // Lights
-    const light = new THREE.AmbientLight(0x8);
+    const light = new THREE.AmbientLight(0xffffff, 2.0);
     scene.add(light);
 
-    const l1 = new THREE.PointLight(Palette.Lava.normal, 0.5);
+    const l1 = new THREE.PointLight(0xffffff, 0.5);
     l1.position.set(0, -200, -200);
     scene.add(l1);
 
-    const l2 = new THREE.PointLight(Palette.Lava.dark, 1.5);
+    const l2 = new THREE.PointLight(0xffffff, 1.5);
     l2.position.set(0, 200, 200);
     scene.add(l2);
 
 
     // Mesh
     const loader = new GLTFLoader();
-    loader.load(`${process.env.PUBLIC_URL}/assets/arc170/arc170.glb`, (gltf) => {
+    loader.load(`${process.env.PUBLIC_URL}/assets/arc170/scene.gltf`, (gltf) => {
       const model = gltf;
 
-      model.scene.scale.x = 100;
-      model.scene.scale.y = 100;
-      model.scene.scale.z = 100;
+      model.scene.scale.x = 0.15;
+      model.scene.scale.y = 0.15;
+      model.scene.scale.z = 0.15;
       scene.add(model.scene);
     });
 
