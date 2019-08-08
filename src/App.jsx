@@ -1,40 +1,28 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { HashRouter, Route, Link } from 'react-router-dom';
+import { HashRouter, Route } from 'react-router-dom';
 import Renderer from './components/Renderer';
+import slugify from 'slugify';
 
 import routes from './routes';
 import urls from './urls';
 import './App.scss';
+import Navigator from './components/Navigator';
 
 export default class App extends Component {
   render() {
     return (
       <HashRouter basename="/">
-        <nav className="site-navigator">
-          <ul>
-            {urls.map((url, index) => (
-              <li key={`main-nav-${index}`}>
-                <span>{url.name}</span>
-                <ul>
-                  {url.children.map((child, index) => (
-                    <li key={`sub-nav-${url.name}-${index}`}>
-                      <Link to={child.path}>{child.name}</Link>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <Navigator links={urls} />
 
         <div className="App">
-          {routes.map((route, index) => {
+          {routes.map((route) => {
             const ComponentName = Renderer[route.component];
+            const key = slugify(route.path);
 
             return (
               <Route
-                key={`route-${index}`}
+                key={key}
                 path={route.path}
                 exact={route.exact}
                 component={ComponentName}
