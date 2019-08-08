@@ -128,7 +128,7 @@ export default class Displacement extends Base {
 
     const renderPass = new RenderPass(scene, camera);
     const bloomPass = new UnrealBloomPass(
-      THREE.Vector2(window.innerWidth, window.innerHeight),
+      new THREE.Vector2(window.innerWidth, window.innerHeight),
       1.5,
       0.4,
       0.85,
