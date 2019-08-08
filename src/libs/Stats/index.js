@@ -9,7 +9,7 @@ const Stats = {
     document.body.appendChild(statsjs.dom);
     statsjs.dom.style.top = 'auto';
     statsjs.dom.style.left = 'auto';
-    statsjs.dom.style.bottom = '30px';
+    statsjs.dom.style.bottom = 0;
     statsjs.dom.style.right = 0;
   },
 
