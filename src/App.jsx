@@ -1,6 +1,6 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as HashRouter, Route, Link } from 'react-router-dom';
 import Renderer from './components/Renderer';
 
 import routes from './routes';
@@ -10,7 +10,7 @@ import './App.scss';
 export default class App extends Component {
   render() {
     return (
-      <Router>
+      <HashRouter basename="/">
         <nav className="site-navigator">
           <ul>
             {urls.map((url, index) => (
@@ -42,7 +42,7 @@ export default class App extends Component {
             );
           })}
         </div>
-      </Router>
+      </HashRouter>
     );
   }
 }
