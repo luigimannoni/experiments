@@ -1,0 +1,8 @@
+language: node_js
+node_js:
+  - "12.6"
+
+install:
+  - npm install
+script:
+  - npm deploy
