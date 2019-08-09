@@ -1,13 +1,7 @@
-# ⚠️ WIP - WebGL/Javascript Experiments 🧪🔬
+[![Build Status](https://travis-ci.org/luigimannoni/experiments.svg?branch=master)](https://travis-ci.org/luigimannoni/experiments)
 
-## Quick start
-
-As usual `npm install` and `npm start` to run the app in the development mode.
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-Run `npm run build` builds the app for production to the `build` folder.
-
-----
+# ⚠️ WIP 
+# WebGL/Javascript Experiments 🧪🔬
 
 ## List of Experiments
 
@@ -30,3 +24,14 @@ Demo of the glTF™ (GL Transmission Format) file loader. [ARC-170 Fighter Model
 ### Generic Javascript experiments
 
 #### [MatterJS Repulsor](https://experiments.luigimannoni.com/#/javascript/matter-repulsor)
+
+This MatterJS experiment uses springs on a grid to simulate a pattern and makes use of the matter-attractors base plugin with a custom function to reverse its attractor effect. 
+
+---
+
+## Local development
+
+As usual `npm install` and `npm start` to run the app in the development mode.
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+Run `npm run build` builds the app for production to the `build` folder.
