@@ -106,25 +106,28 @@ nav.site-navigator {
   }
 
   %handle {
+    $handle-color: #777;
+    $handle-border: #aaa;
     $padding: $rest-padding * 2;
     position: absolute;
     top: 50%;
     right: $padding;
     width: $initial-width - ($padding * 2);
-    height: 2px;
+    height: 3px;
     pointer-events: none;
     display: block;
+    background-color: $handle-color;
+    border-bottom: 1px solid $handle-border;
+    border-left: 1px solid $handle-border;
   }
 
   %pseudo {
     content: '';
-    background: #fff;
     right: 0;
   }
 
   .handle {
     @extend %handle;
-    background: #666;
 
     $pseudo-distance: 0.5rem;
     &::before {
