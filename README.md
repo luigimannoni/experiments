@@ -25,6 +25,8 @@ Demo of the glTF™ (GL Transmission Format) file loader. [ARC-170 Fighter Model
 
 #### [MatterJS Repulsor](https://experiments.luigimannoni.com/#/javascript/matter-repulsor)
 
+This MatterJS experiment uses springs on a grid to simulate a pattern and makes use of the matter-attractors base plugin with a custom function to reverse its attractor effect. 
+
 ---
 
 ## Local development
