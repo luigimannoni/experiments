@@ -4,7 +4,7 @@ import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 import Base from '../Base';
-import Palette from '../../../../libs/Palette/index';
+// import Palette from '../../../../libs/Palette/index';
 
 export default class Arc170 extends Base {
   constructor(...args) {
