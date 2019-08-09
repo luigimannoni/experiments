@@ -1,26 +1,34 @@
 $baseline: 20px;
+$bg-color: #444;
+$initial-width: 2.25rem;
+$column-width: 16rem;
+$rest-padding: 0.25rem;
 
 nav.site-navigator {
-  background-color: #fff;
+  background-color: rgba($bg-color, 0.4);
+  border-right: 1px solid darken($bg-color, 10);
   position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
   z-index: 100;
-  width: 4rem;
+  width: $initial-width;
   overflow: hidden;
-  transition: width 500ms cubic-bezier(.41,.23,.27,1);
+  transition: all 500ms cubic-bezier(.41,.23,.27,1);
+  box-shadow: 2px 0 3px rgba(#000, 0.5);
 
   &:hover {
-    width: 32rem;
+    background-color: rgba($bg-color, 1);
+    width: $column-width * 2;
+    box-shadow: 5px 0 10px rgba(#000, 0.5);
   }
 
   .logo {
     position: absolute;
-    top: 0;
+    bottom: 0;
     left: 0;
-    padding: 10px;
-    width: 4rem;
+    padding: $rest-padding;
+    width: $initial-width;
     display: block;
 
     img {
@@ -32,33 +40,33 @@ nav.site-navigator {
 
   ul {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
     margin: 0;
     padding: 0;
     list-style: none;
     display: flex;
     flex-direction: column;
-    font-weight: 100;
+    width: $column-width;
+
+    &.top-level {
+      top: 50%;
+      transform: translateY(-50%);
+      left: 0;
+    }
 
     li {
+      position: relative;
       padding: 0;
       margin: 0;
       
-      > ul {
-        flex-direction: column;
-        position: absolute;
-        left: 18rem;
+      > ul.sub-level {
         top: 0;
-        width: 18rem;
-        background-color: rgba(#333, .6);
+        left: 100%;
         display: none;
       }
 
       &:hover {
         span {
-          color: #c82222;
-          background-color: #aaa; 
+          color: rgba(#c82222, .9);
         }
         > ul {
           display: block;
@@ -70,17 +78,17 @@ nav.site-navigator {
         padding: 0 .6rem;
         line-height: 1.3;
         display: block;
-        color: #333;
+        color: #fff;
         text-transform: uppercase;
         text-decoration: none;
         font-weight: bold;
         font-family: 'Share Tech Mono', 'Consolas', monospace;
-        font-size: 1.98rem;
+        font-size: 1.75rem;
         transition: all 150ms linear;
+        cursor: pointer;
 
         &:hover {
           color: #c82222;
-          background-color: #fff; 
         }
       }
 
@@ -94,6 +102,43 @@ nav.site-navigator {
           right: 5px;
         }
       }
+    }
+  }
+
+  %handle {
+    $padding: $rest-padding * 2;
+    position: absolute;
+    top: 50%;
+    right: $padding;
+    width: $initial-width - ($padding * 2);
+    height: 2px;
+    pointer-events: none;
+    display: block;
+  }
+
+  %pseudo {
+    content: '';
+    background: #fff;
+    right: 0;
+  }
+
+  .handle {
+    @extend %handle;
+    background: #666;
+
+    $pseudo-distance: 0.5rem;
+    &::before {
+      @extend %handle;
+      @extend %pseudo;
+
+      top: -$pseudo-distance;
+    }
+
+    &::after {
+      @extend %handle;
+      @extend %pseudo;
+
+      top: $pseudo-distance;
     }
   }
 }

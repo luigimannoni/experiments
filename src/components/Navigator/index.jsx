@@ -22,7 +22,7 @@ export default class Navigator extends Component {
       return (
         <li key={parentKey}>
           <span>{url.name}</span>
-          <ul>
+          <ul className="sub-level">
             {
               url.children.map((child) => {
                 const childKey = slugify(`${parentKey}-${child.name}`);
@@ -44,12 +44,17 @@ export default class Navigator extends Component {
 
     return (
       <nav className="site-navigator">
-        <a href="/" className="logo">
+        <Link to="/" className="logo">
           <img src="/assets/cube.png" alt="Experiments" />
-        </a>
-        <ul>
+        </Link>
+
+        <ul className="top-level">
           {links ? this.renderUrls() : null}
         </ul>
+
+        <span className="handle">
+          <span className="line" />
+        </span>
       </nav>
     );
   }
