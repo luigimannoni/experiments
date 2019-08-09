@@ -1,8 +1,18 @@
 language: node_js
 node_js:
   - "12.6"
-
+cache:
+  directories:
+  - node_modules
 install:
   - npm install
 script:
-  - npm deploy
+  - npm run build
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: build
+  on:
+    branch: master
+
