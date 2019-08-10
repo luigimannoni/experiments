@@ -1,5 +1,7 @@
 $baseline: 20px;
-$bg-color: #444;
+$bg-color: #222;
+$active-color: #c82222;
+$active-bg-color: #fff;
 $initial-width: 2.25rem;
 $column-width: 16rem;
 $rest-padding: 0.5rem;
@@ -37,6 +39,7 @@ nav.site-navigator {
     padding: $rest-padding;
     width: $initial-width;
     display: block;
+    z-index: 101;
 
     img {
       max-width: 100%;
@@ -83,15 +86,6 @@ nav.site-navigator {
         }
       }
 
-      &:hover {
-        span {
-          color: rgba(#c82222, .9);
-        }
-        > ul {
-          display: flex;
-        }
-      }
-
       a,
       span {
         padding: 0 .6rem;
@@ -101,11 +95,43 @@ nav.site-navigator {
         text-decoration: none;
         transition: all 150ms linear;
         cursor: pointer;
+        position: relative;
+
+        &::before {
+          content: '';
+          display: block;
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          width: 0;
+          background-color: $active-bg-color;
+          transition: all 150ms linear;
+          z-index: -1;
+        }
 
         &:hover {
-          color: #c82222;
+          color: $active-color;
+
+          &::before {
+            width: 100%;
+          }
         }
       }
+
+      &:hover {
+        span {
+          color: $active-color;
+
+          &::before {
+            width: 100%;
+            background-color: $active-bg-color;
+          }          
+        }
+        > ul {
+          display: flex;
+        }
+      }      
     }
   }
 
