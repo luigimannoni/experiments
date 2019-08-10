@@ -1,9 +1,14 @@
-$baseline: 30px;
+@import 'styles/fonts';
 
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+html { font-family: 'Inter', sans-serif; }
+@supports (font-variation-settings: normal) {
+  html { font-family: 'Inter var', sans-serif; }
 }
 
 body > canvas {

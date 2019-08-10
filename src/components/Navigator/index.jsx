@@ -4,31 +4,51 @@ import slugify from 'slugify';
 
 import './style.scss';
 
-export default class Navigator extends Component {
+export default class Navigator extends Component {  
   constructor(...args) {
     super(...args);
     this.state = {
       open: false,
-      active: null,
+      activeParent: null,
+      activeChild: null,
     };
+    this.handleHover = this.handleHover.bind(this);
+    this.setActive = this.setActive.bind(this);
+  }
+
+  setActive(parentKey, childKey) {
+    this.setState({
+      activeParent: parentKey,
+      activeChild: childKey,
+    });
+  }
+
+  handleHover() {
+    this.setState(prevState => ({
+      open: !prevState.open,
+    }));
   }
 
   renderUrls() {
     const { links } = this.props;
+    const { activeParent, activeChild } = this.state;
 
     return links.map((url) => {
       const parentKey = slugify(url.name);
+      const parentClass = activeParent === parentKey ? 'active' : '';
 
       return (
-        <li key={parentKey}>
+        <li key={parentKey} className={parentClass}>
           <span>{url.name}</span>
           <ul className="sub-level">
             {
               url.children.map((child) => {
                 const childKey = slugify(`${parentKey}-${child.name}`);
+                const childClass = activeChild === childKey ? 'active' : '';
+
                 return (
-                  <li key={childKey}>
-                    <Link to={child.path}>{child.name}</Link>
+                  <li key={childKey} className={childClass}>
+                    <Link to={child.path} onClick={() => { this.setActive(parentKey, childKey); }}>{child.name}</Link>
                   </li>
                 );
               })
@@ -41,9 +61,16 @@ export default class Navigator extends Component {
 
   render() {
     const { links } = this.props;
+    const { open } = this.state;
+    const navClass = open ? 'is-open' : '';
+    const btnClass = open ? 'is-active' : '';
 
     return (
-      <nav className="site-navigator">
+      <nav
+        onMouseEnter={this.handleHover}
+        onMouseLeave={this.handleHover}
+        className={`site-navigator ${navClass}`}
+      >
         <Link to="/" className="logo">
           <img src="/assets/cube.png" alt="Experiments" />
         </Link>
@@ -52,9 +79,13 @@ export default class Navigator extends Component {
           {links ? this.renderUrls() : null}
         </ul>
 
-        <span className="handle">
-          <span className="line" />
-        </span>
+
+        <button className={`hamburger hamburger--arrowturn ${btnClass}`} type="button">
+          <span className="hamburger-box">
+            <span className="hamburger-inner" />
+          </span>
+        </button>
+
       </nav>
     );
   }
