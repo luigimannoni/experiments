@@ -16,10 +16,10 @@ vec4 blurred() {
 
   vec4 color1;
   vec4 color2;
-  int r = 2;
-  int c = 2;
+  int r = 1;
+  int c = 1;
   float d = 0.;
-  float offset = 0.02;
+  float offset = 0.002;
   offset = cos(time*2. + HALFPI) * offset;
   vec2 st = vUV.xy / scale;
 
@@ -137,6 +137,16 @@ vec4 show() {
 }
 
 void main(void) {
-  vec4 blur = blurred();
-  gl_FragColor = blur;  
+  vec2 st = gl_FragCoord.xy/vUV.xy;
+
+  // Smooth interpolation between 0.1 and 0.9
+  float y = smoothstep(0.0,1.0,vUV.x);
+
+  vec3 color = vec3(y);
+
+  color = color * vec3(0.0,1.0,0.0);
+
+  gl_FragColor = vec4(color,1.0);  
+  // vec4 blur = transition();
+  // gl_FragColor = blur;  
 }

@@ -24,7 +24,7 @@ export default class ImageProcessing extends Base {
 
     const scene = new BABYLON.Scene(engine);
 
-    const camera = new BABYLON.ArcRotateCamera('camera1', 0, 0, 1, new BABYLON.Vector3(0, 0, 0), scene);
+    const camera = new BABYLON.ArcRotateCamera('camera1', 0, 0, 100, new BABYLON.Vector3(0, 0, 0), scene);
     camera.setPosition(new BABYLON.Vector3(200, 100, -200));
     camera.orthoTop = 1;
     camera.orthoBottom = -1;
@@ -36,6 +36,7 @@ export default class ImageProcessing extends Base {
 
     BABYLON.Effect.ShadersStore.postprocessVertexShader = vertex;
     BABYLON.Effect.ShadersStore.postprocessFragmentShader = fragment;
+
 
     const material = new BABYLON.ShaderMaterial('shader', scene, { vertex: 'postprocess', fragment: 'postprocess' }, {
       attributes: ['position', 'uv'],
@@ -61,7 +62,7 @@ export default class ImageProcessing extends Base {
     engine.runRenderLoop(() => {
       super.beforeRender();
       material.setFloat('time', time);
-      time += 0.01;
+      time += 0.005;
       scene.render();
       super.afterRender();
     });
