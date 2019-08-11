@@ -16,13 +16,13 @@ const three = [
   // },
 ];
 
-const babylon = [
-  // {
-  //   name: 'Image postprocessing shader',
-  //   path: '/babylon/image-postprocessing',
-  //   component: 'Experiment',
-  // },
-];
+// const babylon = [
+//   {
+//     name: 'Image postprocessing shader',
+//     path: '/babylon/image-postprocessing',
+//     component: 'Experiment',
+//   },
+// ];
 
 
 const javascript = [
