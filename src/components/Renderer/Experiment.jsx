@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Three from '../Three';
 import Javascript from '../Javascript';
+import Babylon from '../Babylon';
 
 export default class Experiment extends Component {
   static pascalCase(s) {
@@ -17,6 +18,7 @@ export default class Experiment extends Component {
     const ComponentMap = {
       Three,
       Javascript,
+      Babylon,
     };
 
     const { match } = this.props;

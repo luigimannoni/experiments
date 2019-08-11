@@ -138,16 +138,5 @@ vec4 show() {
 
 void main(void) {
   vec4 blur = blurred();
-  
-  vec2 st = gl_FragCoord.xy/vUV.xy;
-  st.x *= vUV.x/vUV.y;
-  st.x *= vUV.x/vUV.y;
-  st *= 0.005;
-  st -= 2.;
-  float x = step(cos(time / st.x), st.y);
-  float y = step(sin(time / st.y), st.x);
-
-  vec3 color = vec3(0.);
-  color = vec3(x, y, 0.);
-  gl_FragColor = vec4(color, 1.0) + blur;  
+  gl_FragColor = blur;  
 }
