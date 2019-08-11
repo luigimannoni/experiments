@@ -9,19 +9,19 @@ const three = [
     path: '/three/arc170',
     component: 'Experiment',
   },
-  {
-    name: 'BBC Sphere',
-    path: '/three/bbc-sphere',
-    component: 'Experiment',
-  },
+  // {
+  //   name: 'BBC Sphere',
+  //   path: '/three/bbc-sphere',
+  //   component: 'Experiment',
+  // },
 ];
 
 const babylon = [
-  {
-    name: 'Image postprocessing shader',
-    path: '/babylon/image-postprocessing',
-    component: 'Experiment',
-  },
+  // {
+  //   name: 'Image postprocessing shader',
+  //   path: '/babylon/image-postprocessing',
+  //   component: 'Experiment',
+  // },
 ];
 
 
@@ -38,10 +38,10 @@ const urls = [
     name: 'Three',
     children: three,
   },
-  {
-    name: 'Babylon',
-    children: babylon,
-  },
+  // {
+  //   name: 'Babylon',
+  //   children: babylon,
+  // },
   {
     name: 'Javascript',
     children: javascript,
