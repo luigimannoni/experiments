@@ -2,9 +2,19 @@ import React from 'react';
 import * as THREE from 'three';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 
 import Base from '../Base';
-// import Palette from '../../../../libs/Palette/index';
+
+const BLOOM = {
+  ANIMATE: true,
+  EXP: 1,
+  STR: 1,
+  THRES: 0,
+  RAD: 0.2,
+};
 
 export default class Arc170 extends Base {
   constructor(...args) {
@@ -24,6 +34,7 @@ export default class Arc170 extends Base {
     );
 
     camera.position.x = -1500;
+    camera.position.z = 1500;
     this.renderer = new THREE.WebGLRenderer();
     this.renderer.setClearColor(0x222222, 0);
 
@@ -90,6 +101,24 @@ export default class Arc170 extends Base {
       scene.add(arc170);
     });
 
+    // Post processing
+    const renderPass = new RenderPass(scene, camera);
+    const bloomPass = new UnrealBloomPass(
+      new THREE.Vector2(window.innerWidth, window.innerHeight),
+      1.5,
+      0.4,
+      0.85,
+    );
+
+    bloomPass.threshold = BLOOM.THRES;
+    bloomPass.strength = BLOOM.STR;
+    bloomPass.radius = BLOOM.RAD;
+
+    const composer = new EffectComposer(this.renderer);
+
+    composer.addPass(renderPass);
+    composer.addPass(bloomPass);
+
     const render = () => {
       super.beforeRender();
       const time = performance.now() / 2000;
@@ -107,10 +136,10 @@ export default class Arc170 extends Base {
       }
 
       controls.update();
-      this.renderer.render(scene, camera);
-
+      composer.render();
 
       super.afterRender();
+
       super.raf = requestAnimationFrame(render);
     };
 
@@ -122,8 +151,21 @@ export default class Arc170 extends Base {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       this.renderer.setSize(window.innerWidth, window.innerHeight);
+
+      composer.reset();
     };
     window.addEventListener('resize', onWindowResize, false);
+
+    // Adds GUI stuff
+    const gui = super.gui();
+
+    const guiBloom = gui.addFolder('Bloom Effect');
+    guiBloom.add(this.renderer, 'toneMappingExposure', 0, 1).step(0.001).name('Exposure').listen();
+    guiBloom.add(bloomPass, 'threshold', 0, 2).step(0.001).name('Cut threshold');
+    guiBloom.add(bloomPass, 'strength', 0, 2).step(0.1).name('Strength').listen();
+    guiBloom.add(bloomPass, 'radius', 0, 2).step(0.1).name('Radius').listen();
+    guiBloom.add(BLOOM, 'ANIMATE').name('Animate bloom');
+    guiBloom.open();
   }
 
   componentWillUnmount() {
