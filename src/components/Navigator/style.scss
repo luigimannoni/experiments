@@ -17,7 +17,7 @@ $bezier-curve: cubic-bezier(.41,.23,.27,1);
 
 nav.site-navigator {
   background-color: rgba($bg-color, 0.4);
-  border-right: 1px solid darken($bg-color, 10);
+  border-right: 1px solid rgba($bg-color, 0.4);
   position: fixed;
   top: 0;
   bottom: 0;
@@ -26,12 +26,10 @@ nav.site-navigator {
   width: $initial-width;
   overflow: hidden;
   transition: all 500ms $bezier-curve;
-  box-shadow: 2px 0 3px rgba(#000, 0.5);
 
   &.is-open {
-    background-color: rgba($bg-color, 0.6);
+    background-color: rgba($bg-color, 1);
     width: $column-width + $initial-width;
-    box-shadow: 5px 0 10px rgba(#000, 0.5);
   }
 
   .logo {
