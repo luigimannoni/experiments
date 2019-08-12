@@ -4,7 +4,7 @@ import slugify from 'slugify';
 
 import './style.scss';
 
-export default class Navigator extends Component {  
+export default class Navigator extends Component {
   constructor(...args) {
     super(...args);
     this.state = {
@@ -48,7 +48,12 @@ export default class Navigator extends Component {
 
                 return (
                   <li key={childKey} className={childClass}>
-                    <Link to={child.path} onClick={() => { this.setActive(parentKey, childKey); }}>{child.name}</Link>
+                    <Link
+                      to={child.path}
+                      onClick={() => { this.setActive(parentKey, childKey); }}
+                    >
+                      {child.name}
+                    </Link>
                   </li>
                 );
               })
