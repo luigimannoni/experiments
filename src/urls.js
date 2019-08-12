@@ -9,17 +9,17 @@ const three = [
     path: '/three/arc170',
     component: 'Experiment',
   },
-  {
-    name: 'BBC Sphere',
-    path: '/three/bbc-sphere',
-    component: 'Experiment',
-  },
+  // {
+  //   name: 'BBC Sphere',
+  //   path: '/three/bbc-sphere',
+  //   component: 'Experiment',
+  // },
 ];
 
 const babylon = [
   {
     name: 'Image postprocessing shader',
-    path: '/babylon/image-postprocessing',
+    path: '/babylon/image-processing',
     component: 'Experiment',
   },
 ];

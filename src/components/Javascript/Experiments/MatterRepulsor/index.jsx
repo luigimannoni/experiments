@@ -149,6 +149,7 @@ export default class MatterRepulsor extends Component {
             x: 1 - Math.sin((Math.PI / 2) * (100 / threshold * pos.x) / 100),
             y: 1 - Math.sin((Math.PI / 2) * (100 / threshold * pos.y) / 100),
           };
+          const finalAngular = angular.x * angular.y;
 
           const coeff = {
             x: (threshold - distance.x) / 200,
@@ -156,8 +157,8 @@ export default class MatterRepulsor extends Component {
           };
 
           return {
-            x: pos.x * dir.x * angular.x * angular.y * (settings.force * power * coeff.x) * -1,
-            y: pos.y * dir.y * angular.y * angular.x * (settings.force * power * coeff.y) * -1,
+            x: pos.x * dir.x * finalAngular * (settings.force * power * coeff.x) * -1,
+            y: pos.y * dir.y * finalAngular * (settings.force * power * coeff.y) * -1,
           };
         },
       ],
@@ -334,6 +335,8 @@ export default class MatterRepulsor extends Component {
     this.renderer.canvas = null;
     this.renderer.context = null;
     this.renderer.textures = {};
+
+    document.body.style = '';
   }
 
   render() {
