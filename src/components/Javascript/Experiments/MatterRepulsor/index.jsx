@@ -42,6 +42,7 @@ export default class MatterRepulsor extends Component {
       backgroundGradientStart: '#2ba7fe',
       backgroundGradientEnd: '#0a0059',
       dots: '#ffffff',
+      maskDot: false,
       randomForceMultiplier: 0,
       dotSize: 8,
       dotScale: 1,
@@ -259,7 +260,9 @@ export default class MatterRepulsor extends Component {
         grid.bodies.forEach((body, i) => {
           grid.bodies[i].render.fillStyle = settings.dots;
         });
-        if (settings.logo === 'solid') {
+        if (settings.maskDot === true) {
+          logo.render.fillStyle = 'transparent';
+        } else {
           logo.render.fillStyle = settings.dots;
         }
       },
@@ -316,6 +319,7 @@ export default class MatterRepulsor extends Component {
     guiFolder.colors.addColor(settings, 'backgroundGradientEnd').onChange(updateFuncs.bgColor).name('BG Gradient End');
     guiFolder.colors.add(settings, 'backgroundGradientDegrees', 0, 360).step(1).onChange(updateFuncs.bgColor).name('Gradient Deg');
     guiFolder.colors.addColor(settings, 'dots').onChange(updateFuncs.dotsColor).name('Dot color');
+    guiFolder.colors.add(settings, 'maskDot').onChange(updateFuncs.dotsColor).name('Transparent repulsor');
     guiFolder.colors.open();
 
     gui.add(updateFuncs, 'switchFullscreen').name('Fullscreen toggle');
