@@ -105,11 +105,9 @@ vec4 move() {
 vec4 transition() {
   vec4 color1 = texture2D(channel1, vUV);
   vec4 color2 = texture2D(channel2, vUV);
-  float PI = 3.14;
-  float HALFPI = PI / 2.;
 
-  float alpha1 = abs(cos(time));
-  float alpha2 = abs(cos(time + HALFPI));
+  float alpha1 = (cos(time) + 1.) / 2.;
+  float alpha2 = abs(1. - alpha1);
 
   color1 = color1 * alpha1;
   color2 = color2 * alpha2;
@@ -131,22 +129,17 @@ vec4 maxOut() {
   return color;
 }
 
-vec4 show() {
-  vec4 color = texture2D(channel1, vUV);
-  return color;
-}
-
 void main(void) {
-  vec2 st = gl_FragCoord.xy/vUV.xy;
+  // vec2 st = gl_FragCoord.xy/vUV.xy;
 
-  // Smooth interpolation between 0.1 and 0.9
-  float y = smoothstep(0.0,1.0,vUV.x);
+  // // Smooth interpolation between 0.1 and 0.9
+  // float y = smoothstep(cos(time), 1.0, vUV.x);
 
-  vec3 color = vec3(y);
+  // vec3 color = vec3(y);
 
-  color = color * vec3(0.0,1.0,0.0);
+  // color = color * vec3(0.0, 1.0, 0.0);
 
-  gl_FragColor = vec4(color,1.0);  
-  // vec4 blur = transition();
-  // gl_FragColor = blur;  
+  // gl_FragColor = vec4(color,1.0);  
+  vec4 color = transition();
+  gl_FragColor = color;  
 }

@@ -32,7 +32,7 @@ export default class ImageProcessing extends Base {
     camera.orthoLeft = -1;
     camera.attachControl(this.renderer, false);
 
-    const box = BABYLON.MeshBuilder.CreateSphere('sphere', { diameter: 100 }, scene);
+    const earth = BABYLON.MeshBuilder.CreateSphere('sphere', { diameter: 100 }, scene);
 
     BABYLON.Effect.ShadersStore.postprocessVertexShader = vertex;
     BABYLON.Effect.ShadersStore.postprocessFragmentShader = fragment;
@@ -55,7 +55,29 @@ export default class ImageProcessing extends Base {
       ? this.renderer.width : this.renderer.height;
     material.setVector2('scale', new BABYLON.Vector2(scale, scale));
 
-    box.material = material;
+    earth.material = material;
+
+    // Skybox
+
+    const skybox = BABYLON.Mesh.CreateBox('skybox', 5000.0, scene);
+    const skyboxMaterial = new BABYLON.StandardMaterial('skybox', scene);
+    skyboxMaterial.backFaceCulling = false;
+    skyboxMaterial.disableLighting = true;
+    skybox.material = skyboxMaterial;
+    skybox.infiniteDistance = true;
+    skyboxMaterial.disableLighting = true;
+    const loadExts = [
+      '_px.png', '_py.png',
+      '_pz.png', '_nx.png',
+      '_ny.png', '_nz.png',
+    ];
+    skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture('/assets/skyboxes/bluenebula1024', scene, loadExts);
+    skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+
+    // Bloom
+    const bloom = new BABYLON.GlowLayer('bloom', scene);
+    bloom.intensity = 10.5;
+
 
     // Render Loop
     let time = 0;
@@ -63,6 +85,8 @@ export default class ImageProcessing extends Base {
       super.beforeRender();
       material.setFloat('time', time);
       time += 0.005;
+      skybox.rotation.x = time / 50;
+      earth.rotation.y = -time / 2;
       scene.render();
       super.afterRender();
     });
