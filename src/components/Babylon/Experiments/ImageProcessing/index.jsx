@@ -35,14 +35,20 @@ export default class ImageProcessing extends Base {
     const earth = BABYLON.MeshBuilder.CreateSphere('earth', { diameter: 100 }, scene);
     earth.rotation.x = 180 / 180 * Math.PI;
 
-    // const clouds = BABYLON.MeshBuilder.CreateSphere('clouds', { diameter: 102 }, scene);
-    //clouds.rotation.x = 180 / 180 * Math.PI;
 
+    // const clouds = BABYLON.MeshBuilder.CreateSphere('clouds', { diameter: 102 }, scene);
+    // clouds.rotation.x = 180 / 180 * Math.PI;
+    BABYLON.Effect.ShadersStore.earthVertexShader = vertex;
+    BABYLON.Effect.ShadersStore.earthFragmentShader = fragment;
 
     // Create a material with our land texture.
     const material = {
       earth: new BABYLON.StandardMaterial('earth', scene),
       clouds: new BABYLON.StandardMaterial('clouds', scene),
+      shader: new BABYLON.ShaderMaterial('shader', scene, { vertex: 'earth', fragment: 'earth' }, {
+        attributes: ['position', 'uv'],
+        uniforms: ['worldViewProjection', 'scale'],
+      }),
     };
 
     const textures = {
@@ -55,6 +61,10 @@ export default class ImageProcessing extends Base {
       cloudsTransparency: new BABYLON.Texture('/assets/textures/earth/clouds-transparency.png', scene),
     };
 
+    material.shader.setTexture('diffuseTexture1', textures.color, scene);
+    material.shader.setTexture('diffuseTexture2', textures.color2, scene);
+    material.shader.setTexture('specularTexture', textures.specular, scene);
+
     material.earth.diffuseTexture = textures.color;
     material.earth.specularTexture = textures.specular;
     material.earth.bumpTexture = textures.normal;
@@ -63,7 +73,8 @@ export default class ImageProcessing extends Base {
     material.clouds.opacityTexture = textures.cloudsTransparency;
     material.clouds.backFaceCulling = true;
 
-    earth.material = material.earth;
+
+    earth.material = material.shader;
     //clouds.material = material.clouds;
 
     // Skybox
@@ -97,6 +108,8 @@ export default class ImageProcessing extends Base {
     engine.runRenderLoop(() => {
       super.beforeRender();
       time += 0.005;
+      material.shader.setFloat('time', time);
+
       skybox.rotation.x = time / 50;
       earth.rotation.y = -time / 2;
       //clouds.rotation.y = -time / 3;
@@ -106,9 +119,6 @@ export default class ImageProcessing extends Base {
 
     // Resize event
     window.addEventListener('resize', () => {
-      const rScale = this.renderer.width < this.renderer.height
-        ? this.renderer.width : this.renderer.height;
-
       engine.resize();
     });
 
