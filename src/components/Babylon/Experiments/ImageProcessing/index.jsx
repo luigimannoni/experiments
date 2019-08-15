@@ -32,30 +32,39 @@ export default class ImageProcessing extends Base {
     camera.orthoLeft = -1;
     camera.attachControl(this.renderer, false);
 
-    const earth = BABYLON.MeshBuilder.CreateSphere('sphere', { diameter: 100 }, scene);
+    const earth = BABYLON.MeshBuilder.CreateSphere('earth', { diameter: 100 }, scene);
+    earth.rotation.x = 180 / 180 * Math.PI;
 
-    BABYLON.Effect.ShadersStore.postprocessVertexShader = vertex;
-    BABYLON.Effect.ShadersStore.postprocessFragmentShader = fragment;
+    // const clouds = BABYLON.MeshBuilder.CreateSphere('clouds', { diameter: 102 }, scene);
+    //clouds.rotation.x = 180 / 180 * Math.PI;
 
 
-    const material = new BABYLON.ShaderMaterial('shader', scene, { vertex: 'postprocess', fragment: 'postprocess' }, {
-      attributes: ['position', 'uv'],
-      uniforms: ['worldViewProjection', 'scale'],
-    });
-
-    const texture = {
-      channel1: new BABYLON.Texture('/assets/textures/earth/sphere-noclouds-8k.jpg', scene, false, false),
-      channel2: new BABYLON.Texture('/assets/textures/earth/sphere-night-8k.jpg', scene, false, false),
+    // Create a material with our land texture.
+    const material = {
+      earth: new BABYLON.StandardMaterial('earth', scene),
+      clouds: new BABYLON.StandardMaterial('clouds', scene),
     };
 
-    material.setTexture('channel1', texture.channel1, scene);
-    material.setTexture('channel2', texture.channel2, scene);
+    const textures = {
+      color: new BABYLON.Texture('/assets/textures/earth/earth-day.jpg', scene),
+      color2: new BABYLON.Texture('/assets/textures/earth/earth-night.jpg', scene),
+      specular: new BABYLON.Texture('/assets/textures/earth/earth-specular.jpg', scene),
+      normal: new BABYLON.Texture('/assets/textures/earth/earth-normal.jpg', scene),
+      bump: new BABYLON.Texture('/assets/textures/earth/earth-bump.jpg', scene),
+      clouds: new BABYLON.Texture('/assets/textures/earth/clouds.jpg', scene),
+      cloudsTransparency: new BABYLON.Texture('/assets/textures/earth/clouds-transparency.png', scene),
+    };
 
-    const scale = this.renderer.width < this.renderer.height
-      ? this.renderer.width : this.renderer.height;
-    material.setVector2('scale', new BABYLON.Vector2(scale, scale));
+    material.earth.diffuseTexture = textures.color;
+    material.earth.specularTexture = textures.specular;
+    material.earth.bumpTexture = textures.normal;
 
-    earth.material = material;
+    material.clouds.diffuseTexture = textures.clouds;
+    material.clouds.opacityTexture = textures.cloudsTransparency;
+    material.clouds.backFaceCulling = true;
+
+    earth.material = material.earth;
+    //clouds.material = material.clouds;
 
     // Skybox
 
@@ -74,7 +83,11 @@ export default class ImageProcessing extends Base {
     skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture('/assets/skyboxes/bluenebula1024', scene, loadExts);
     skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
 
-    // Bloom
+    // Illumination and bloom
+
+    const light = new BABYLON.PointLight('light', new BABYLON.Vector3(0, 0, -220), scene);
+    light.setEnabled(true);
+
     const bloom = new BABYLON.GlowLayer('bloom', scene);
     bloom.intensity = 10.5;
 
@@ -83,10 +96,10 @@ export default class ImageProcessing extends Base {
     let time = 0;
     engine.runRenderLoop(() => {
       super.beforeRender();
-      material.setFloat('time', time);
       time += 0.005;
       skybox.rotation.x = time / 50;
       earth.rotation.y = -time / 2;
+      //clouds.rotation.y = -time / 3;
       scene.render();
       super.afterRender();
     });
@@ -95,7 +108,6 @@ export default class ImageProcessing extends Base {
     window.addEventListener('resize', () => {
       const rScale = this.renderer.width < this.renderer.height
         ? this.renderer.width : this.renderer.height;
-      material.setVector2('scale', new BABYLON.Vector2(rScale, rScale));
 
       engine.resize();
     });

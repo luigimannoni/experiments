@@ -130,16 +130,14 @@ vec4 maxOut() {
 }
 
 void main(void) {
-  // vec2 st = gl_FragCoord.xy/vUV.xy;
+  vec2 st = gl_FragCoord.xy / vUV.xy;
 
-  // // Smooth interpolation between 0.1 and 0.9
-  // float y = smoothstep(cos(time), 1.0, vUV.x);
+  vec3 color = vec3(0.0);
+  vec3 pct = st.x + (time / 3.);
+  vec4 colorA = texture2D(channel1, vUV);
+  vec4 colorB = texture2D(channel2, vUV);
 
-  // vec3 color = vec3(y);
+  color = mix(colorA, colorB, fract(pct));
 
-  // color = color * vec3(0.0, 1.0, 0.0);
-
-  // gl_FragColor = vec4(color,1.0);  
-  vec4 color = transition();
-  gl_FragColor = color;  
+  gl_FragColor = vec4(color, 1.0);
 }
