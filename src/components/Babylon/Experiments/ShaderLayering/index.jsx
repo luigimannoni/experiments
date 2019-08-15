@@ -7,7 +7,7 @@ import Base from '../Base';
 const vertex = raw('./vertex.glsl');
 const fragment = raw('./fragment.glsl');
 
-export default class ImageProcessing extends Base {
+export default class ShaderLayering extends Base {
   constructor(...args) {
     super(...args);
     this.renderer = null;

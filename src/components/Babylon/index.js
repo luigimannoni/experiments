@@ -1,5 +1,5 @@
-import ImageProcessing from './Experiments/ImageProcessing';
+import ShaderLayering from './Experiments/ShaderLayering';
 
 export default {
-  ImageProcessing,
+  ShaderLayering,
 };

@@ -19,7 +19,9 @@ Demo of the glTF™ (GL Transmission Format) file loader. [ARC-170 Fighter Model
 
 ### Babylonjs
 
-#### [Simple postprocessing image shader](https://experiments.luigimannoni.com/#/babylon/image-postprocessing)
+#### [Shader Layering](https://experiments.luigimannoni.com/#/babylon/shader-layering)
+
+Multiple shaders layered on top of each other to build up a complex scene, the main globe shader has two diffuse maps shifting between each other 
 
 ### Generic Javascript experiments
 
