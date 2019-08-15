@@ -1,9 +1,5 @@
 precision mediump float;
 varying vec2 vUV;
-uniform sampler2D diffuseTexture1;
-uniform sampler2D diffuseTexture2;
-uniform vec2 scale;
-uniform float time;
 
 #define PI 3.14159265359
 

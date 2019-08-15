@@ -35,7 +35,6 @@ export default class ShaderLayering extends Base {
     const earth = BABYLON.MeshBuilder.CreateSphere('earth', { diameter: 100 }, scene);
     earth.rotation.x = 180 / 180 * Math.PI;
 
-
     // const clouds = BABYLON.MeshBuilder.CreateSphere('clouds', { diameter: 102 }, scene);
     // clouds.rotation.x = 180 / 180 * Math.PI;
     BABYLON.Effect.ShadersStore.earthVertexShader = vertex;
@@ -75,7 +74,7 @@ export default class ShaderLayering extends Base {
 
 
     earth.material = material.shader;
-    //clouds.material = material.clouds;
+    // clouds.material = material.clouds;
 
     // Skybox
 
