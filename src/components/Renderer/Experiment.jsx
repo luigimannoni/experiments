@@ -10,7 +10,9 @@ export default class Experiment extends Component {
 
   static render404() {
     return (
-      <p>404!</p>
+      <div className="flex flex-center">
+        <h1 className="giant glitch">404</h1>
+      </div>
     );
   }
 
