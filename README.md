@@ -17,6 +17,10 @@ The above experiment is a simple vertex displacement shader with a simple height
 
 Demo of the glTF™ (GL Transmission Format) file loader. [ARC-170 Fighter Model](https://sketchfab.com/3d-models/arc-170-fighter-d2b9834148e84c86a2423148db1f6705) by courtesy of SketchFab.
 
+#### [Soundcloud Visualizer](https://experiments.luigimannoni.com/#/three/soundcloud-visualizer)
+
+Music visualizer using AudioContext and Soundcloud APIs
+
 ### Babylonjs
 
 #### [Simple postprocessing image shader](https://experiments.luigimannoni.com/#/babylon/image-postprocessing)

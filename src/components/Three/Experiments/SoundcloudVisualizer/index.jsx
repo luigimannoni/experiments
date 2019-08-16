@@ -39,7 +39,7 @@ export default class SoundcloudVisualizer extends Base {
     SC.initialize({
       client_id: SC_KEY,
     });
-    SC.get('/resolve', { url: 'https://soundcloud.com/shockone/polygon-shockone-vip' }).then((res) => {
+    SC.get('/resolve', { url: 'https://soundcloud.com/noton-info/alva-noto-uni-blue' }).then((res) => {
       if (res.errors) {
         console.error(res.errors);
       } else {
@@ -175,7 +175,7 @@ export default class SoundcloudVisualizer extends Base {
             const channel = sample.streamData[i];
             const attrs = {
               scale: (channel + 0.1) / 3,
-              squeeze: 1 / 255 * (255 - channel / 1.5),
+              squeeze: 1 / 255 * (255 - channel / 2),
               color: new THREE.Color(0x0).setHSL(0.27 / 128 * (255 - channel), 1, 0.5),
             };
 
