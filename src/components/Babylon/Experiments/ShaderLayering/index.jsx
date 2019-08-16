@@ -6,6 +6,7 @@ import Base from '../Base';
 
 const vertex = raw('./vertex.glsl');
 const fragment = raw('./fragment.glsl');
+// const waterFragment = raw('./waterFragment.glsl');
 
 export default class ShaderLayering extends Base {
   constructor(...args) {
@@ -111,7 +112,7 @@ export default class ShaderLayering extends Base {
 
       skybox.rotation.x = time / 50;
       earth.rotation.y = -time / 2;
-      //clouds.rotation.y = -time / 3;
+      // clouds.rotation.y = -time / 3;
       scene.render();
       super.afterRender();
     });
