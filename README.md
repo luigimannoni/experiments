@@ -19,7 +19,8 @@ Demo of the glTF™ (GL Transmission Format) file loader. [ARC-170 Fighter Model
 
 #### [Soundcloud Visualizer](https://experiments.luigimannoni.com/#/three/soundcloud-visualizer)
 
-Music visualizer using AudioContext and Soundcloud APIs
+Music visualizer using AudioContext and Soundcloud APIs.
+Uses an `<audio>` tag to load and play the source and read the stream from there. The current experiment uses autoplay and might not work on mobile devices without user interation.
 
 ### Babylonjs
 
