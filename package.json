@@ -17,6 +17,7 @@
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
     "slugify": "^1.3.4",
+    "soundcloud-api-client": "0.0.9",
     "stats.js": "^0.17.0",
     "three": "^0.107.0"
   },
