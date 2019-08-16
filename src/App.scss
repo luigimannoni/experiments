@@ -6,7 +6,7 @@
   box-sizing: border-box;
 }
 
-html { font-family: 'Inter', sans-serif; }
+html { font-family: 'Inter', sans-serif; color: #fff }
 @supports (font-variation-settings: normal) {
   html { font-family: 'Inter var', sans-serif; }
 }
@@ -23,4 +23,84 @@ body > canvas {
 // Dat GUI
 .dg.ac {
   z-index: 5 !important;
+}
+
+.flex {
+  display: flex;
+  height: 100vh;
+
+  &.flex-center {
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+h1.giant {
+  text-align: center;
+  font-size: 25vmax;
+  line-height: 1;
+  padding: 0;
+  margin: 0;
+  font-weight: 800;
+}
+
+@mixin glitchCopy { 
+  content: '404';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch {
+  position: relative;
+  color: #444;
+  animation: glitch-color-main 2s infinite linear alternate-reverse;
+
+  &::before {
+    @include glitchCopy;
+    color: #fff;
+    left: 10px;
+    text-shadow: -10px 0 #c82222;
+    clip: rect(0, 100vw, 100vh, 0);
+    animation: glitch-anim 3.25s infinite steps(1) alternate-reverse;
+  }
+
+  &::after {
+    @include glitchCopy;
+    color: #fff;
+    left: -10px;
+    text-shadow: -10px 0 #00fff9, 10px 5px #c82222;
+    animation: glitch-anim2 1.5s infinite steps(1) alternate-reverse;
+  }
+}
+
+@keyframes glitch-color-main {
+  0% {
+    color: #333;
+  }
+  100% {
+    color: #fff;
+  }  
+}
+
+@keyframes glitch-anim {
+  $steps: 20;
+  @for $i from 0 through $steps {
+    #{percentage($i*(1/$steps))} {
+      clip: rect(random(2000)+px, 9999px, random(1000)+px, 0);
+			transform: skew((random(100) / 100) + deg);
+    }
+  }
+}
+
+@keyframes glitch-anim2 {
+  $steps: 20;
+  @for $i from 0 through $steps {
+    #{percentage($i*(1/$steps))} {
+      clip: rect(random(1000)+px, 9999px, random(2000)+px, 0);
+			transform: skew((random(100) / 100) + deg);
+    }
+  }
 }
