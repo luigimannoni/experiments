@@ -9,6 +9,11 @@ const three = [
     path: '/three/arc170',
     component: 'Experiment',
   },
+  {
+    name: 'Soundcloud Visualizer',
+    path: '/three/soundcloud-visualizer',
+    component: 'Experiment',
+  },
   // {
   //   name: 'BBC Sphere',
   //   path: '/three/bbc-sphere',
