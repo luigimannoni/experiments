@@ -13,7 +13,7 @@ import Audio from '../../../../libs/Utils/audio';
 const BLOOM = {
   ANIMATE: true,
   EXP: 1,
-  STR: 0.35,
+  STR: 0.3,
   THRES: 0,
   RAD: 0.5,
 };
@@ -167,7 +167,7 @@ export default class SoundcloudVisualizer extends Base {
 
       camera.position.y = 65 + 120 * mental;
       plane.material.color.setHSL(0, 0, mental);
-      bloomPass.strength = mental / 2;
+      bloomPass.strength = mental / 3 + 0.2;
 
       if (sample.streamData && sample.streamData.length > 0) {
         for (let i = sample.streamData.length - 1; i >= 0; i -= 1) {
