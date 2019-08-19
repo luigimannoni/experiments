@@ -12,7 +12,7 @@ export default class Navigator extends Component {
       activeParent: null,
       activeChild: null,
     };
-    this.handleHover = this.handleHover.bind(this);
+    this.toggleNavigator = this.toggleNavigator.bind(this);
     this.setActive = this.setActive.bind(this);
   }
 
@@ -23,9 +23,9 @@ export default class Navigator extends Component {
     });
   }
 
-  handleHover() {
+  toggleNavigator(opened) {
     this.setState(prevState => ({
-      open: !prevState.open,
+      open: opened || !prevState.open,
     }));
   }
 
@@ -72,8 +72,8 @@ export default class Navigator extends Component {
 
     return (
       <nav
-        onMouseEnter={this.handleHover}
-        onMouseLeave={this.handleHover}
+        onMouseEnter={() => { this.toggleNavigator(true); }}
+        onMouseLeave={() => { this.toggleNavigator(false); }}
         className={`site-navigator ${navClass}`}
       >
         <Link to="/" className="logo">
@@ -85,7 +85,11 @@ export default class Navigator extends Component {
         </ul>
 
 
-        <button className={`hamburger hamburger--arrowturn ${btnClass}`} type="button">
+        <button
+          onClick={() => { this.toggleNavigator(!open); }}
+          className={`hamburger hamburger--arrowturn ${btnClass}`}
+          type="button"
+        >
           <span className="hamburger-box">
             <span className="hamburger-inner" />
           </span>
