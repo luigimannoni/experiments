@@ -13,7 +13,7 @@ import Audio from '../../../../libs/Utils/audio';
 const BLOOM = {
   ANIMATE: true,
   EXP: 1,
-  STR: 0.35,
+  STR: 0.3,
   THRES: 0,
   RAD: 0.5,
 };
@@ -33,7 +33,6 @@ export default class SoundcloudVisualizer extends Base {
     this.player.loop = true;
     document.body.appendChild(this.player);
     const audioSource = Audio.Analyzer(this.player);
-    console.log(audioSource);
 
     const SC_KEY = '26095b994cc185bc665f4c9fcce8f211';
     SC.initialize({
@@ -42,6 +41,9 @@ export default class SoundcloudVisualizer extends Base {
     SC.get('/resolve', { url: 'https://soundcloud.com/noton-info/alva-noto-uni-blue' }).then((res) => {
       if (res.errors) {
         console.error(res.errors);
+        setTimeout(() => {
+          window.location.reload();
+        }, 5000);
       } else {
         this.player.crossOrigin = 'anonymous';
         this.player.setAttribute('src', `${res.stream_url}?client_id=${SC_KEY}`);
@@ -75,7 +77,7 @@ export default class SoundcloudVisualizer extends Base {
     const planeGeometry = new THREE.PlaneBufferGeometry(10000, 10000);
     const planeMaterial = new THREE.MeshPhongMaterial({
       color: 0x111111,
-      diffuse: 0x000000,
+      emissive: 0x000000,
     });
 
     const plane = new THREE.Mesh(planeGeometry, planeMaterial);
@@ -167,7 +169,7 @@ export default class SoundcloudVisualizer extends Base {
 
       camera.position.y = 65 + 120 * mental;
       plane.material.color.setHSL(0, 0, mental);
-      bloomPass.strength = mental / 2;
+      bloomPass.strength = mental / 3 + 0.2;
 
       if (sample.streamData && sample.streamData.length > 0) {
         for (let i = sample.streamData.length - 1; i >= 0; i -= 1) {
