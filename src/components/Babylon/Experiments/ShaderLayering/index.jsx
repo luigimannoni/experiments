@@ -6,7 +6,7 @@ import Base from '../Base';
 
 const vertex = raw('./vertex.glsl');
 const fragment = raw('./fragment.glsl');
-// const waterFragment = raw('./waterFragment.glsl');
+const atmosphereFragment = raw('./atmosphereFragment.glsl');
 
 export default class ShaderLayering extends Base {
   constructor(...args) {
@@ -36,16 +36,27 @@ export default class ShaderLayering extends Base {
     const earth = BABYLON.MeshBuilder.CreateSphere('earth', { diameter: 100 }, scene);
     earth.rotation.x = 180 / 180 * Math.PI;
 
-    // const clouds = BABYLON.MeshBuilder.CreateSphere('clouds', { diameter: 102 }, scene);
-    // clouds.rotation.x = 180 / 180 * Math.PI;
-    BABYLON.Effect.ShadersStore.earthVertexShader = vertex;
+    const atmosphere = BABYLON.MeshBuilder.CreateSphere('atmosphere', { diameter: 110 }, scene);
+    atmosphere.rotation.x = 180 / 180 * Math.PI;
+
+
+    // Assign Shaders to stores
+    BABYLON.Effect.ShadersStore.baseVertexShader = vertex;
     BABYLON.Effect.ShadersStore.earthFragmentShader = fragment;
+
+    BABYLON.Effect.ShadersStore.atmosphereVertexShader = vertex;
+    BABYLON.Effect.ShadersStore.atmosphereFragmentShader = atmosphereFragment;
 
     // Create a material with our land texture.
     const material = {
-      earth: new BABYLON.StandardMaterial('earth', scene),
-      clouds: new BABYLON.StandardMaterial('clouds', scene),
-      shader: new BABYLON.ShaderMaterial('shader', scene, { vertex: 'earth', fragment: 'earth' }, {
+
+      atmosphere: new BABYLON.ShaderMaterial('atmosphere', scene, { vertex: 'base', fragment: 'atmosphere' }, {
+        needAlphaBlending: true,
+        attributes: ['position', 'uv'],
+        uniforms: ['worldViewProjection', 'scale'],
+      }),
+
+      earth: new BABYLON.ShaderMaterial('earth', scene, { vertex: 'base', fragment: 'earth' }, {
         attributes: ['position', 'uv'],
         uniforms: ['worldViewProjection', 'scale'],
       }),
@@ -61,21 +72,19 @@ export default class ShaderLayering extends Base {
       cloudsTransparency: new BABYLON.Texture('/assets/textures/earth/clouds-transparency.png', scene),
     };
 
-    material.shader.setTexture('diffuseTexture1', textures.color, scene);
-    material.shader.setTexture('diffuseTexture2', textures.color2, scene);
-    material.shader.setTexture('specularTexture', textures.specular, scene);
+    material.earth.setTexture('diffuseTexture1', textures.color, scene);
+    material.earth.setTexture('diffuseTexture2', textures.color2, scene);
+    material.earth.setTexture('specularTexture', textures.specular, scene);
 
     material.earth.diffuseTexture = textures.color;
     material.earth.specularTexture = textures.specular;
     material.earth.bumpTexture = textures.normal;
 
-    material.clouds.diffuseTexture = textures.clouds;
-    material.clouds.opacityTexture = textures.cloudsTransparency;
-    material.clouds.backFaceCulling = true;
+    material.atmosphere.backFaceCulling = true;
 
 
-    earth.material = material.shader;
-    // clouds.material = material.clouds;
+    earth.material = material.earth;
+    atmosphere.material = material.atmosphere;
 
     // Skybox
 
@@ -94,21 +103,12 @@ export default class ShaderLayering extends Base {
     skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture('/assets/skyboxes/bluenebula1024', scene, loadExts);
     skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
 
-    // Illumination and bloom
-
-    const light = new BABYLON.PointLight('light', new BABYLON.Vector3(0, 0, -220), scene);
-    light.setEnabled(true);
-
-    const bloom = new BABYLON.GlowLayer('bloom', scene);
-    bloom.intensity = 10.5;
-
-
     // Render Loop
     let time = 0;
     engine.runRenderLoop(() => {
       super.beforeRender();
       time += 0.005;
-      material.shader.setFloat('time', time);
+      material.earth.setFloat('time', time);
 
       skybox.rotation.x = time / 50;
       earth.rotation.y = -time / 2;
