@@ -43,7 +43,7 @@ export default class SoundcloudVisualizer extends Base {
       if (res.errors) {
         console.error(res.errors);
         setTimeout(() => {
-          window.location = window.location;
+          window.location.reload();
         }, 5000);
       } else {
         this.player.crossOrigin = 'anonymous';
