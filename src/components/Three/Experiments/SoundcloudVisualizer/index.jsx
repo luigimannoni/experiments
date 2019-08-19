@@ -33,7 +33,6 @@ export default class SoundcloudVisualizer extends Base {
     this.player.loop = true;
     document.body.appendChild(this.player);
     const audioSource = Audio.Analyzer(this.player);
-    console.log(audioSource);
 
     const SC_KEY = '26095b994cc185bc665f4c9fcce8f211';
     SC.initialize({
@@ -78,7 +77,7 @@ export default class SoundcloudVisualizer extends Base {
     const planeGeometry = new THREE.PlaneBufferGeometry(10000, 10000);
     const planeMaterial = new THREE.MeshPhongMaterial({
       color: 0x111111,
-      diffuse: 0x000000,
+      emissive: 0x000000,
     });
 
     const plane = new THREE.Mesh(planeGeometry, planeMaterial);
