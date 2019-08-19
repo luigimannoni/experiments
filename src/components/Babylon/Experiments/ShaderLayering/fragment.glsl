@@ -8,11 +8,11 @@ uniform float time;
 
 #define PI 3.14159265359
 #define TAU 6.28318530718
-#define MAX_ITER 32
+#define MAX_ITER 12
 
 vec4 water() {
   vec2 p = mod(vUV*TAU, TAU)-250.0;
-	vec2 i = vec2(p * 32.) / 20.;
+	vec2 i = vec2(p * 64.) / 16.;
 	float c = 1.0;
 	float inten = .002;
 
@@ -25,9 +25,10 @@ vec4 water() {
 	c /= float(MAX_ITER);
 	c = 0.17-pow(c, 0.2);
 	vec3 colour = vec3(pow(abs(c), 8.0));
-  colour = clamp(colour + vec3(0.0, 0.01, 0.6), 0.0, 1.0);
-    
-	return normalize(vec4(colour, 1.0));
+  colour = colour - vec3(1.0, 1.0, 0.);
+  colour = clamp(colour, 0.0, 0.3);
+
+	return vec4(colour, 1.0);
 }
 
 void main(void) {
@@ -37,12 +38,12 @@ void main(void) {
   vec4 color2 = texture2D(diffuseTexture2, vUV);
   vec4 specular = texture2D(specularTexture, vUV);
 
-  float multiplier = 3.;
+  float multiplier = 1.5;
   float curve = cos((x + fract(time / 10.)) * ((PI * 2.))) * multiplier + (multiplier / 2.);
 
   vec4 color = mix(color1, color2, clamp(curve, 0., 1.));
   vec4 water = water();
-  water = mix(water + vec4(0., 0., .05, 0.), water - vec4(0., 0., .25, 0.), clamp(curve, 0., 1.));
+  water = mix(water + vec4(0., 0., .05, 0.), water - vec4(0., 0., .35, 0.), clamp(curve, 0., 1.));
 
   gl_FragColor = mix(color, water, specular.r);
 }
