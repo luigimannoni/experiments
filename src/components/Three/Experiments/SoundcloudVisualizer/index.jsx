@@ -42,6 +42,9 @@ export default class SoundcloudVisualizer extends Base {
     SC.get('/resolve', { url: 'https://soundcloud.com/noton-info/alva-noto-uni-blue' }).then((res) => {
       if (res.errors) {
         console.error(res.errors);
+        setTimeout(() => {
+          window.location = window.location;
+        }, 5000);
       } else {
         this.player.crossOrigin = 'anonymous';
         this.player.setAttribute('src', `${res.stream_url}?client_id=${SC_KEY}`);
