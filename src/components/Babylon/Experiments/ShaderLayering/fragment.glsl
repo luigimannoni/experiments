@@ -25,9 +25,9 @@ vec4 water() {
 	c /= float(MAX_ITER);
 	c = 0.17-pow(c, 0.2);
 	vec3 colour = vec3(pow(abs(c), 8.0));
-  colour = colour - vec3(1.0, 1.0, 0.);
-  colour = clamp(colour, 0.0, 0.3);
-
+  colour = (colour - vec3(1., 1., .25)) + vec3(0.066, 0.411, 0.611);
+  //colour = clamp(colour, 0., 0.3);
+	
 	return vec4(colour, 1.0);
 }
 
@@ -43,7 +43,7 @@ void main(void) {
 
   vec4 color = mix(color1, color2, clamp(curve, 0., 1.));
   vec4 water = water();
-  water = mix(water + vec4(0., 0., .05, 0.), water - vec4(0., 0., .35, 0.), clamp(curve, 0., 1.));
+  water = mix(water + vec4(0., 0., .05, 0.), water - vec4(1., 1., .35, 0.), clamp(curve, 0., 1.));
 
   gl_FragColor = mix(color, water, specular.r);
 }

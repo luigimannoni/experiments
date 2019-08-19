@@ -1,10 +1,16 @@
-precision mediump float;
-varying vec2 vUV;
+uniform vec3 glowColor;
+uniform float coeficient;
+uniform float power;
 
-#define PI 3.14159265359
+varying vec3 vVertexNormal;
+varying vec3 vVertexWorldPosition;
 
-void main(void) {
-  float x = vUV.x;
+varying vec4 vFragColor;
 
-  gl_FragColor = vec4(1., 1., 1., x);
+void main() {
+	vec3 worldCameraToVertex = vVertexWorldPosition - cameraPosition;
+	vec3 viewCameraToVertex	= (viewMatrix * vec4(worldCameraToVertex, 0.0)).xyz;
+	viewCameraToVertex = normalize(viewCameraToVertex);
+	float intensity = pow(coeficient + dot(vVertexNormal, viewCameraToVertex), power);
+	gl_FragColor = vec4(glowColor, intensity);
 }

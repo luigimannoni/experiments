@@ -53,12 +53,12 @@ export default class ShaderLayering extends Base {
       atmosphere: new BABYLON.ShaderMaterial('atmosphere', scene, { vertex: 'base', fragment: 'atmosphere' }, {
         needAlphaBlending: true,
         attributes: ['position', 'uv'],
-        uniforms: ['worldViewProjection', 'scale'],
+        uniforms: ['worldViewProjection'],
       }),
 
       earth: new BABYLON.ShaderMaterial('earth', scene, { vertex: 'base', fragment: 'earth' }, {
         attributes: ['position', 'uv'],
-        uniforms: ['worldViewProjection', 'scale'],
+        uniforms: ['worldViewProjection'],
       }),
     };
 
