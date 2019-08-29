@@ -166,6 +166,7 @@ nav.site-navigator {
     top: 50%;
     transform: translateY(-50%);
     right: 0;
-    pointer-events: none;
+    outline: none !important;
+    cursor: auto;
   }
 }
