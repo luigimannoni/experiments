@@ -36,8 +36,8 @@ export default class ShaderLayering extends Base {
     const earth = BABYLON.MeshBuilder.CreateSphere('earth', { diameter: 100 }, scene);
     earth.rotation.x = 180 / 180 * Math.PI;
 
-    const atmosphere = BABYLON.MeshBuilder.CreateSphere('atmosphere', { diameter: 110 }, scene);
-    atmosphere.rotation.x = 180 / 180 * Math.PI;
+    // const atmosphere = BABYLON.MeshBuilder.CreateSphere('atmosphere', { diameter: 110 }, scene);
+    // atmosphere.rotation.x = 180 / 180 * Math.PI;
 
 
     // Assign Shaders to stores
@@ -50,11 +50,11 @@ export default class ShaderLayering extends Base {
     // Create a material with our land texture.
     const material = {
 
-      atmosphere: new BABYLON.ShaderMaterial('atmosphere', scene, { vertex: 'base', fragment: 'atmosphere' }, {
-        needAlphaBlending: true,
-        attributes: ['position', 'uv'],
-        uniforms: ['worldViewProjection'],
-      }),
+      // atmosphere: new BABYLON.ShaderMaterial('atmosphere', scene, { vertex: 'base', fragment: 'atmosphere' }, {
+      //   needAlphaBlending: true,
+      //   attributes: ['position', 'uv'],
+      //   uniforms: ['worldViewProjection'],
+      // }),
 
       earth: new BABYLON.ShaderMaterial('earth', scene, { vertex: 'base', fragment: 'earth' }, {
         attributes: ['position', 'uv'],
@@ -80,11 +80,11 @@ export default class ShaderLayering extends Base {
     material.earth.specularTexture = textures.specular;
     material.earth.bumpTexture = textures.normal;
 
-    material.atmosphere.backFaceCulling = true;
+    // material.atmosphere.backFaceCulling = true;
 
 
     earth.material = material.earth;
-    atmosphere.material = material.atmosphere;
+    // atmosphere.material = material.atmosphere;
 
     // Skybox
 
