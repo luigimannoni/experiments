@@ -3,6 +3,8 @@ varying vec2 vUV;
 uniform sampler2D channel1;
 uniform sampler2D channel2;
 uniform vec2 scale;
+uniform vec3 target;
+uniform vec3 wave;
 uniform float time;
 
 vec4 negative() {
@@ -158,7 +160,7 @@ vec4 water() {
 	c /= float(MAX_ITER);
 	c = 0.17-pow(c, 0.2);
 	vec3 colour = vec3(pow(abs(c), 8.0));
-  colour = clamp(colour + vec3(0.0, 0.1, 0.4), 0.0, 1.0);
+  colour = clamp(colour + wave, 0.0, 1.0);
   return vec4(colour, 1.);  
 }
 

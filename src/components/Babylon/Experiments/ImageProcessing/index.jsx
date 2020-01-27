@@ -7,6 +7,12 @@ import Base from '../Base';
 const vertex = raw('./vertex.glsl');
 const fragment = raw('./fragment.glsl');
 
+const COLORS = {
+  TARGET: '#440000',
+  WAVE: '#000088',
+};
+
+
 export default class ImageProcessing extends Base {
   constructor(...args) {
     super(...args);
@@ -17,7 +23,7 @@ export default class ImageProcessing extends Base {
     super.componentDidMount();
 
     this.renderer = document.createElement('canvas');
-    this.renderer.style = 'width:100%;height:100%;';
+    this.renderer.style = 'width:100%; height:100%;';
     document.body.appendChild(this.renderer);
 
     const engine = new BABYLON.Engine(this.renderer, true);
@@ -40,7 +46,7 @@ export default class ImageProcessing extends Base {
 
     const material = new BABYLON.ShaderMaterial('shader', scene, { vertex: 'postprocess', fragment: 'postprocess' }, {
       attributes: ['position', 'uv'],
-      uniforms: ['worldViewProjection', 'scale'],
+      uniforms: ['worldViewProjection', 'scale', 'wave', 'target'],
     });
 
     const texture = {
@@ -75,23 +81,18 @@ export default class ImageProcessing extends Base {
       engine.resize();
     });
 
+
+    const recolor = (color) => {
+      material.setColor3(color.toLowerCase(), new BABYLON.Color3.FromHexString(COLORS[color]));
+    };
+
     // Adds GUI stuff
-    // const gui = super.gui();
+    const gui = super.gui();
 
-    // const guiDisplacement = gui.addFolder('Displacement');
-    // guiDisplacement.add(uniforms.scale, 'value', 0, 2).step(0.01).name('Resolution');
-    // guiDisplacement.add(uniforms.displacement, 'value', 0, 110).name('Elevation');
-    // guiDisplacement.add(uniforms.speed, 'value', 10, 50).name('Morph speed');
-    // guiDisplacement.open();
-
-    // const guiColor = gui.addFolder('Color Settings');
-    // guiColor.add(uniforms.lowStep, 'value', -2, 0).name('Starting elevation');
-    // guiColor.add(uniforms.hiStep, 'value', 0, 2).name('Smoothness');
-    // guiColor.addColor(COLORS, 'PLASMA').name('Plasma').onChange(recolor);
-    // guiColor.addColor(COLORS, 'LIGHT_1').name('Env light 1').onChange(recolor);
-    // guiColor.addColor(COLORS, 'LIGHT_2').name('Env light 2').onChange(recolor);
-    // guiColor.add(COLORS, 'EQUALIZE').name('Env matches plasma').onChange(recolor);
-    // guiColor.open();
+    const guiColor = gui.addFolder('Color Settings');
+    guiColor.addColor(COLORS, 'TARGET').name('Target overlay').onChange(() => { recolor('TARGET'); });
+    guiColor.addColor(COLORS, 'WAVE').name('Waves color').onChange(() => { recolor('WAVE'); });
+    guiColor.open();
   }
 
   componentWillUnmount() {
