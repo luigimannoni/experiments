@@ -32,7 +32,7 @@ export default class ImageProcessing extends Base {
     camera.orthoLeft = -1;
     camera.attachControl(this.renderer, false);
 
-    const box = BABYLON.MeshBuilder.CreateSphere('sphere', { diameter: 100 }, scene);
+    const box = BABYLON.MeshBuilder.CreateBox('box', { size: 100 }, scene);
 
     BABYLON.Effect.ShadersStore.postprocessVertexShader = vertex;
     BABYLON.Effect.ShadersStore.postprocessFragmentShader = fragment;
@@ -44,12 +44,10 @@ export default class ImageProcessing extends Base {
     });
 
     const texture = {
-      channel1: new BABYLON.Texture('/assets/textures/earth/sphere-noclouds-8k.jpg', scene, false, false),
-      channel2: new BABYLON.Texture('/assets/textures/earth/sphere-night-8k.jpg', scene, false, false),
+      channel1: new BABYLON.Texture('/assets/textures/generic/leaves.png', scene, false, false),
     };
 
     material.setTexture('channel1', texture.channel1, scene);
-    material.setTexture('channel2', texture.channel2, scene);
 
     const scale = this.renderer.width < this.renderer.height
       ? this.renderer.width : this.renderer.height;
@@ -66,6 +64,7 @@ export default class ImageProcessing extends Base {
       scene.render();
       super.afterRender();
     });
+
 
     // Resize event
     window.addEventListener('resize', () => {

@@ -6,6 +6,7 @@ attribute vec2 uv;
 
 // Uniforms
 uniform mat4 worldViewProjection;
+uniform vec2 scale;
 
 // Normal
 varying vec2 vUV;

@@ -16,10 +16,10 @@ vec4 blurred() {
 
   vec4 color1;
   vec4 color2;
-  int r = 1;
-  int c = 1;
+  int r = 2;
+  int c = 2;
   float d = 0.;
-  float offset = 0.002;
+  float offset = 0.02;
   offset = cos(time*2. + HALFPI) * offset;
   vec2 st = vUV.xy / scale;
 
@@ -136,17 +136,44 @@ vec4 show() {
   return color;
 }
 
+#define PI 3.14159265359
+#define TAU 6.28318530718
+#define MAX_ITER 32
+
+vec4 water() {
+	vec2 uv = vUV.xy;
+
+  vec2 p = mod(uv*TAU, TAU)-250.0;
+	//vec2 p = uv;
+  vec2 i = vec2(p * 0.00001) / 20.;
+	float c = 1.0;
+	float inten = .002;
+
+	for (int n = 0; n < MAX_ITER; n++) 
+	{
+		float t = (time / 3.) * (1.0 - (3.5 / float(n+1)));
+		i = p + vec2(cos(t - i.x) + sin(t + i.y), sin(t - i.y) + cos(t + i.x));
+		c += 1.0/length(vec2(p.x / (sin(i.x+t)/inten),p.y / (cos(i.y+t)/inten)));
+	}
+	c /= float(MAX_ITER);
+	c = 0.17-pow(c, 0.2);
+	vec3 colour = vec3(pow(abs(c), 8.0));
+  colour = clamp(colour + vec3(0.0, 0.1, 0.4), 0.0, 1.0);
+  return vec4(colour, 1.);  
+}
+
 void main(void) {
-  vec2 st = gl_FragCoord.xy/vUV.xy;
+  float x = vUV.x;
 
-  // Smooth interpolation between 0.1 and 0.9
-  float y = smoothstep(0.0,1.0,vUV.x);
+  vec4 color1 = texture2D(channel1, vUV);
+  vec4 color2 = texture2D(channel2, vUV);
+  float multiplier = 1.;
+  float curve = cos((x + fract(time)) * ((PI * 2.))) * multiplier + (multiplier / 2.);
 
-  vec3 color = vec3(y);
+  vec4 color = mix(color1, color2, clamp(curve, 0., 1.));
+  vec4 water = water();
+  water = mix(water + .5, water, clamp(curve, 0., 1.));
+  
+  gl_FragColor = mix(color, water, curve);
 
-  color = color * vec3(0.0,1.0,0.0);
-
-  gl_FragColor = vec4(color,1.0);  
-  // vec4 blur = transition();
-  // gl_FragColor = blur;  
 }
