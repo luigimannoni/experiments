@@ -53,16 +53,27 @@ export default class ImageProcessing extends Base {
       Radios: '/assets/textures/generic/radios.jpg',
     };
     const modeList = {
+      Crossfade: 7,
+      'Sine Crossfade': 0,
+      'Box Crossblur': 3,
+      Greyscale: 4,
+      Overlay: 8,
+      Mirror: 12,
       'Channel 1 only': 1,
       'Channel 2 only': 2,
-      'Sine Crossfade': 0,
     };
 
 
     const options = {
       shaderMode: 0,
+      hIterations: 2,
+      vIterations: 2,
       channel1: imageList.Leaves,
       channel2: imageList.Plants,
+      speed: 1.0,
+      filterRed: 1.0,
+      filterGreen: 1.0,
+      filterBlue: 1.0,
     };
 
     const texture = {
@@ -71,6 +82,13 @@ export default class ImageProcessing extends Base {
     };
 
     material.setInt('mode', options.shaderMode);
+    material.setInt('hIterations', options.hIterations);
+    material.setInt('vIterations', options.vIterations);
+    material.setFloat('speed', options.speed);
+    material.setFloat('filterRed', options.filterRed);
+    material.setFloat('filterGreen', options.filterGreen);
+    material.setFloat('filterBlue', options.filterBlue);
+
     material.setTexture('channel1', texture.channel1, scene);
     material.setTexture('channel2', texture.channel2, scene);
     material.setColor3('target', new BABYLON.Color3.FromHexString(COLORS.TARGET));
@@ -138,6 +156,7 @@ export default class ImageProcessing extends Base {
     // Loaders
     document.getElementById('file-image').addEventListener('change', injectImage, false);
 
+
     // Adds GUI stuff
     const gui = super.gui();
     gui.add(updateFuncs, 'loadImage').name('Upload custom image');
@@ -148,12 +167,40 @@ export default class ImageProcessing extends Base {
     guiProcess.add(options, 'shaderMode', modeList).name('Shader mode').onChange(() => {
       material.setInt('mode', options.shaderMode);
     });
+    guiProcess.add(options, 'speed').name('Speed').min(0.01).max(2.00)
+      .onChange(() => {
+        material.setFloat('speed', options.speed.toFixed(2));
+      });
+
+    const guiBlur = gui.addFolder('Blur Settings');
+
+    guiBlur.add(options, 'hIterations').name('Horizontal Step').step(1).min(1)
+      .max(5)
+      .onChange(() => {
+        material.setInt('hIterations', options.hIterations.toFixed(0));
+      });
+
+    guiBlur.add(options, 'vIterations').name('Vertical Step').step(1).min(1)
+      .max(5)
+      .onChange(() => {
+        material.setInt('vIterations', options.vIterations.toFixed(0));
+      });
 
     const guiColor = gui.addFolder('Color Settings');
-    guiColor.addColor(COLORS, 'TARGET').name('Target overlay').onChange(() => { recolor('TARGET'); });
-    guiColor.addColor(COLORS, 'WAVE').name('Waves color').onChange(() => { recolor('WAVE'); });
-    guiColor.open();
+    guiColor.add(options, 'filterRed').name('R').min(0.01).max(1.00)
+      .onChange(() => {
+        material.setFloat('filterRed', options.filterRed.toFixed(2));
+      });
+    guiColor.add(options, 'filterGreen').name('G').min(0.01).max(1.00)
+      .onChange(() => {
+        material.setFloat('filterGreen', options.filterGreen.toFixed(2));
+      });
+    guiColor.add(options, 'filterBlue').name('B').min(0.01).max(1.00)
+      .onChange(() => {
+        material.setFloat('filterBlue', options.filterBlue.toFixed(2));
+      });
   }
+
 
   componentWillUnmount() {
     super.componentWillUnmount();

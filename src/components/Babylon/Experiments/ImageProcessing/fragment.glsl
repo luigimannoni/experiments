@@ -6,7 +6,13 @@ uniform vec2 scale;
 uniform vec3 target;
 uniform vec3 wave;
 uniform float time;
+uniform float speed;
 uniform int mode;
+uniform int hIterations;
+uniform int vIterations;
+uniform float filterRed;
+uniform float filterGreen;
+uniform float filterBlue;
 
 vec4 negative() {
   vec4 color = texture2D(channel1, vUV);
@@ -19,16 +25,15 @@ vec4 blurred() {
 
   vec4 color1;
   vec4 color2;
-  int r = 2;
-  int c = 2;
+  int r = hIterations;
+  int c = vIterations;
   float d = 0.;
   float offset = 0.02;
-  offset = cos(time*2. + HALFPI) * offset;
+  offset = cos((time * speed)*2. + HALFPI) * offset;
   vec2 st = vUV.xy / scale;
 
   vec2 stepper = step(.5, st);
   vec2 smthstepper = smoothstep(0.25, .75, st);
-
 
   for(int i = -r; i < r; i++) {
     for(int j = -c; j < c; j++){
@@ -38,8 +43,8 @@ vec4 blurred() {
     }
   }
 
-  float alpha1 = abs(cos(time));
-  float alpha2 = abs(cos(time + HALFPI));
+  float alpha1 = abs(cos((time * speed)));
+  float alpha2 = abs(cos((time * speed) + HALFPI));
 
   color1.rgb /= d;
   color2.rgb /= d;
@@ -61,9 +66,9 @@ vec4 greyScaleWeighted() {
   return color;
 }
 
-vec4 emboss() {
+vec4 invert() {
   vec4 color = texture2D(channel1, vUV);
-  return color;
+  return color * -1.0;
 }
 
 vec4 simpleEdgeDetection() {
@@ -72,14 +77,18 @@ vec4 simpleEdgeDetection() {
 }
 
 vec4 mirror() {
-  vec4 color = texture2D(channel1, vUV);        
-  return color;
+  vec4 color = texture2D(channel1, vUV);
+  float nextX = vUV.x + cos(time);        
+  float nextY = vUV.y + sin(time);        
+  vec2 coords = vec2(nextX, nextY);
+
+  vec4 pixel = texture2D(channel1, coords);
+
+  return color + pixel;
 }
 
-vec4 redOnly() {
-  vec4 color = texture2D(channel1, vUV);
-  color.g = 0.;
-  color.b = 0.;
+vec4 colorFilter() {
+  vec4 color = texture2D(channel1, vUV);        
   return color;
 }
 
@@ -111,8 +120,8 @@ vec4 transition() {
   float PI = 3.14;
   float HALFPI = PI / 2.;
 
-  float alpha1 = abs(cos(time));
-  float alpha2 = abs(cos(time + HALFPI));
+  float alpha1 = abs(cos((time * speed)));
+  float alpha2 = abs(cos((time * speed) + HALFPI));
 
   color1 = color1 * alpha1;
   color2 = color2 * alpha2;
@@ -170,17 +179,55 @@ void main(void) {
   vec4 finalFragColor = texture2D(channel1, vUV); 
 
   if (mode == 1) {
+    // Channel 1 only
     finalFragColor = texture2D(channel1, vUV);
   } else if (mode == 2) {
+    // Channel 2 only
     finalFragColor = texture2D(channel2, vUV);
+  } else if (mode == 3) {
+    // Blurred
+    finalFragColor = blurred();
+  } else if (mode == 4) {
+    // Greyscale
+    finalFragColor = greyScaleSimple();
+  } else if (mode == 5) {
+    // Greyscale weight
+    finalFragColor = greyScaleWeighted();
+  } else if (mode == 6) {
+    // Greyscale weight
+    finalFragColor = maxOut();
+  } else if (mode == 7) {
+    // Greyscale weight
+    finalFragColor = transition();
+  } else if (mode == 8) {
+    // Greyscale weight
+    finalFragColor = move();
+  } else if (mode == 9) {
+    // Greyscale weight
+
+  } else if (mode == 10) {
+    // Greyscale weight
+    finalFragColor = simpleEdgeDetection();
+  } else if (mode == 11) {
+    // Greyscale weight
+    finalFragColor = invert();
+  } else if (mode == 12) {
+    // Greyscale weight
+    finalFragColor = mirror();
   } else {
+    // Crossfade sine wave
     vec4 color1 = texture2D(channel1, vUV);
     vec4 color2 = texture2D(channel2, vUV);
     float multiplier = 1.;
-    float curve = cos((x + fract(time)) * ((PI * 2.))) * multiplier + (multiplier / 2.);
+    float curve = cos((x + fract(time * speed)) * ((PI * 2.))) * multiplier + (multiplier / 2.);
 
     finalFragColor = mix(color1, color2, clamp(curve, 0., 1.));    
   }
+
+  // Color Filter Pass
+  finalFragColor.r = clamp(finalFragColor.r, 0., filterRed);
+  finalFragColor.g = clamp(finalFragColor.g, 0., filterGreen);
+  finalFragColor.b = clamp(finalFragColor.b, 0., filterBlue);
 
   gl_FragColor = finalFragColor;
 }

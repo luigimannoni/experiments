@@ -23,7 +23,7 @@ const three = [
 
 const babylon = [
   {
-    name: 'Image Processing',
+    name: 'Shader Post Processing',
     path: '/babylon/image-processing',
     component: 'Experiment',
   },
