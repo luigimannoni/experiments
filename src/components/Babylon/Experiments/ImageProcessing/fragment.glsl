@@ -6,6 +6,7 @@ uniform vec2 scale;
 uniform vec3 target;
 uniform vec3 wave;
 uniform float time;
+uniform int mode;
 
 vec4 negative() {
   vec4 color = texture2D(channel1, vUV);
@@ -166,16 +167,20 @@ vec4 water() {
 
 void main(void) {
   float x = vUV.x;
+  vec4 finalFragColor = texture2D(channel1, vUV); 
 
-  vec4 color1 = texture2D(channel1, vUV);
-  vec4 color2 = texture2D(channel2, vUV);
-  float multiplier = 1.;
-  float curve = cos((x + fract(time)) * ((PI * 2.))) * multiplier + (multiplier / 2.);
+  if (mode == 1) {
+    finalFragColor = texture2D(channel1, vUV);
+  } else if (mode == 2) {
+    finalFragColor = texture2D(channel2, vUV);
+  } else {
+    vec4 color1 = texture2D(channel1, vUV);
+    vec4 color2 = texture2D(channel2, vUV);
+    float multiplier = 1.;
+    float curve = cos((x + fract(time)) * ((PI * 2.))) * multiplier + (multiplier / 2.);
 
-  vec4 color = mix(color1, color2, clamp(curve, 0., 1.));
-  vec4 water = water();
-  water = mix(water + .5, water, clamp(curve, 0., 1.));
-  
-  gl_FragColor = mix(color, water, curve);
+    finalFragColor = mix(color1, color2, clamp(curve, 0., 1.));    
+  }
 
+  gl_FragColor = finalFragColor;
 }

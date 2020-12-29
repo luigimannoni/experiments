@@ -17,13 +17,7 @@ export default class ShaderLayering extends Base {
   componentDidMount() {
     super.componentDidMount();
 
-    this.renderer = document.createElement('canvas');
-    this.renderer.style = 'width:100%;height:100%;';
-    document.body.appendChild(this.renderer);
-
-    const engine = new BABYLON.Engine(this.renderer, true);
-
-    const scene = new BABYLON.Scene(engine);
+    const scene = new BABYLON.Scene(this.engine);
 
     const camera = new BABYLON.ArcRotateCamera('camera1', 0, 0, 100, new BABYLON.Vector3(0, 0, 0), scene);
     camera.setPosition(new BABYLON.Vector3(200, 100, -200));
@@ -36,8 +30,8 @@ export default class ShaderLayering extends Base {
     const earth = BABYLON.MeshBuilder.CreateSphere('earth', { diameter: 100 }, scene);
     earth.rotation.x = 180 / 180 * Math.PI;
 
-    // const atmosphere = BABYLON.MeshBuilder.CreateSphere('atmosphere', { diameter: 110 }, scene);
-    // atmosphere.rotation.x = 180 / 180 * Math.PI;
+    const atmosphere = BABYLON.MeshBuilder.CreateSphere('atmosphere', { diameter: 102 }, scene);
+    atmosphere.rotation.x = 180 / 180 * Math.PI;
 
 
     // Assign Shaders to stores
@@ -50,11 +44,11 @@ export default class ShaderLayering extends Base {
     // Create a material with our land texture.
     const material = {
 
-      // atmosphere: new BABYLON.ShaderMaterial('atmosphere', scene, { vertex: 'base', fragment: 'atmosphere' }, {
-      //   needAlphaBlending: true,
-      //   attributes: ['position', 'uv'],
-      //   uniforms: ['worldViewProjection'],
-      // }),
+      atmosphere: new BABYLON.ShaderMaterial('atmosphere', scene, { vertex: 'base', fragment: 'earth' }, {
+        needAlphaBlending: true,
+        attributes: ['position', 'uv'],
+        uniforms: ['worldViewProjection'],
+      }),
 
       earth: new BABYLON.ShaderMaterial('earth', scene, { vertex: 'base', fragment: 'earth' }, {
         attributes: ['position', 'uv'],
@@ -79,12 +73,11 @@ export default class ShaderLayering extends Base {
     material.earth.diffuseTexture = textures.color;
     material.earth.specularTexture = textures.specular;
     material.earth.bumpTexture = textures.normal;
-
-    // material.atmosphere.backFaceCulling = true;
+    material.atmosphere.backFaceCulling = true;
 
 
     earth.material = material.earth;
-    // atmosphere.material = material.atmosphere;
+    atmosphere.material = material.earth;
 
     // Skybox
 
@@ -105,7 +98,7 @@ export default class ShaderLayering extends Base {
 
     // Render Loop
     let time = 0;
-    engine.runRenderLoop(() => {
+    this.engine.runRenderLoop(() => {
       super.beforeRender();
       time += 0.005;
       material.earth.setFloat('time', time);
@@ -119,7 +112,7 @@ export default class ShaderLayering extends Base {
 
     // Resize event
     window.addEventListener('resize', () => {
-      engine.resize();
+      this.engine.resize();
     });
 
     // Adds GUI stuff
