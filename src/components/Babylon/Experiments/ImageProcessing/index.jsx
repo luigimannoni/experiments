@@ -123,17 +123,11 @@ export default class ImageProcessing extends Base {
       this.engine.resize();
     });
 
-
-    const recolor = (color) => {
-      material.setColor3(color.toLowerCase(), new BABYLON.Color3.FromHexString(COLORS[color]));
-    };
-
     const updateFuncs = {
       loadImage: () => {
         document.getElementById('file-image').click();
       },
     };
-
 
     function changeImageTo(path, channel) {
       const image = new BABYLON.Texture(path, scene, false, false);
