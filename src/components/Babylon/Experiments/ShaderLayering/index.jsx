@@ -17,13 +17,7 @@ export default class ShaderLayering extends Base {
   componentDidMount() {
     super.componentDidMount();
 
-    this.renderer = document.createElement('canvas');
-    this.renderer.style = 'width:100%;height:100%;';
-    document.body.appendChild(this.renderer);
-
-    const engine = new BABYLON.Engine(this.renderer, true);
-
-    const scene = new BABYLON.Scene(engine);
+    const scene = new BABYLON.Scene(this.engine);
 
     const camera = new BABYLON.ArcRotateCamera('camera1', 0, 0, 100, new BABYLON.Vector3(0, 0, 0), scene);
     camera.setPosition(new BABYLON.Vector3(200, 100, -200));
@@ -33,11 +27,23 @@ export default class ShaderLayering extends Base {
     camera.orthoLeft = -1;
     camera.attachControl(this.renderer, false);
 
-    const earth = BABYLON.MeshBuilder.CreateSphere('earth', { diameter: 100 }, scene);
-    earth.rotation.x = 180 / 180 * Math.PI;
+    const renderPipeline = new BABYLON.DefaultRenderingPipeline('default', true, scene, [camera]);
+    renderPipeline.bloomEnabled = true;
+    renderPipeline.fxaaEnabled = true;
+    renderPipeline.bloomWeight = 1;
+    renderPipeline.cameraFov = camera.fov;
+    renderPipeline.imageProcessing.toneMappingEnabled = true;
+    renderPipeline.imageProcessing.vignetteEnabled = true;
+    renderPipeline.imageProcessing.vignetteColor = new BABYLON.Color4(0, 0, 0, 1);
+    renderPipeline.imageProcessing.vignetteWeight = 1;
+    renderPipeline.imageProcessing.contrast = 1;
+    renderPipeline.imageProcessing.exposure = 1;
 
-    // const atmosphere = BABYLON.MeshBuilder.CreateSphere('atmosphere', { diameter: 110 }, scene);
-    // atmosphere.rotation.x = 180 / 180 * Math.PI;
+    const earth = BABYLON.MeshBuilder.CreateSphere('earth', { diameter: 100 }, scene);
+    earth.rotation.x = Math.PI;
+
+    const atmosphere = BABYLON.MeshBuilder.CreateSphere('atmosphere', { diameter: 102 }, scene);
+    atmosphere.rotation.x = Math.PI;
 
 
     // Assign Shaders to stores
@@ -50,11 +56,11 @@ export default class ShaderLayering extends Base {
     // Create a material with our land texture.
     const material = {
 
-      // atmosphere: new BABYLON.ShaderMaterial('atmosphere', scene, { vertex: 'base', fragment: 'atmosphere' }, {
-      //   needAlphaBlending: true,
-      //   attributes: ['position', 'uv'],
-      //   uniforms: ['worldViewProjection'],
-      // }),
+      atmosphere: new BABYLON.ShaderMaterial('atmosphere', scene, { vertex: 'base', fragment: 'earth' }, {
+        needAlphaBlending: true,
+        attributes: ['position', 'uv'],
+        uniforms: ['worldViewProjection'],
+      }),
 
       earth: new BABYLON.ShaderMaterial('earth', scene, { vertex: 'base', fragment: 'earth' }, {
         attributes: ['position', 'uv'],
@@ -79,12 +85,11 @@ export default class ShaderLayering extends Base {
     material.earth.diffuseTexture = textures.color;
     material.earth.specularTexture = textures.specular;
     material.earth.bumpTexture = textures.normal;
-
-    // material.atmosphere.backFaceCulling = true;
+    material.atmosphere.backFaceCulling = true;
 
 
     earth.material = material.earth;
-    // atmosphere.material = material.atmosphere;
+    atmosphere.material = material.earth;
 
     // Skybox
 
@@ -105,7 +110,7 @@ export default class ShaderLayering extends Base {
 
     // Render Loop
     let time = 0;
-    engine.runRenderLoop(() => {
+    this.engine.runRenderLoop(() => {
       super.beforeRender();
       time += 0.005;
       material.earth.setFloat('time', time);
@@ -119,26 +124,19 @@ export default class ShaderLayering extends Base {
 
     // Resize event
     window.addEventListener('resize', () => {
-      engine.resize();
+      this.engine.resize();
     });
 
     // Adds GUI stuff
-    // const gui = super.gui();
-
-    // const guiDisplacement = gui.addFolder('Displacement');
-    // guiDisplacement.add(uniforms.scale, 'value', 0, 2).step(0.01).name('Resolution');
-    // guiDisplacement.add(uniforms.displacement, 'value', 0, 110).name('Elevation');
-    // guiDisplacement.add(uniforms.speed, 'value', 10, 50).name('Morph speed');
-    // guiDisplacement.open();
-
-    // const guiColor = gui.addFolder('Color Settings');
-    // guiColor.add(uniforms.lowStep, 'value', -2, 0).name('Starting elevation');
-    // guiColor.add(uniforms.hiStep, 'value', 0, 2).name('Smoothness');
-    // guiColor.addColor(COLORS, 'PLASMA').name('Plasma').onChange(recolor);
-    // guiColor.addColor(COLORS, 'LIGHT_1').name('Env light 1').onChange(recolor);
-    // guiColor.addColor(COLORS, 'LIGHT_2').name('Env light 2').onChange(recolor);
-    // guiColor.add(COLORS, 'EQUALIZE').name('Env matches plasma').onChange(recolor);
-    // guiColor.open();
+    const gui = super.gui();
+    gui.add(renderPipeline.imageProcessing, 'contrast', 0.5, 3).name('Contrast');
+    gui.add(renderPipeline.imageProcessing, 'exposure', 0.5, 3).name('Exposure');
+    gui.add(renderPipeline, 'fxaaEnabled').name('FXAA');
+    gui.add(renderPipeline, 'bloomEnabled').name('Bloom');
+    gui.add(renderPipeline, 'bloomWeight', 0, 2).name('Bloom Weight');
+    gui.add(renderPipeline.imageProcessing, 'toneMappingEnabled').name('Tone Mapping');
+    gui.add(renderPipeline.imageProcessing, 'vignetteEnabled').name('Vignette');
+    gui.add(renderPipeline.imageProcessing, 'vignetteWeight', 0, 2).name('Vignette Weight');
   }
 
   componentWillUnmount() {

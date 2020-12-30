@@ -24,9 +24,14 @@ Uses an `<audio>` tag to load and play the source and read the stream from there
 
 ### Babylonjs
 
+#### [Image Processing](https://experiments.luigimannoni.com/#/babylon/image-processing)
+
+Apply some postprocess effects to a texture image using a single shader. 
+
+
 #### [Shader Layering](https://experiments.luigimannoni.com/#/babylon/shader-layering)
 
-Multiple shaders layered on top of each other to build up a complex scene, the main globe shader has two diffuse maps shifting between each other 
+Multiple shaders layered on top of each other to build up a complex scene, the main globe shader has two diffuse maps shifting between each other.
 
 ### Generic Javascript experiments
 
