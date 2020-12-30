@@ -1,7 +1,6 @@
 [![Build Status](https://travis-ci.org/luigimannoni/experiments.svg?branch=master)](https://travis-ci.org/luigimannoni/experiments)
 
-# ⚠️ WIP 
-# WebGL/Javascript Experiments 🧪🔬
+# WebGL/Javascript Experiments 🧪🔬 (⚠️ WIP )
 
 ## List of Experiments
 
