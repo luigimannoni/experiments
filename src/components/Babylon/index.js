@@ -1,5 +1,7 @@
-import ImageProcessing from './Experiments/ImageProcessing';
+import GpuProcessing from './Experiments/GpuProcessing';
+import ShaderLayering from './Experiments/ShaderLayering';
 
 export default {
-  ImageProcessing,
+  GpuProcessing,
+  ShaderLayering,
 };

@@ -14,19 +14,19 @@ const three = [
     path: '/three/soundcloud-visualizer',
     component: 'Experiment',
   },
-  // {
-  //   name: 'BBC Sphere',
-  //   path: '/three/bbc-sphere',
-  //   component: 'Experiment',
-  // },
 ];
 
 const babylon = [
   {
-    name: 'Image postprocessing shader',
-    path: '/babylon/image-processing',
+    name: 'Shader GPU Post Processing',
+    path: '/babylon/gpu-processing',
     component: 'Experiment',
   },
+  // {
+  //   name: 'Shader Layering',
+  //   path: '/babylon/shader-layering',
+  //   component: 'Experiment',
+  // },
 ];
 
 

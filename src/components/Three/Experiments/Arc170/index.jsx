@@ -49,9 +49,9 @@ export default class Arc170 extends Base {
     // Skybox
     const r = '/assets/skyboxes/nebula1024_';
     const urls = [
-      `${r}right1.png`, `${r}left2.png`,
-      `${r}top3.png`, `${r}bottom4.png`,
-      `${r}front5.png`, `${r}back6.png`,
+      `${r}nx.png`, `${r}px.png`,
+      `${r}ny.png`, `${r}py.png`,
+      `${r}nz.png`, `${r}pz.png`,
     ];
 
     const textureCube = new THREE.CubeTextureLoader().load(urls);
