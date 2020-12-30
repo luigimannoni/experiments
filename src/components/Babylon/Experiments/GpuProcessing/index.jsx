@@ -12,7 +12,7 @@ const COLORS = {
   WAVE: '#000041',
 };
 
-export default class ImageProcessing extends Base {
+export default class GpuProcessing extends Base {
   constructor(...args) {
     super(...args);
     this.renderer = null;
@@ -58,7 +58,7 @@ export default class ImageProcessing extends Base {
       'Box Crossblur': 3,
       Greyscale: 4,
       Overlay: 8,
-      Mirror: 12,
+      // Mirror: 12,
       'Channel 1 only': 1,
       'Channel 2 only': 2,
     };
@@ -156,12 +156,10 @@ export default class ImageProcessing extends Base {
     gui.add(updateFuncs, 'loadImage').name('Upload custom image');
     gui.add(options, 'channel1', imageList).name('Image Channel 1').onChange(() => { changeImageTo(options.channel1, 'channel1'); });
     gui.add(options, 'channel2', imageList).name('Image Channel 2').onChange(() => { changeImageTo(options.channel2, 'channel2'); });
-
-    const guiProcess = gui.addFolder('Postprocessing');
-    guiProcess.add(options, 'shaderMode', modeList).name('Shader mode').onChange(() => {
+    gui.add(options, 'shaderMode', modeList).name('Shader mode').onChange(() => {
       material.setInt('mode', options.shaderMode);
     });
-    guiProcess.add(options, 'speed').name('Speed').min(0.01).max(2.00)
+    gui.add(options, 'speed').name('Speed').min(0.01).max(2.00)
       .onChange(() => {
         material.setFloat('speed', options.speed.toFixed(2));
       });
@@ -179,6 +177,7 @@ export default class ImageProcessing extends Base {
       .onChange(() => {
         material.setInt('vIterations', options.vIterations.toFixed(0));
       });
+    guiBlur.close();
 
     const guiColor = gui.addFolder('Color Settings');
     guiColor.add(options, 'filterRed').name('R').min(0.01).max(1.00)
@@ -193,6 +192,7 @@ export default class ImageProcessing extends Base {
       .onChange(() => {
         material.setFloat('filterBlue', options.filterBlue.toFixed(2));
       });
+    guiColor.close();
   }
 
 
