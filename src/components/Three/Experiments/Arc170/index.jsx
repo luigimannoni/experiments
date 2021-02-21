@@ -29,7 +29,7 @@ export default class Arc170 extends Base {
     const camera = new THREE.PerspectiveCamera(
       75,
       window.innerWidth / window.innerHeight,
-      0.1,
+      10,
       5000,
     );
 
@@ -49,37 +49,16 @@ export default class Arc170 extends Base {
     // Skybox
     const r = '/assets/skyboxes/nebula1024_';
     const urls = [
-      `${r}nx.png`, `${r}px.png`,
-      `${r}ny.png`, `${r}py.png`,
-      `${r}nz.png`, `${r}pz.png`,
+      `${r}px.png`, `${r}nx.png`,
+      `${r}py.png`, `${r}ny.png`,
+      `${r}pz.png`, `${r}nz.png`,
     ];
 
     const textureCube = new THREE.CubeTextureLoader().load(urls);
     textureCube.format = THREE.RGBFormat;
     textureCube.mapping = THREE.CubeReflectionMapping;
     textureCube.encoding = THREE.sRGBEncoding;
-
-    const cubeShader = THREE.ShaderLib.cube;
-    const skyboxMaterial = new THREE.ShaderMaterial({
-      fragmentShader: cubeShader.fragmentShader,
-      vertexShader: cubeShader.vertexShader,
-      uniforms: cubeShader.uniforms,
-      depthWrite: false,
-      side: THREE.BackSide,
-    });
-
-    skyboxMaterial.uniforms.tCube.value = textureCube;
-    Object.defineProperty(skyboxMaterial, 'map', {
-      get() {
-        return this.uniforms.tCube.value;
-      },
-    });
-
-    const skybox = new THREE.Mesh(
-      new THREE.BoxBufferGeometry(5000, 5000, 5000),
-      skyboxMaterial,
-    );
-    scene.add(skybox);
+    scene.background = textureCube;
 
     // Lights
     const light = new THREE.AmbientLight(0xffffff, 2.0);
