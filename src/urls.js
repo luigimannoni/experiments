@@ -44,6 +44,11 @@ const css = [
     path: '/css/twist-typography',
     component: 'Experiment',
   },
+  {
+    name: 'Ladder Typography',
+    path: '/css/ladder-typography',
+    component: 'Experiment',
+  },
 ];
 
 const urls = [

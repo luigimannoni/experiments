@@ -3,12 +3,12 @@ import './style.scss';
 
 const TwistTypography = () => (
   <>
-    <div className="typography">
-      <div className="typography--container">
+    <div className="typography typography--twist">
+      <div className="typography--twist--container">
         {
-          Array(40).fill('Typography').map((value, index) => (
-            <div className="typography--element">
-              <span text={value} className="typography--element-span">{value}</span>
+          Array(40).fill('Twister').map((value, index) => (
+            <div key={index} className="typography--twist--element">
+              <span text={value} className="typography--twist--element-span">{value}</span>
             </div>
           ))
         }

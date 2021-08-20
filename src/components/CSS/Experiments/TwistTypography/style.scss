@@ -1,9 +1,9 @@
 $delay: 75ms;
 $duration: 1.5s;
+$curve: ease-out;
 
-.typography {
-  font-family: 'Inter var experimental', 'Inter', sans-serif;
-  font-variation-settings: 'slnt' 10deg;
+.typography--twist {
+	font-family: 'Krona One', sans-serif;
 
   &--container {
     display: flex;
@@ -26,7 +26,7 @@ $duration: 1.5s;
       &:nth-child(#{$i}) {
         animation-delay: ($delay * $i);
 
-        .typography--element-span {
+        .typography--twist--element-span {
           &::before {
             animation-delay: ($delay * $i);
           }
@@ -43,7 +43,7 @@ $duration: 1.5s;
     display: flex;
     position: relative;
     width: auto;
-    animation: slide ($duration * 2) ease-in-out infinite alternate;
+    animation: twist-element ($duration * 2) ease-in-out infinite alternate;
     color: transparent;
     line-height: 1;
 
@@ -52,20 +52,20 @@ $duration: 1.5s;
       position: absolute;
       display: inline-block;
       content: attr(text);
-      animation: shrink $duration ease-out infinite;
+      animation: twist-text $duration $curve infinite;
       transform-origin: left;
       color: #ffffe2;
     }
 
     &::after {
-      animation: shrink $duration ease-out infinite reverse;
+      animation: twist-text $duration $curve infinite reverse;
       transform-origin: right;
       color: #c82222;
     }
   }
 }
 
-@keyframes shrink {
+@keyframes twist-text {
   0% {
     transform: rotateY(0deg);
   }
@@ -74,7 +74,7 @@ $duration: 1.5s;
   }
 }
 
-@keyframes slide {
+@keyframes twist-element {
   0% {
     transform: rotateZ(-15deg);
   }
