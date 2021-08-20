@@ -1,0 +1,84 @@
+$delay: 75ms;
+$duration: 1.5s;
+
+.typography {
+  font-family: 'Inter var experimental', 'Inter', sans-serif;
+  font-variation-settings: 'slnt' 10deg;
+
+  &--container {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    flex-direction: column;
+    transform: translateY(-10%);
+  }
+
+  &--element {
+    text-transform: uppercase;
+    font-size: 2rem;
+    font-weight: 700;
+
+    @media screen and (min-width: 550px)  {
+      font-size: 3rem;
+    }
+
+    @for $i from 1 through 40 {
+      &:nth-child(#{$i}) {
+        animation-delay: ($delay * $i);
+
+        .typography--element-span {
+          &::before {
+            animation-delay: ($delay * $i);
+          }
+
+          &::after {
+            animation-delay: ($delay * $i);
+          }
+        }
+      }
+    }
+  }
+
+  &--element-span {
+    display: flex;
+    position: relative;
+    width: auto;
+    animation: slide ($duration * 2) ease-in-out infinite alternate;
+    color: transparent;
+    line-height: 1;
+
+    &::before,
+    &::after {
+      position: absolute;
+      display: inline-block;
+      content: attr(text);
+      animation: shrink $duration ease-out infinite;
+      transform-origin: left;
+      color: #ffffe2;
+    }
+
+    &::after {
+      animation: shrink $duration ease-out infinite reverse;
+      transform-origin: right;
+      color: #c82222;
+    }
+  }
+}
+
+@keyframes shrink {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(90deg);
+  }
+}
+
+@keyframes slide {
+  0% {
+    transform: rotateZ(-15deg);
+  }
+  100% {
+    transform: rotateZ(15deg);
+  }
+}

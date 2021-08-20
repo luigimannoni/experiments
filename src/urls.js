@@ -38,6 +38,14 @@ const javascript = [
   },
 ];
 
+const css = [
+  {
+    name: 'Twisting Typography',
+    path: '/css/twist-typography',
+    component: 'Experiment',
+  },
+];
+
 const urls = [
   {
     name: 'Three',
@@ -50,6 +58,10 @@ const urls = [
   {
     name: 'Javascript',
     children: javascript,
+  },
+  {
+    name: 'Pure CSS',
+    children: css,
   },
 ];
 

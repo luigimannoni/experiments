@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Three from '../Three';
 import Javascript from '../Javascript';
 import Babylon from '../Babylon';
+import Css from '../CSS';
 
 export default class Experiment extends Component {
   static pascalCase(s) {
@@ -21,6 +22,7 @@ export default class Experiment extends Component {
       Three,
       Javascript,
       Babylon,
+      Css,
     };
 
     const { match } = this.props;
