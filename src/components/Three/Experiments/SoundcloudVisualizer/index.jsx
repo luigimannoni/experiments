@@ -3,7 +3,6 @@ import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
-import SC from 'soundcloud';
 
 import Base from '../Base';
 
@@ -25,6 +24,10 @@ export default class SoundcloudVisualizer extends Base {
     this.player = null;
   }
 
+  handlePlay = () => {
+    this.player.play();
+  };
+
   componentDidMount() {
     super.componentDidMount();
 
@@ -34,22 +37,12 @@ export default class SoundcloudVisualizer extends Base {
     document.body.appendChild(this.player);
     const audioSource = Audio.Analyzer(this.player);
 
-    const SC_KEY = '26095b994cc185bc665f4c9fcce8f211';
-    SC.initialize({
-      client_id: SC_KEY,
-    });
-    SC.get('/resolve', { url: 'https://soundcloud.com/noton-info/alva-noto-uni-blue' }).then((res) => {
-      if (res.errors) {
-        console.error(res.errors);
-        setTimeout(() => {
-          window.location.reload();
-        }, 5000);
-      } else {
-        this.player.crossOrigin = 'anonymous';
-        this.player.setAttribute('src', `${res.stream_url}?client_id=${SC_KEY}`);
-        this.player.play();
-      }
-    });
+    this.player.setAttribute('src', '/assets/audio/nin-ghosts-14.mp3');
+    try {
+      this.player.play();
+    } catch (err) {
+      console.log(err);
+    }
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(

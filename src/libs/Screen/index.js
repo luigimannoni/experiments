@@ -28,6 +28,8 @@ const ToggleFullscreen = () => {
   }
 };
 
-export default {
+const Screen = {
   ToggleFullscreen,
 };
+
+export default Screen;

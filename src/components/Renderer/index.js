@@ -1,7 +1,9 @@
 import Home from './Home';
 import Experiment from './Experiment';
 
-export default {
+const Renderer = {
   Home,
   Experiment,
 };
+
+export default Renderer;

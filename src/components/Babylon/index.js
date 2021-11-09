@@ -1,7 +1,9 @@
 import GpuProcessing from './Experiments/GpuProcessing';
 import ShaderLayering from './Experiments/ShaderLayering';
 
-export default {
+const Babylon = {
   GpuProcessing,
   ShaderLayering,
 };
+
+export default Babylon;

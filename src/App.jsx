@@ -1,6 +1,6 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { HashRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import slugify from 'slugify';
 
 import Renderer from './components/Renderer';
@@ -14,25 +14,27 @@ import './App.scss';
 export default class App extends Component {
   render() {
     return (
-      <HashRouter basename="/">
+      <BrowserRouter basename="/">
         <Navigator links={urls} />
 
         <div className="App">
-          {routes.map((route) => {
-            const ComponentName = Renderer[route.component];
-            const key = slugify(route.path);
+          <Routes>
+            {routes.map((route) => {
+              const Component = Renderer[route.component];
+              const key = slugify(route.path);
 
-            return (
-              <Route
-                key={key}
-                path={route.path}
-                exact={route.exact}
-                component={ComponentName}
-              />
-            );
-          })}
+              return (
+                <Route
+                  key={key}
+                  path={route.path}
+                  exact={route.exact}
+                  element={<Component />}
+                />
+              );
+            })}
+          </Routes>
         </div>
-      </HashRouter>
+      </BrowserRouter>
     );
   }
 }

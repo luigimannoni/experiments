@@ -46,6 +46,8 @@ const Analyzer = (player) => {
   };
 };
 
-export default {
+const Audio = {
   Analyzer,
 };
+
+export default Audio;

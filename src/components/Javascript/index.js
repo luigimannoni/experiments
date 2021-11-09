@@ -1,5 +1,7 @@
 import MatterRepulsor from './Experiments/MatterRepulsor';
 
-export default {
+const Javascript = {
   MatterRepulsor,
 };
+
+export default Javascript;
