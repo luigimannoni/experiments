@@ -1,3 +1,7 @@
+import { SiThreedotjs, SiCss3 } from 'react-icons/si';
+import { HiOutlineCubeTransparent } from 'react-icons/hi';
+import { IoLogoJavascript } from 'react-icons/io';
+
 const three = [
   {
     name: 'Displacement shader',
@@ -55,18 +59,22 @@ const urls = [
   {
     name: 'Three',
     children: three,
+    icon: () => <SiThreedotjs size="18" />
   },
   {
     name: 'Babylon',
     children: babylon,
+    icon: () => <HiOutlineCubeTransparent size="18" />
   },
   {
     name: 'Javascript',
     children: javascript,
+    icon: () => <IoLogoJavascript size="18" />
   },
   {
-    name: 'Pure CSS',
+    name: 'CSS3',
     children: css,
+    icon: () => <SiCss3 size="18" />
   },
 ];
 

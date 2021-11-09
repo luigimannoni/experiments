@@ -17,7 +17,7 @@ export default class App extends Component {
       <BrowserRouter basename="/">
         <Navigator links={urls} />
 
-        <div className="App">
+        <div id="main-screen" className="App">
           <Routes>
             {routes.map((route) => {
               const Component = Renderer[route.component];

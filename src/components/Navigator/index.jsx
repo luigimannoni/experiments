@@ -31,15 +31,19 @@ export default class Navigator extends Component {
 
   renderUrls() {
     const { links } = this.props;
-    const { activeParent, activeChild } = this.state;
+    const { open, activeParent, activeChild } = this.state;
 
     return links.map((url) => {
       const parentKey = slugify(url.name);
       const parentClass = activeParent === parentKey ? 'active' : '';
 
       return (
-        <li key={parentKey} className={parentClass}>
-          <span>{url.name}</span>
+        <li
+          key={parentKey}
+          className={parentClass}
+          onClick={() => { this.setActive(parentKey, false); }}
+        >
+          <span>{url.icon && url.icon()} {url.name}</span>
           <ul className="sub-level">
             {
               url.children.map((child) => {
@@ -50,7 +54,10 @@ export default class Navigator extends Component {
                   <li key={childKey} className={childClass}>
                     <Link
                       to={child.path}
-                      onClick={() => { this.setActive(parentKey, childKey); }}
+                      onClick={() => {
+                        this.setActive(parentKey, childKey);
+                        this.toggleNavigator(!open);
+                      }}
                     >
                       {child.name}
                     </Link>
@@ -73,7 +80,6 @@ export default class Navigator extends Component {
     return (
       <nav
         onMouseEnter={() => { this.toggleNavigator(true); }}
-        onMouseLeave={() => { this.toggleNavigator(false); }}
         className={`site-navigator ${navClass}`}
       >
         <Link to="/" className="logo">

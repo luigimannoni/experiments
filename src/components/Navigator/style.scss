@@ -26,9 +26,11 @@ nav.site-navigator {
   width: $initial-width;
   overflow: hidden;
   transition: all 500ms $bezier-curve;
+  backdrop-filter: blur(10px);
 
   &.is-open {
-    background-color: rgba($bg-color, 1);
+    background-color: rgba($bg-color, 0.8);
+    backdrop-filter: blur(20px);
     width: $column-width + $initial-width;
   }
 
@@ -64,8 +66,8 @@ nav.site-navigator {
       left: 0;
 
       span {
-        font-size: 2.75rem;
-        font-weight: 200;
+        font-size: 1.5rem;
+        font-weight: 300;
       }
     }
 
@@ -75,20 +77,20 @@ nav.site-navigator {
       width: 100%;
       opacity: 0;
       overflow: hidden;
-      transform: translateX(-50px);      
+      transform: translateX(-50px);
       transition: all 300ms $bezier-curve;
 
       > ul.sub-level {
         position: relative;
         display: block;
         align-items: center;
-        justify-content: center;    
-        height: 0;
+        justify-content: center;
         overflow: hidden;
+        height: 0;
 
         a {
           font-size: 1rem;
-          font-weight: 500;
+          font-weight: 400;
         }
       }
 
@@ -132,9 +134,11 @@ nav.site-navigator {
           &::before {
             width: 100%;
             background-color: $active-bg-color;
-          }          
+          }
         }
-        
+      }
+
+      &.active {
         > ul.sub-level {
           height: auto;
 
@@ -143,7 +147,7 @@ nav.site-navigator {
             transform: translateX(0);
           }
         }
-      }      
+      }
     }
   }
 
@@ -158,7 +162,7 @@ nav.site-navigator {
       li:nth-child(#{$i}) {
         transition-delay: 50ms * $i;
       }
-    }    
+    }
   }
 
   .hamburger {
@@ -167,6 +171,7 @@ nav.site-navigator {
     transform: translateY(-50%);
     right: 0;
     outline: none !important;
-    cursor: auto;
+    cursor: pointer;
+    height: 100%;
   }
 }
