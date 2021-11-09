@@ -1,6 +1,6 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { HashRouter, Route, Routes } from 'react-router-dom';
 import slugify from 'slugify';
 
 import Renderer from './components/Renderer';
@@ -14,7 +14,7 @@ import './App.scss';
 export default class App extends Component {
   render() {
     return (
-      <BrowserRouter basename="/">
+      <HashRouter basename="/">
         <Navigator links={urls} />
 
         <div id="main-screen" className="App">
@@ -34,7 +34,7 @@ export default class App extends Component {
             })}
           </Routes>
         </div>
-      </BrowserRouter>
+      </HashRouter>
     );
   }
 }
