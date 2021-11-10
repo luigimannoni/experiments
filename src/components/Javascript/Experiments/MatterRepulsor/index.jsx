@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Matter from 'matter-js';
 import MatterAttractors from 'matter-attractors-f';
-import GUI from '../../../../libs/GUI';
+import Pane from '../../../../libs/Pane';
 import Screen from '../../../../libs/Screen';
 
 export default class MatterRepulsor extends Component {
@@ -233,7 +233,7 @@ export default class MatterRepulsor extends Component {
       mouseConstraint,
     ]);
 
-    Engine.run(this.engine);
+    Matter.Runner.run(this.engine);
     Render.run(this.renderer);
 
     function setRandomForce() {
@@ -290,43 +290,71 @@ export default class MatterRepulsor extends Component {
 
     // Editor setup
 
-    GUI.mount();
-    const gui = GUI.interface();
+    Pane.mount();
+    const pane = Pane.interface();
 
-    const guiFolder = {
-      grid: gui.addFolder('Grid settings'),
-      render: gui.addFolder('Render settings'),
-      colors: gui.addFolder('Colors'),
-    };
-    guiFolder.grid.add(updateFuncs, 'dotScaleUp').name('Scale up dots');
-    guiFolder.grid.add(updateFuncs, 'dotScaleDown').name('Scale down dots');
+    const paneGrid = pane.addFolder({ title: 'Grid settings' });
+    const paneRender = pane.addFolder({ title: 'Render settings' });
+    const paneColors = pane.addFolder({ title: 'Colors' });
 
-    guiFolder.grid.add(settings, 'force', 0, 10).step(0.01).onChange(updateFuncs.dotsConstraints).name('Force field');
-    guiFolder.grid.add(settings, 'stiffness', 0, 0.015).step(0.0001).onChange(updateFuncs.dotsConstraints).name('Stiffness');
-    guiFolder.grid.add(settings, 'damping', 0, 1).step(0.0001).onChange(updateFuncs.dotsConstraints).name('Damping');
-    guiFolder.grid.open();
+    paneGrid.addButton({ title: 'Scale dots up' }).on('click', updateFuncs.dotScaleUp);
+    paneGrid.addButton({ title: 'Scale dots down' }).on('click', updateFuncs.dotScaleDown);
 
-    guiFolder.render.add(this.engine.timing, 'timeScale', 1e-3, 1.2).step(1e-3).listen().name('Render speed');
-    guiFolder.render.add(this.engine.world.gravity, 'scale', 0, 0.001).step(0.0001).name('Gravity force');
-    guiFolder.render.add(this.engine.world.gravity, 'x', -1, 1).step(0.01).name('Gravity horiz');
-    guiFolder.render.add(this.engine.world.gravity, 'y', -1, 1).step(0.01).name('Gravity vert');
-    guiFolder.render.add(settings, 'randomForceMultiplier', 0, 1).step(0.01).name('Random force');
-    guiFolder.render.open();
+    paneGrid.addInput(settings, 'force', {
+      min: 0, max: 10, step: 0.01, label: 'Force field',
+    }).on('change', updateFuncs.dotsConstraints);
+    paneGrid.addInput(settings, 'stiffness', {
+      min: 0, max: 0.015, step: 0.0001, label: 'Stiffness',
+    }).on('change', updateFuncs.dotsConstraints);
+    paneGrid.addInput(settings, 'damping', {
+      min: 0, max: 1, step: 0.0001, label: 'Damping',
+    }).on('change', updateFuncs.dotsConstraints);
 
-    guiFolder.colors.addColor(settings, 'backgroundGradientStart').onChange(updateFuncs.bgColor).name('BG Gradient Start');
-    guiFolder.colors.addColor(settings, 'backgroundGradientEnd').onChange(updateFuncs.bgColor).name('BG Gradient End');
-    guiFolder.colors.add(settings, 'backgroundGradientDegrees', 0, 360).step(1).onChange(updateFuncs.bgColor).name('Gradient Deg');
-    guiFolder.colors.addColor(settings, 'dots').onChange(updateFuncs.dotsColor).name('Dot color');
-    guiFolder.colors.add(settings, 'maskDot').onChange(updateFuncs.dotsColor).name('Transparent repulsor');
-    guiFolder.colors.open();
+    paneRender.addInput(this.engine.timing, 'timeScale', {
+      min: 1e-3, max: 1.2, step: 1e-3, label: 'Render speed',
+    });
+    paneRender.addInput(this.engine.gravity, 'scale', {
+      min: 0, max: 0.001, step: 0.0001, label: 'Gravity force',
+    });
+    paneRender.addInput(this.engine.gravity, 'x', {
+      min: -1, max: 1, step: 0.01, label: 'Gravity horiz',
+    });
+    paneRender.addInput(this.engine.gravity, 'y', {
+      min: -1, max: 1, step: 0.01, label: 'Gravity vert',
+    });
+    paneRender.addInput(settings, 'randomForceMultiplier', {
+      min: 0, max: 1, step: 0.01, label: 'Random force',
+    });
 
-    gui.add(updateFuncs, 'switchFullscreen').name('Fullscreen toggle');
+    paneColors.addInput(settings, 'backgroundGradientStart', {
+      view: 'color',
+      label: 'BG Gradient Start',
+    }).on('change', updateFuncs.bgColor);
+    paneColors.addInput(settings, 'backgroundGradientEnd', {
+      view: 'color',
+      label: 'BG Gradient End',
+    }).on('change', updateFuncs.bgColor);
+    paneColors.addInput(settings, 'backgroundGradientDegrees', {
+      min: 0,
+      max: 360,
+      step: 1,
+      label: 'Gradient Deg',
+    }).on('change', updateFuncs.bgColor);
+    paneColors.addInput(settings, 'dots', {
+      view: 'color',
+      label: 'Dot color',
+    }).on('change', updateFuncs.dotsColor);
+    paneColors.addInput(settings, 'maskDot', {
+      label: 'Transparent repulsor',
+    }).on('change', updateFuncs.dotsColor);
+
+    pane.addButton({ title: 'Fullscreen toggle' }).on('click', updateFuncs.switchFullscreen);
 
     updateFuncs.bgColor();
   }
 
   componentWillUnmount() {
-    GUI.unmount();
+    Pane.unmount();
     Matter.Render.stop(this.renderer);
     Matter.World.clear(this.engine.world);
     Matter.Engine.clear(this.engine);

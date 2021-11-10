@@ -17,8 +17,8 @@ const BLOOM = {
 };
 
 export default class Arc170 extends Base {
-  constructor(...args) {
-    super(...args);
+  constructor() {
+    super({ tweakpane: true });
     this.renderer = null;
   }
 
@@ -134,16 +134,26 @@ export default class Arc170 extends Base {
     };
     window.addEventListener('resize', onWindowResize, false);
 
-    // Adds GUI stuff
-    const gui = super.gui();
+    const pane = super.pane();
 
-    const guiBloom = gui.addFolder('Bloom Effect');
-    guiBloom.add(this.renderer, 'toneMappingExposure', 0, 1).step(0.001).name('Exposure').listen();
-    guiBloom.add(bloomPass, 'threshold', 0, 2).step(0.001).name('Cut threshold');
-    guiBloom.add(bloomPass, 'strength', 0, 2).step(0.1).name('Strength').listen();
-    guiBloom.add(bloomPass, 'radius', 0, 2).step(0.1).name('Radius').listen();
-    guiBloom.add(BLOOM, 'ANIMATE').name('Animate bloom');
-    guiBloom.open();
+    const paneBloom = pane.addFolder({ title: 'Bloom Effect' });
+    const b1 = paneBloom.addInput(this.renderer, 'toneMappingExposure', {
+      min: 0, max: 1, step: 0.001, label: 'Exposure', disabled: BLOOM.ANIMATE,
+    });
+    paneBloom.addInput(bloomPass, 'threshold', {
+      min: 0, max: 1, step: 0.0001, label: 'Threshold',
+    });
+    const b2 = paneBloom.addInput(bloomPass, 'strength', {
+      min: 0, max: 2, step: 0.1, label: 'Strength', disabled: BLOOM.ANIMATE,
+    });
+    const b3 = paneBloom.addInput(bloomPass, 'radius', {
+      min: 0, max: 2, step: 0.1, label: 'Radius', disabled: BLOOM.ANIMATE,
+    });
+    paneBloom.addInput(BLOOM, 'ANIMATE', { label: 'Animate' }).on('change', () => {
+      b1.disabled = BLOOM.ANIMATE;
+      b2.disabled = BLOOM.ANIMATE;
+      b3.disabled = BLOOM.ANIMATE;
+    });
   }
 
   componentWillUnmount() {

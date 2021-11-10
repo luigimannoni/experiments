@@ -210,24 +210,32 @@ export default class Displacement extends Base {
 
     const paneColor = pane.addFolder({ title: 'Color Settings' });
     paneColor.addInput(COLORS, 'PLASMA', { view: 'color', label: 'Ball' }).on('change', recolor);
-    paneColor.addInput(COLORS, 'LIGHT_1', { view: 'color', label: 'Background Shadows' }).on('change', recolor);
-    paneColor.addInput(COLORS, 'LIGHT_2', { view: 'color', label: 'Background Lights' }).on('change', recolor);
-    paneColor.addInput(COLORS, 'EQUALIZE', { label: 'Equalize colors' }).on('change', recolor);
+    const c1 = paneColor.addInput(COLORS, 'LIGHT_1', { view: 'color', disabled: COLORS.EQUALIZE, label: 'Background Shadows' }).on('change', recolor);
+    const c2 = paneColor.addInput(COLORS, 'LIGHT_2', { view: 'color', disabled: COLORS.EQUALIZE, label: 'Background Lights' }).on('change', recolor);
+    paneColor.addInput(COLORS, 'EQUALIZE', { label: 'Equalize colors' }).on('change', () => {
+      c1.disabled = COLORS.EQUALIZE;
+      c2.disabled = COLORS.EQUALIZE;
+      recolor();
+    });
 
     const paneBloom = pane.addFolder({ title: 'Bloom Effect' });
-    paneBloom.addInput(this.renderer, 'toneMappingExposure', {
-      min: 0, max: 1, step: 0.001, label: 'Exposure',
+    const b1 = paneBloom.addInput(this.renderer, 'toneMappingExposure', {
+      min: 0, max: 1, step: 0.001, label: 'Exposure', disabled: BLOOM.ANIMATE,
     });
     paneBloom.addInput(bloomPass, 'threshold', {
-      min: 0, max: 2, step: 0.001, label: 'Threshold',
+      min: 0, max: 1, step: 0.0001, label: 'Threshold',
     });
-    paneBloom.addInput(bloomPass, 'strength', {
-      min: 0, max: 2, step: 0.1, label: 'Strength',
+    const b2 = paneBloom.addInput(bloomPass, 'strength', {
+      min: 0, max: 2, step: 0.1, label: 'Strength', disabled: BLOOM.ANIMATE,
     });
-    paneBloom.addInput(bloomPass, 'radius', {
-      min: 0, max: 2, step: 0.1, label: 'Radius',
+    const b3 = paneBloom.addInput(bloomPass, 'radius', {
+      min: 0, max: 2, step: 0.1, label: 'Radius', disabled: BLOOM.ANIMATE,
     });
-    paneBloom.addInput(BLOOM, 'ANIMATE', { label: 'Animate' });
+    paneBloom.addInput(BLOOM, 'ANIMATE', { label: 'Animate' }).on('change', () => {
+      b1.disabled = BLOOM.ANIMATE;
+      b2.disabled = BLOOM.ANIMATE;
+      b3.disabled = BLOOM.ANIMATE;
+    });
   }
 
   componentWillUnmount() {
