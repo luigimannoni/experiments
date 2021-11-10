@@ -33,7 +33,7 @@ export default class GpuProcessing extends Base {
     camera.upperRadiusLimit = 300;
     camera.attachControl(this.renderer, false);
 
-    const plane = BABYLON.MeshBuilder.CreatePlane('plane', { size: 100, sideOrientation: BABYLON.Mesh.DOUBLESIDE }, scene);
+    const box = BABYLON.MeshBuilder.CreateBox('box', { size: 100, sideOrientation: BABYLON.Mesh.DOUBLESIDE }, scene);
 
     BABYLON.Effect.ShadersStore.postprocessVertexShader = vertex;
     BABYLON.Effect.ShadersStore.postprocessFragmentShader = fragment;
@@ -96,9 +96,9 @@ export default class GpuProcessing extends Base {
       ? this.renderer.width : this.renderer.height;
     material.setVector2('scale', new BABYLON.Vector2(scale, scale));
 
-    plane.material = material;
+    box.material = material;
     // Rotate plane 180 degrees
-    plane.rotation = new BABYLON.Vector3(Math.PI, 0, 0);
+    box.rotation = new BABYLON.Vector3(Math.PI, 0, 0);
 
     // Render Loop
     let time = 0;

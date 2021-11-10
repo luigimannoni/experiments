@@ -18,6 +18,11 @@ body > canvas {
   z-index: 0;
 }
 
+#main-screen {
+  display: flex;
+  height: 100vh;
+}
+
 // Dat GUI
 // Tweakpane
 .dg.ac,

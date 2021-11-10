@@ -19,6 +19,7 @@
   ],
   "rules": {
     "react/prop-types": "off",
-    "class-methods-use-this": "off"
+    "class-methods-use-this": "off",
+    "react/jsx-props-no-spreading": "off"
   }
 }
