@@ -316,11 +316,13 @@ export default class MatterRepulsor extends Component {
     paneRender.addInput(this.engine.gravity, 'scale', {
       min: 0, max: 0.001, step: 0.0001, label: 'Gravity force',
     });
-    paneRender.addInput(this.engine.gravity, 'x', {
-      min: -1, max: 1, step: 0.01, label: 'Gravity horiz',
-    });
-    paneRender.addInput(this.engine.gravity, 'y', {
-      min: -1, max: 1, step: 0.01, label: 'Gravity vert',
+    paneRender.addInput(this.engine, 'gravity', {
+      x: {
+        min: -1, max: 1, step: 0.01, label: 'Gravity horiz',
+      },
+      y: {
+        min: -1, max: 1, step: 0.01, label: 'Gravity vert',
+      },
     });
     paneRender.addInput(settings, 'randomForceMultiplier', {
       min: 0, max: 1, step: 0.01, label: 'Random force',
