@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-filename-extension */
+import React from 'react';
 import { SiThreedotjs, SiCss3 } from 'react-icons/si';
 import { HiOutlineCubeTransparent } from 'react-icons/hi';
 import { IoLogoJavascript } from 'react-icons/io';
@@ -33,7 +35,6 @@ const babylon = [
   // },
 ];
 
-
 const javascript = [
   {
     name: 'MatterJS Simple Repulsor',
@@ -59,22 +60,22 @@ const urls = [
   {
     name: 'Three',
     children: three,
-    icon: () => <SiThreedotjs size="18" />
+    icon: () => <SiThreedotjs size="18" />,
   },
   {
     name: 'Babylon',
     children: babylon,
-    icon: () => <HiOutlineCubeTransparent size="18" />
+    icon: () => <HiOutlineCubeTransparent size="18" />,
   },
   {
     name: 'Javascript',
     children: javascript,
-    icon: () => <IoLogoJavascript size="18" />
+    icon: () => <IoLogoJavascript size="18" />,
   },
   {
     name: 'CSS3',
     children: css,
-    icon: () => <SiCss3 size="18" />
+    icon: () => <SiCss3 size="18" />,
   },
 ];
 

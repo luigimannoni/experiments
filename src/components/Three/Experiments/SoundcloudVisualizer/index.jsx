@@ -24,9 +24,9 @@ export default class SoundcloudVisualizer extends Base {
     this.player = null;
   }
 
-  handlePlay = () => {
+  handlePlay() {
     this.player.play();
-  };
+  }
 
   componentDidMount() {
     super.componentDidMount();
@@ -41,7 +41,8 @@ export default class SoundcloudVisualizer extends Base {
     try {
       this.player.play();
     } catch (err) {
-      console.log(err);
+      // eslint-disable-next-line no-console
+      console.warn(err);
     }
 
     const scene = new THREE.Scene();
@@ -58,14 +59,11 @@ export default class SoundcloudVisualizer extends Base {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(this.renderer.domElement);
 
-
     const group = new THREE.Group();
     scene.add(group);
 
-
     const light = new THREE.AmbientLight(0xffffff);
     scene.add(light);
-
 
     const planeGeometry = new THREE.PlaneBufferGeometry(10000, 10000);
     const planeMaterial = new THREE.MeshPhongMaterial({
@@ -78,7 +76,6 @@ export default class SoundcloudVisualizer extends Base {
     plane.rotation.x = Helpers.deg(-90);
 
     scene.add(plane);
-
 
     const cubeDimension = 45;
     const cubeRows = 9;
@@ -170,15 +167,15 @@ export default class SoundcloudVisualizer extends Base {
             const channel = sample.streamData[i];
             const attrs = {
               scale: (channel + 0.1) / 3,
-              squeeze: 1 / 255 * (255 - channel / 2),
-              color: new THREE.Color(0x0).setHSL(0.27 / 128 * (255 - channel), 1, 0.5),
+              squeeze: (1 / 255) * (255 - channel / 2),
+              color: new THREE.Color(0x0).setHSL((0.27 / 128) * (255 - channel), 1, 0.5),
             };
 
             cubes[i].scale.y = attrs.scale;
             cubes[i].position.y = attrs.scale / 2;
             cubes[i].scale.x = attrs.squeeze;
             cubes[i].scale.z = attrs.squeeze;
-            cubes[i].material.opacity = 1 / 255 * channel;
+            cubes[i].material.opacity = (1 / 255) * channel;
 
             cubesWireframe[i].scale.y = attrs.scale;
             cubesWireframe[i].position.y = attrs.scale / 2;

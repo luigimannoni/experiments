@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import './style.scss';
 
@@ -7,7 +8,7 @@ const LadderTypography = () => (
       <div className="typography--ladder--container">
         {
           Array(40).fill('Stepper').map((value, index) => (
-            <div className="typography--ladder--element">
+            <div key={index} className="typography--ladder--element">
               <span text={value} className="typography--ladder--element-span">{value}</span>
             </div>
           ))

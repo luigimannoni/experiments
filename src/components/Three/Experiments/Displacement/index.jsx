@@ -31,8 +31,8 @@ const BLOOM = {
 };
 
 export default class Displacement extends Base {
-  constructor(...args) {
-    super(...args);
+  constructor() {
+    super({ tweakpane: true });
     this.renderer = null;
   }
 
@@ -143,7 +143,6 @@ export default class Displacement extends Base {
     composer.addPass(renderPass);
     composer.addPass(bloomPass);
 
-
     const render = () => {
       super.beforeRender();
 
@@ -175,7 +174,6 @@ export default class Displacement extends Base {
 
     render();
 
-
     // Mouse and resize events
     const onWindowResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;
@@ -198,30 +196,38 @@ export default class Displacement extends Base {
     };
 
     // Adds GUI stuff
-    const gui = super.gui();
+    // const gui = super.gui();
+    const pane = super.pane();
 
-    const guiDisplacement = gui.addFolder('Displacement');
-    guiDisplacement.add(uniforms.scale, 'value', 0, 2).step(0.01).name('Resolution');
-    guiDisplacement.add(uniforms.displacement, 'value', 0, 110).name('Elevation');
-    guiDisplacement.add(uniforms.speed, 'value', 10, 50).name('Morph speed');
-    guiDisplacement.open();
+    const paneShader = pane.addFolder({ title: 'Shader uniforms' });
+    paneShader.addInput(uniforms.scale, 'value', {
+      min: 0, max: 2, step: 0.01, label: 'Scale',
+    });
+    paneShader.addInput(uniforms.displacement, 'value', { min: 0, max: 110, label: 'Displacement' });
+    paneShader.addInput(uniforms.speed, 'value', { min: 10, max: 50, label: 'Speed' });
+    paneShader.addInput(uniforms.lowStep, 'value', { min: -2, max: 0, label: 'Low step' });
+    paneShader.addInput(uniforms.hiStep, 'value', { min: 0, max: 2, label: 'High step' });
 
-    const guiColor = gui.addFolder('Color Settings');
-    guiColor.add(uniforms.lowStep, 'value', -2, 0).name('Starting elevation');
-    guiColor.add(uniforms.hiStep, 'value', 0, 2).name('Smoothness');
-    guiColor.addColor(COLORS, 'PLASMA').name('Plasma').onChange(recolor);
-    guiColor.addColor(COLORS, 'LIGHT_1').name('Env light 1').onChange(recolor);
-    guiColor.addColor(COLORS, 'LIGHT_2').name('Env light 2').onChange(recolor);
-    guiColor.add(COLORS, 'EQUALIZE').name('Env matches plasma').onChange(recolor);
-    guiColor.open();
+    const paneColor = pane.addFolder({ title: 'Color Settings' });
+    paneColor.addInput(COLORS, 'PLASMA', { view: 'color', label: 'Ball' }).on('change', recolor);
+    paneColor.addInput(COLORS, 'LIGHT_1', { view: 'color', label: 'Background Shadows' }).on('change', recolor);
+    paneColor.addInput(COLORS, 'LIGHT_2', { view: 'color', label: 'Background Lights' }).on('change', recolor);
+    paneColor.addInput(COLORS, 'EQUALIZE', { label: 'Equalize colors' }).on('change', recolor);
 
-    const guiBloom = gui.addFolder('Bloom Effect');
-    guiBloom.add(this.renderer, 'toneMappingExposure', 0, 1).step(0.001).name('Exposure').listen();
-    guiBloom.add(bloomPass, 'threshold', 0, 2).step(0.001).name('Cut threshold');
-    guiBloom.add(bloomPass, 'strength', 0, 2).step(0.1).name('Strength').listen();
-    guiBloom.add(bloomPass, 'radius', 0, 2).step(0.1).name('Radius').listen();
-    guiBloom.add(BLOOM, 'ANIMATE').name('Animate bloom');
-    guiBloom.open();
+    const paneBloom = pane.addFolder({ title: 'Bloom Effect' });
+    paneBloom.addInput(this.renderer, 'toneMappingExposure', {
+      min: 0, max: 1, step: 0.001, label: 'Exposure',
+    });
+    paneBloom.addInput(bloomPass, 'threshold', {
+      min: 0, max: 2, step: 0.001, label: 'Threshold',
+    });
+    paneBloom.addInput(bloomPass, 'strength', {
+      min: 0, max: 2, step: 0.1, label: 'Strength',
+    });
+    paneBloom.addInput(bloomPass, 'radius', {
+      min: 0, max: 2, step: 0.1, label: 'Radius',
+    });
+    paneBloom.addInput(BLOOM, 'ANIMATE', { label: 'Animate' });
   }
 
   componentWillUnmount() {

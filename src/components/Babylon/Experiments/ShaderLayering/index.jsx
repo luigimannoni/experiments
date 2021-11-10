@@ -45,7 +45,6 @@ export default class ShaderLayering extends Base {
     const atmosphere = BABYLON.MeshBuilder.CreateSphere('atmosphere', { diameter: 102 }, scene);
     atmosphere.rotation.x = Math.PI;
 
-
     // Assign Shaders to stores
     BABYLON.Effect.ShadersStore.baseVertexShader = vertex;
     BABYLON.Effect.ShadersStore.earthFragmentShader = fragment;
@@ -86,7 +85,6 @@ export default class ShaderLayering extends Base {
     material.earth.specularTexture = textures.specular;
     material.earth.bumpTexture = textures.normal;
     material.atmosphere.backFaceCulling = true;
-
 
     earth.material = material.earth;
     atmosphere.material = material.earth;

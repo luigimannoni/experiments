@@ -1,23 +1,19 @@
 import React from 'react';
-import { useParams } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 
 import Three from '../Three';
 import Javascript from '../Javascript';
 import Babylon from '../Babylon';
 import Css from '../CSS';
 
-export default function Experiment () {
-  const pascalCase = (s) => {
-    return s.replace(/(\w)(\w*)/g, (_g0, g1, g2) => g1.toUpperCase() + g2.toLowerCase()).replace(/-/g, '');
-  }
+export default function Experiment() {
+  const pascalCase = (s) => s.replace(/(\w)(\w*)/g, (_g0, g1, g2) => g1.toUpperCase() + g2.toLowerCase()).replace(/-/g, '');
 
-  const render404 = ()  =>{
-    return (
-      <div className="flex flex-center">
-        <h1 className="giant glitch">404</h1>
-      </div>
-    );
-  }
+  const render404 = () => (
+    <div className="flex flex-center">
+      <h1 className="giant glitch">404</h1>
+    </div>
+  );
 
   const ComponentMap = {
     Three,

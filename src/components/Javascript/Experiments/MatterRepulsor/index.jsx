@@ -51,7 +51,6 @@ export default class MatterRepulsor extends Component {
       damping: 0.015,
     };
 
-
     this.engine = Engine.create({
       positionIterations: 20,
       velocityIterations: 20,
@@ -123,7 +122,6 @@ export default class MatterRepulsor extends Component {
       ),
     ];
 
-
     const plugin = {
       attractors: [
         (bodyA, bodyB) => {
@@ -147,8 +145,8 @@ export default class MatterRepulsor extends Component {
           };
 
           const angular = {
-            x: 1 - Math.sin((Math.PI / 2) * (100 / threshold * pos.x) / 100),
-            y: 1 - Math.sin((Math.PI / 2) * (100 / threshold * pos.y) / 100),
+            x: 1 - Math.sin(((Math.PI / 2) * ((100 / threshold) * pos.x)) / 100),
+            y: 1 - Math.sin(((Math.PI / 2) * ((100 / threshold) * pos.y)) / 100),
           };
           const finalAngular = angular.x * angular.y;
 
@@ -323,7 +321,6 @@ export default class MatterRepulsor extends Component {
     guiFolder.colors.open();
 
     gui.add(updateFuncs, 'switchFullscreen').name('Fullscreen toggle');
-
 
     updateFuncs.bgColor();
   }

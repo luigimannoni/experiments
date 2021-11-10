@@ -20,7 +20,7 @@ export default class App extends Component {
         <div id="main-screen" className="App">
           <Routes>
             {routes.map((route) => {
-              const Component = Renderer[route.component];
+              const Element = Renderer[route.component];
               const key = slugify(route.path);
 
               return (
@@ -28,7 +28,7 @@ export default class App extends Component {
                   key={key}
                   path={route.path}
                   exact={route.exact}
-                  element={<Component />}
+                  element={<Element />}
                 />
               );
             })}

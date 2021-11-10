@@ -38,7 +38,6 @@ export default class GpuProcessing extends Base {
     BABYLON.Effect.ShadersStore.postprocessVertexShader = vertex;
     BABYLON.Effect.ShadersStore.postprocessFragmentShader = fragment;
 
-
     const material = new BABYLON.ShaderMaterial('shader', scene, { vertex: 'postprocess', fragment: 'postprocess' }, {
       attributes: ['position', 'uv'],
       uniforms: ['worldViewProjection', 'scale', 'wave', 'target'],
@@ -62,7 +61,6 @@ export default class GpuProcessing extends Base {
       'Channel 1 only': 1,
       'Channel 2 only': 2,
     };
-
 
     const options = {
       shaderMode: 0,
@@ -102,7 +100,6 @@ export default class GpuProcessing extends Base {
     // Rotate plane 180 degrees
     plane.rotation = new BABYLON.Vector3(Math.PI, 0, 0);
 
-
     // Render Loop
     let time = 0;
     this.engine.runRenderLoop(() => {
@@ -112,7 +109,6 @@ export default class GpuProcessing extends Base {
       scene.render();
       super.afterRender();
     });
-
 
     // Resize event
     window.addEventListener('resize', () => {
@@ -146,10 +142,8 @@ export default class GpuProcessing extends Base {
       reader.readAsDataURL(f);
     }
 
-
     // Loaders
     document.getElementById('file-image').addEventListener('change', injectImage, false);
-
 
     // Adds GUI stuff
     const gui = super.gui();
@@ -194,7 +188,6 @@ export default class GpuProcessing extends Base {
       });
     guiColor.close();
   }
-
 
   componentWillUnmount() {
     super.componentWillUnmount();

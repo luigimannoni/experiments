@@ -124,7 +124,6 @@ export default class Arc170 extends Base {
 
     render();
 
-
     // Mouse and resize events
     const onWindowResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;
