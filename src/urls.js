@@ -16,8 +16,13 @@ const three = [
     component: 'Experiment',
   },
   {
-    name: 'Soundcloud Visualizer',
-    path: '/three/soundcloud-visualizer',
+    name: 'Audio Visualizer',
+    path: '/three/audio-visualizer',
+    component: 'Experiment',
+  },
+  {
+    name: 'Particle Cosmos',
+    path: '/three/particle-cosmos',
     component: 'Experiment',
   },
 ];

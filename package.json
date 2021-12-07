@@ -25,7 +25,8 @@
     "slugify": "^1.6.2",
     "stats.js": "^0.17.0",
     "three": "^0.134.0",
-    "tweakpane": "^3.0.5",
+    "tweakpane": "^3.0.6",
+    "use-tweaks": "^0.3.1",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
