@@ -28,13 +28,13 @@ export default function Channel(props) {
       ref.current.scale.x = attrs.squeeze;
       ref.current.scale.z = attrs.squeeze;
       ref.current.scale.y = attrs.scale;
-      ref.current.position.y = attrs.scale / 2;
+      // ref.current.position.y = attrs.scale / 2;
       ref.current.material.opacity = (1 / 255) * channel;
 
       wireRef.current.scale.x = attrs.squeeze;
       wireRef.current.scale.z = attrs.squeeze;
       wireRef.current.scale.y = attrs.scale;
-      wireRef.current.position.y = attrs.scale / 2;
+      // wireRef.current.position.y = attrs.scale / 2;
 
       ref.current.material.color.setHSL((0.27 / 128) * (255 - channel), 1, 0.5);
       wireRef.current.material.color.setHSL((0.27 / 128) * (255 - channel), 1, 0.5);

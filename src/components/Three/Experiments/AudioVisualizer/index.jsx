@@ -4,7 +4,8 @@ import React, { useState, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { BiPlayCircle } from 'react-icons/bi';
 import { useTweaks, makeButton } from 'use-tweaks';
-import { EffectComposer, Bloom } from '@react-three/postprocessing';
+import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing';
+import { degToRad } from 'three/src/math/MathUtils';
 
 import Channel from './Channel';
 import Ground from './Ground';
@@ -80,13 +81,12 @@ export default function AudioVisualizer() {
   return (
     <>
       <Canvas camera={{ fov: 90, position: [-10, 2, -10] }}>
-        <color attach="background" args={[0x000000]} />
+        <color attach="background" args={[0x050505]} />
         <ambientLight intensity={1} color={0xffffff} />
         {
           cubes.map((data, i) => {
             // set x and z position in a 8*8 grid
             // with a padding of 2 units
-
             const x = (i % 8) * 1.15 - 8;
             const z = Math.floor(i / 8) * 1.15 - 8;
 
@@ -96,8 +96,17 @@ export default function AudioVisualizer() {
             );
           })
         }
-        <Ground source={audioSource} />
-        <fogExp2 args={[0x111111, 15, 30]} />
+        <Ground
+          position={[0, -2, 0]}
+          rotation={[degToRad(-90), 0, 0]}
+          source={audioSource}
+        />
+        <Ground
+          position={[0, 5, 0]}
+          rotation={[degToRad(90), 0, 0]}
+          source={audioSource}
+        />
+        <fogExp2 args={[0x050505, 5, 20]} />
         <RotateCamera />
         <MentalBloom />
         <EffectComposer multisampling={0}>
@@ -108,6 +117,7 @@ export default function AudioVisualizer() {
             luminanceThreshold={0}
             luminanceSmoothing={1}
           />
+          <Vignette eskil={false} offset={0.1} darkness={1.1} />
         </EffectComposer>
       </Canvas>
 

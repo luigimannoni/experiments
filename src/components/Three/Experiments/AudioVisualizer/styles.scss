@@ -5,10 +5,29 @@
   justify-content: center;
   align-items: center;
   z-index: 10000;
+  display: flex;
 
-  .player-controls {
+  .player-controls-button {
     color: #fff;
     background-color: transparent;
     border: none;
+    cursor: pointer;
+    background-color: #232323;
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    animation: play-pulse 2000ms linear infinite;
+  }
+}
+
+@keyframes play-pulse {
+  0% {
+    box-shadow: 0 0 0 0rem rgba(255, 255, 255, 1);
+  }
+  50% {
+    box-shadow: 0 0 0 1rem rgba(255, 255, 255, 1);
+  }
+  100% {
+    box-shadow: 0 0 1rem 2rem rgba(255, 255, 255, 0);
   }
 }
