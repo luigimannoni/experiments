@@ -12,7 +12,7 @@ export default function Ground(props) {
   useFrame(() => {
     if (source) {
       const { mental } = source.sample();
-      color.setHSL(0, 0, mental);
+      ref.current.material.color.setHSL(0, 0, mental);
     }
   });
 
@@ -24,13 +24,8 @@ export default function Ground(props) {
         rotation={[degToRad(-90), 0, 0]}
       >
         <planeGeometry args={[128, 128]} />
-        <meshPhongMaterial
+        <meshBasicMaterial
           color={color}
-          specular={0x000000}
-          emissive={0x000000}
-          refractionRatio={1}
-          reflectivity={0}
-          shininess={0}
         />
       </mesh>
     </>

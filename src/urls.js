@@ -20,11 +20,11 @@ const three = [
     path: '/three/audio-visualizer',
     component: 'Experiment',
   },
-  {
-    name: 'Particle Cosmos',
-    path: '/three/particle-cosmos',
-    component: 'Experiment',
-  },
+  // {
+  //   name: 'Particle Cosmos',
+  //   path: '/three/particle-cosmos',
+  //   component: 'Experiment',
+  // },
 ];
 
 const babylon = [

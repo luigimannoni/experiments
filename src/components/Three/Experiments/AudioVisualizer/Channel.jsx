@@ -12,25 +12,43 @@ export default function Channel(props) {
     opacity = 1,
   } = props;
   const ref = useRef();
+  const wireRef = useRef();
   useFrame(() => {
     if (source) {
       const {
         streamData,
       } = source.sample();
       const channel = streamData[index];
-      // const attrs = {
-      //   scale: (channel + 0.1) / 3,
-      //   squeeze: (1 / 255) * (255 - channel / 2),
-      //   color: new Color(0x0),
-      // };
+      const attrs = {
+        scale: Math.max(0.01, (channel / 255) * 2),
+        squeeze: (1 / 255) * (255 - channel / 2),
+        color: new Color(0x0),
+      };
 
-      // scale[0] = attrs.squeeze;
-      // scale[2] = attrs.squeeze;
-      // scale[1] = attrs.scale;
-      // position[1] = attrs.scale / 2;
-      // opacity = (1 / 255) * channel;
+      ref.current.scale.x = attrs.squeeze;
+      ref.current.scale.z = attrs.squeeze;
+      ref.current.scale.y = attrs.scale;
+      ref.current.position.y = attrs.scale / 2;
+      ref.current.material.opacity = (1 / 255) * channel;
 
-      color.setHSL((0.27 / 128) * (255 - channel), 1, 0.5);
+      wireRef.current.scale.x = attrs.squeeze;
+      wireRef.current.scale.z = attrs.squeeze;
+      wireRef.current.scale.y = attrs.scale;
+      wireRef.current.position.y = attrs.scale / 2;
+
+      ref.current.material.color.setHSL((0.27 / 128) * (255 - channel), 1, 0.5);
+      wireRef.current.material.color.setHSL((0.27 / 128) * (255 - channel), 1, 0.5);
+    } else {
+      ref.current.scale.x = 1;
+      ref.current.scale.z = 1;
+      ref.current.scale.y = 0.01;
+
+      wireRef.current.scale.x = 1;
+      wireRef.current.scale.z = 1;
+      wireRef.current.scale.y = 0.01;
+
+      ref.current.material.color.setHSL((0.27 / 128) * 255, 1, 0.5);
+      wireRef.current.material.color.setHSL((0.27 / 128) * 255, 1, 0.5);
     }
   });
 
@@ -51,6 +69,20 @@ export default function Channel(props) {
           refractionRatio={1}
           reflectivity={0}
           shininess={0}
+          transparent
+        />
+      </mesh>
+      <mesh
+        {...props}
+        position={position}
+        scale={scale}
+        ref={wireRef}
+      >
+        <boxGeometry args={[1, 1, 1]} />
+        <meshBasicMaterial
+          color={color}
+          wireframe
+          wireframeLinewidth={4}
         />
       </mesh>
     </>

@@ -5,6 +5,7 @@
   "homepage": "https://experiments.luigimannoni.com/",
   "dependencies": {
     "@react-three/fiber": "^7.0.18",
+    "@react-three/postprocessing": "^2.0.5",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -26,7 +27,7 @@
     "stats.js": "^0.17.0",
     "three": "^0.134.0",
     "tweakpane": "^3.0.6",
-    "use-tweaks": "^0.3.1",
+    "use-tweaks": "^0.3.2-alpha.0",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
