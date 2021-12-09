@@ -59,6 +59,11 @@ const css = [
     path: '/css/ladder-typography',
     component: 'Experiment',
   },
+  {
+    name: 'Ticker Typography',
+    path: '/css/ticker-typography',
+    component: 'Experiment',
+  },
 ];
 
 const urls = [

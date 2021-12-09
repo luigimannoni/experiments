@@ -16,7 +16,10 @@ export default function Ground(props) {
     if (source) {
       const { mental } = source.sample();
       matRef.current.lineColor.setHSL(0, 0, mental);
-      matRef.current.elevation = mental;
+      matRef.current.elevation = 1 * mental;
+      matRef.current.time += mental / 4;
+      matRef.current.sombrero_frequency = 0.5 * mental;
+      matRef.current.sombrero_amplitude = 0.3 * mental;
     } else {
       matRef.current.elevation = Math.sin(matRef.current.time / 4) / 2;
     }

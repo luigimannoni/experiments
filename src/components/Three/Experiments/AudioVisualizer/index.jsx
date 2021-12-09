@@ -138,7 +138,9 @@ export default function AudioVisualizer() {
             onClick={() => { playerRef.current.play(); }}
             className="player-controls-button"
           >
-            <BiPlayCircle size={48} />
+            <span>
+              <BiPlayCircle size={48} />
+            </span>
           </button>
         </div>
       )}
