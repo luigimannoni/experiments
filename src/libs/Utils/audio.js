@@ -2,17 +2,29 @@ const Analyzer = (player) => {
   let volume = 0;
   let volumeLow = 0;
   let volumeHi = 0;
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  let analyser = null;
+  let source = null;
   const streamData = new Uint8Array(256);
 
-  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  const analyser = audioCtx.createAnalyser();
-  analyser.fftSize = 256;
+  try {
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 256;
 
-  const source = audioCtx.createMediaElementSource(player);
-  source.connect(analyser);
-  analyser.connect(audioCtx.destination);
+    source = audioCtx.createMediaElementSource(player);
+    source.connect(analyser);
+    analyser.connect(audioCtx.destination);
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.warn('AudioContext is not available', e);
+    return false;
+  }
 
   const sampleAudioStream = () => {
+    if (!analyser) {
+      return false;
+    }
+
     analyser.getByteFrequencyData(streamData);
 
     let total = 0;
@@ -33,10 +45,16 @@ const Analyzer = (player) => {
     }
     volumeHi = totalHi;
 
+    const mental = Math.min(
+      Math.max(Math.tan(volumeHi / 6500) * 0.5),
+      2,
+    ) || 0;
+
     return {
       volume,
       volumeLow,
       volumeHi,
+      mental,
       streamData,
     };
   };

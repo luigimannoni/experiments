@@ -4,7 +4,7 @@ import GUI from '../../../libs/GUI';
 import Pane from '../../../libs/Pane';
 
 export default class Base extends Component {
-  constructor({ tweakpane = false }) {
+  constructor({ tweakpane = true }) {
     super();
     this.tweakpane = tweakpane;
   }

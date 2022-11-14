@@ -16,10 +16,15 @@ const three = [
     component: 'Experiment',
   },
   {
-    name: 'Soundcloud Visualizer',
-    path: '/three/soundcloud-visualizer',
+    name: 'Audio Visualizer',
+    path: '/three/audio-visualizer',
     component: 'Experiment',
   },
+  // {
+  //   name: 'Particle Cosmos',
+  //   path: '/three/particle-cosmos',
+  //   component: 'Experiment',
+  // },
 ];
 
 const babylon = [
@@ -52,6 +57,11 @@ const css = [
   {
     name: 'Ladder Typography',
     path: '/css/ladder-typography',
+    component: 'Experiment',
+  },
+  {
+    name: 'Ticker Typography',
+    path: '/css/ticker-typography',
     component: 'Experiment',
   },
 ];

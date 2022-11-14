@@ -195,8 +195,7 @@ export default class Displacement extends Base {
       }
     };
 
-    // Adds GUI stuff
-    // const gui = super.gui();
+    // Adds Pane stuff
     const pane = super.pane();
 
     const paneShader = pane.addFolder({ title: 'Shader uniforms' });

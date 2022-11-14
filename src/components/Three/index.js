@@ -1,11 +1,11 @@
 import Arc170 from './Experiments/Arc170';
 import Displacement from './Experiments/Displacement';
-import SoundcloudVisualizer from './Experiments/SoundcloudVisualizer';
+import AudioVisualizer from './Experiments/AudioVisualizer';
 
 const Three = {
   Arc170,
   Displacement,
-  SoundcloudVisualizer,
+  AudioVisualizer,
 };
 
 export default Three;
