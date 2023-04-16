@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://experiments.luigimannoni.com/",
   "dependencies": {
+    "@react-three/drei": "^9.65.3",
     "@react-three/fiber": "^8.12.1",
     "@react-three/postprocessing": "^2.7.1",
     "babylonjs": "^5.56.0",

@@ -1,12 +1,12 @@
-import React from "react";
-import * as THREE from "three";
-import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
-import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
-import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
+import { BackSide } from "three";
 
-import Base from "../Base";
+import { Canvas, useFrame, useLoader } from "@react-three/fiber";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+
+import { EffectComposer, Bloom } from "@react-three/postprocessing";
+
+import { Stars, TrackballControls, useCubeTexture } from "@react-three/drei";
+import { Suspense, useRef } from "react";
 
 const BLOOM = {
   ANIMATE: true,
@@ -16,175 +16,123 @@ const BLOOM = {
   RAD: 0.2,
 };
 
-export default class Arc170 extends Base {
-  constructor() {
-    super({ tweakpane: true });
-    this.renderer = null;
-  }
+const AnimatedLight = ({ color, intensity, distance }) => {
+  const light = useRef();
+  useFrame(({ clock }) => {
+    const time = clock.getElapsedTime() / 4;
 
-  componentDidMount() {
-    super.componentDidMount();
+    if (light && light.current) {
+      light.current.position.x = Math.sin(Math.sin(time)) * distance;
+      light.current.position.y = Math.sin(Math.cos(time)) * distance;
+      light.current.position.z = Math.sin(time) * distance;
+    }
+  });
 
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      10,
-      5000
-    );
+  return <pointLight ref={light} color={color} intensity={intensity} />;
+};
 
-    camera.position.x = -1500;
-    camera.position.z = 1500;
-    this.renderer = new THREE.WebGLRenderer();
-    this.renderer.setClearColor(0x222222, 0);
+const Spaceship = () => {
+  const arc170Ref = useRef();
 
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(this.renderer.domElement);
+  const arc170 = useLoader(
+    GLTFLoader,
+    `${process.env.PUBLIC_URL}/assets/arc170/scene.gltf`
+  );
 
-    const controls = new TrackballControls(camera, this.renderer.domElement);
-    controls.target = scene.position;
-    controls.minDistance = 800;
-    controls.maxDistance = 2000;
+  useFrame(({ clock }) => {
+    const time = clock.getElapsedTime() / 4;
 
-    // Skybox
-    const r = "/assets/skyboxes/nebula1024_";
-    const urls = [
-      `${r}px.png`,
-      `${r}nx.png`,
-      `${r}py.png`,
-      `${r}ny.png`,
-      `${r}pz.png`,
-      `${r}nz.png`,
-    ];
+    if (arc170Ref && arc170Ref.current) {
+      arc170Ref.current.rotation.z = 0 + Math.sin(time * 4) / 10 + 0.25;
+      arc170Ref.current.position.y = Math.sin(time * 2) * 5;
+    }
+  });
 
-    const textureCube = new THREE.CubeTextureLoader().load(urls);
-    textureCube.format = THREE.RGBAFormat;
-    textureCube.mapping = THREE.CubeReflectionMapping;
-    textureCube.encoding = THREE.sRGBEncoding;
-    scene.background = textureCube;
+  return (
+    <Suspense fallback={null}>
+      <primitive ref={arc170Ref} object={arc170.scene} scale={0.1} />
+    </Suspense>
+  );
+};
 
-    // Lights
-    const light = new THREE.AmbientLight(0xffffff, 2.0);
-    scene.add(light);
+const Skybox = () => {
+  const envMap = useCubeTexture(
+    ["px.png", "nx.png", "py.png", "ny.png", "pz.png", "nz.png"],
+    { path: "/assets/skyboxes/nebula1024_" }
+  );
 
-    const l1 = new THREE.PointLight(0xffffff, 0.5);
-    l1.position.set(0, -2000, -2000);
-    scene.add(l1);
+  return (
+    <group>
+      <Stars radius={500} fade speed={1} />
+      <mesh>
+        <sphereGeometry args={[500, 60, 40]} />
+        <meshBasicMaterial envMap={envMap} side={BackSide} />
+      </mesh>
+    </group>
+  );
+};
 
-    const l2 = new THREE.PointLight(0xffffff, 1.5);
-    l2.position.set(0, 2000, 2000);
-    scene.add(l2);
+export default function Arc170() {
+  // bloomPass.threshold = BLOOM.THRES;
+  // bloomPass.strength = BLOOM.STR;
+  // bloomPass.radius = BLOOM.RAD;
 
-    let arc170 = null;
-    // Model Mesh
-    const loader = new GLTFLoader();
-    loader.load(
-      `${process.env.PUBLIC_URL}/assets/arc170/scene.gltf`,
-      (gltf) => {
-        [arc170] = gltf.scene.children;
-        scene.add(arc170);
-      }
-    );
+  // const paneBloom = pane.addFolder({ title: "Bloom Effect" });
+  // const b1 = paneBloom.addInput(this.renderer, "toneMappingExposure", {
+  //   min: 0,
+  //   max: 1,
+  //   step: 0.001,
+  //   label: "Exposure",
+  //   disabled: BLOOM.ANIMATE,
+  // });
+  // paneBloom.addInput(bloomPass, "threshold", {
+  //   min: 0,
+  //   max: 1,
+  //   step: 0.0001,
+  //   label: "Threshold",
+  // });
+  // const b2 = paneBloom.addInput(bloomPass, "strength", {
+  //   min: 0,
+  //   max: 2,
+  //   step: 0.1,
+  //   label: "Strength",
+  //   disabled: BLOOM.ANIMATE,
+  // });
+  // const b3 = paneBloom.addInput(bloomPass, "radius", {
+  //   min: 0,
+  //   max: 2,
+  //   step: 0.1,
+  //   label: "Radius",
+  //   disabled: BLOOM.ANIMATE,
+  // });
+  // paneBloom
+  //   .addInput(BLOOM, "ANIMATE", { label: "Animate" })
+  //   .on("change", () => {
+  //     b1.disabled = BLOOM.ANIMATE;
+  //     b2.disabled = BLOOM.ANIMATE;
+  //     b3.disabled = BLOOM.ANIMATE;
+  //   });
 
-    // Post processing
-    const renderPass = new RenderPass(scene, camera);
-    const bloomPass = new UnrealBloomPass(
-      new THREE.Vector2(window.innerWidth, window.innerHeight),
-      1.5,
-      0.4,
-      0.85
-    );
+  return (
+    <Canvas>
+      <TrackballControls noPan maxDistance={250} minDistance={90} />
 
-    bloomPass.threshold = BLOOM.THRES;
-    bloomPass.strength = BLOOM.STR;
-    bloomPass.radius = BLOOM.RAD;
+      <color attach="background" args={[0x222222]} />
+      <ambientLight color={0xffffff} intensity={2} />
+      <AnimatedLight color={0xff9900} intensity={5.5} distance={200} />
+      <AnimatedLight color={0xbb4400} intensity={10.5} distance={200} />
+      {/*
+      <EffectComposer>
+        <Bloom
+          kernelSize={4}
+          luminanceThreshold={0}
+          luminanceSmoothing={0}
+          intensity={0.5}
+        />
+      </EffectComposer> */}
 
-    const composer = new EffectComposer(this.renderer);
-
-    composer.addPass(renderPass);
-    composer.addPass(bloomPass);
-
-    const render = () => {
-      super.beforeRender();
-      const time = performance.now() / 2000;
-
-      l1.position.x = Math.sin(Math.sin(time)) * 2000;
-      l1.position.y = Math.sin(Math.cos(time)) * 2000;
-      l1.position.z = Math.sin(time) * 2000;
-
-      l2.position.x = Math.sin(time) * -2000;
-      l2.position.y = Math.cos(time) * -2000;
-      l2.position.z = Math.cos(Math.sin(time)) * -2000;
-
-      if (arc170 && arc170.rotation) {
-        arc170.rotation.y = Math.cos(time) / 2;
-      }
-
-      controls.update();
-      composer.render();
-
-      super.afterRender();
-
-      super.raf = requestAnimationFrame(render);
-    };
-
-    render();
-
-    // Mouse and resize events
-    const onWindowResize = () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      this.renderer.setSize(window.innerWidth, window.innerHeight);
-
-      composer.reset();
-    };
-    window.addEventListener("resize", onWindowResize, false);
-
-    const pane = super.pane();
-
-    const paneBloom = pane.addFolder({ title: "Bloom Effect" });
-    const b1 = paneBloom.addInput(this.renderer, "toneMappingExposure", {
-      min: 0,
-      max: 1,
-      step: 0.001,
-      label: "Exposure",
-      disabled: BLOOM.ANIMATE,
-    });
-    paneBloom.addInput(bloomPass, "threshold", {
-      min: 0,
-      max: 1,
-      step: 0.0001,
-      label: "Threshold",
-    });
-    const b2 = paneBloom.addInput(bloomPass, "strength", {
-      min: 0,
-      max: 2,
-      step: 0.1,
-      label: "Strength",
-      disabled: BLOOM.ANIMATE,
-    });
-    const b3 = paneBloom.addInput(bloomPass, "radius", {
-      min: 0,
-      max: 2,
-      step: 0.1,
-      label: "Radius",
-      disabled: BLOOM.ANIMATE,
-    });
-    paneBloom
-      .addInput(BLOOM, "ANIMATE", { label: "Animate" })
-      .on("change", () => {
-        b1.disabled = BLOOM.ANIMATE;
-        b2.disabled = BLOOM.ANIMATE;
-        b3.disabled = BLOOM.ANIMATE;
-      });
-  }
-
-  componentWillUnmount() {
-    super.componentWillUnmount();
-    this.renderer.domElement.remove();
-  }
-
-  render() {
-    return <></>;
-  }
+      <Skybox />
+      <Spaceship />
+    </Canvas>
+  );
 }
