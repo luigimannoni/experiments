@@ -1,11 +1,9 @@
-import React, { useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { BackSide } from 'three';
+import React, { useRef } from "react";
+import { useFrame } from "@react-three/fiber";
+import { BackSide } from "three";
 
 export default function Box(props) {
-  const {
-    size = 1,
-  } = props;
+  const { size = 1 } = props;
   const outerRef = useRef();
   const innerRef = useRef();
   useFrame(() => {
@@ -20,10 +18,7 @@ export default function Box(props) {
 
   return (
     <>
-      <mesh
-        {...props}
-        ref={innerRef}
-      >
+      <mesh {...props} ref={innerRef}>
         <boxGeometry args={[size, size, size]} />
         <meshPhongMaterial
           color={0xc82222}
@@ -34,11 +29,7 @@ export default function Box(props) {
           shininess={0}
         />
       </mesh>
-      <mesh
-        {...props}
-        ref={outerRef}
-        scale={1.1}
-      >
+      <mesh {...props} ref={outerRef} scale={1.1}>
         <boxGeometry args={[size, size, size]} />
         <meshBasicMaterial side={BackSide} color={0xffffff} />
       </mesh>

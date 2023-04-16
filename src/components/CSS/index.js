@@ -1,6 +1,6 @@
-import TwistTypography from './Experiments/TwistTypography';
-import LadderTypography from './Experiments/LadderTypography';
-import TickerTypography from './Experiments/TickerTypography';
+import TwistTypography from "./TwistTypography";
+import LadderTypography from "./LadderTypography";
+import TickerTypography from "./TickerTypography";
 
 const CSS = {
   TwistTypography,

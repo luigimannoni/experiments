@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import slugify from 'slugify';
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import slugify from "slugify";
 
-import './style.scss';
+import "./style.scss";
 
 export default class Navigator extends Component {
   constructor(...args) {
@@ -35,7 +35,7 @@ export default class Navigator extends Component {
 
     return links.map((url) => {
       const parentKey = slugify(url.name);
-      const parentClass = activeParent === parentKey ? 'active' : '';
+      const parentClass = activeParent === parentKey ? "active" : "";
 
       return (
         <li
@@ -47,31 +47,27 @@ export default class Navigator extends Component {
           }}
         >
           <span>
-            {url.icon && url.icon()}
-            {' '}
-            {url.name}
+            {url.icon && url.icon()} {url.name}
           </span>
           <ul className="sub-level">
-            {
-              url.children.map((child) => {
-                const childKey = slugify(`${parentKey}-${child.name}`);
-                const childClass = activeChild === childKey ? 'active' : '';
+            {url.children.map((child) => {
+              const childKey = slugify(`${parentKey}-${child.name}`);
+              const childClass = activeChild === childKey ? "active" : "";
 
-                return (
-                  <li key={childKey} className={childClass}>
-                    <Link
-                      to={child.path}
-                      onClick={() => {
-                        this.setActive(parentKey, childKey);
-                        this.toggleNavigator(!open);
-                      }}
-                    >
-                      {child.name}
-                    </Link>
-                  </li>
-                );
-              })
-            }
+              return (
+                <li key={childKey} className={childClass}>
+                  <Link
+                    to={child.path}
+                    onClick={() => {
+                      this.setActive(parentKey, childKey);
+                      this.toggleNavigator(!open);
+                    }}
+                  >
+                    {child.name}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </li>
       );
@@ -81,24 +77,26 @@ export default class Navigator extends Component {
   render() {
     const { links } = this.props;
     const { open } = this.state;
-    const navClass = open ? 'is-open' : '';
-    const btnClass = open ? 'is-active' : '';
+    const navClass = open ? "is-open" : "";
+    const btnClass = open ? "is-active" : "";
 
     return (
       <nav
-        onMouseEnter={() => { this.toggleNavigator(true); }}
+        onMouseEnter={() => {
+          this.toggleNavigator(true);
+        }}
         className={`site-navigator ${navClass}`}
       >
         <Link to="/" className="logo">
           <img src="/assets/cube.png" alt="Experiments" />
         </Link>
 
-        <ul className="top-level">
-          {links ? this.renderUrls() : null}
-        </ul>
+        <ul className="top-level">{links ? this.renderUrls() : null}</ul>
 
         <button
-          onClick={() => { this.toggleNavigator(!open); }}
+          onClick={() => {
+            this.toggleNavigator(!open);
+          }}
           className={`hamburger hamburger--arrowturn ${btnClass}`}
           type="button"
         >
@@ -106,7 +104,6 @@ export default class Navigator extends Component {
             <span className="hamburger-inner" />
           </span>
         </button>
-
       </nav>
     );
   }

@@ -1,15 +1,15 @@
 /* eslint-disable react/prefer-stateless-function */
-import React, { Component } from 'react';
-import { HashRouter, Route, Routes } from 'react-router-dom';
-import slugify from 'slugify';
+import React, { Component } from "react";
+import { HashRouter, Route, Routes } from "react-router-dom";
+import slugify from "slugify";
 
-import Renderer from './components/Renderer';
-import Navigator from './components/Navigator';
+import Renderer from "./components/Renderer";
+import Navigator from "./components/Navigator";
 
-import routes from './routes';
-import urls from './urls';
+import routes from "./routes";
+import urls from "./urls";
 
-import './App.scss';
+import "./App.scss";
 
 export default class App extends Component {
   render() {
