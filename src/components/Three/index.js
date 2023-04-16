@@ -1,6 +1,6 @@
-import Arc170 from './Experiments/Arc170';
-import Displacement from './Experiments/Displacement';
-import AudioVisualizer from './Experiments/AudioVisualizer';
+import Arc170 from "./Arc170";
+import Displacement from "./Displacement";
+import AudioVisualizer from "./AudioVisualizer";
 
 const Three = {
   Arc170,

@@ -1,5 +1,5 @@
-import Home from './Home';
-import Experiment from './Experiment';
+import Home from "./Home";
+import Experiment from "./Experiment";
 
 const Renderer = {
   Home,
