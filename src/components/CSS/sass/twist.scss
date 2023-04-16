@@ -18,7 +18,7 @@ $curve: ease-out;
     font-size: 2rem;
     font-weight: 700;
 
-    @media screen and (min-width: 550px)  {
+    @media screen and (width >= 550px)  {
       font-size: 3rem;
     }
 
@@ -69,6 +69,7 @@ $curve: ease-out;
   0% {
     transform: rotateY(0deg);
   }
+
   100% {
     transform: rotateY(90deg);
   }
@@ -78,6 +79,7 @@ $curve: ease-out;
   0% {
     transform: rotateZ(-15deg);
   }
+
   100% {
     transform: rotateZ(15deg);
   }

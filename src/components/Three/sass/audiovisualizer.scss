@@ -42,7 +42,7 @@
     }
 
     &::before {
-      border: 1rem solid rgba(255, 255, 255, 0.5);
+      border: 1rem solid rgb(255 255 255 / 50%);
       z-index: 5;
       animation: play-pulse-before 2000ms linear infinite;
     }
@@ -54,10 +54,12 @@
     border-width: 1rem;
     transform: scale(0.5);
   }
+
   50% {
     border-width: 1rem;
     transform: scale(1.25);
   }
+
   100% {
     border-width: 0;
     transform: scale(1.75);
@@ -68,9 +70,11 @@
   0% {
     transform: scale(1);
   }
+
   30% {
     transform: scale(1.15);
   }
+
   100% {
     transform: scale(1);
   }

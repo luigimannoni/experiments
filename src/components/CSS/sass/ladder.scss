@@ -24,7 +24,7 @@ $colors: (
     font-size: 2rem;
     font-weight: 700;
 
-    @media screen and (min-width: 550px)  {
+    @media screen and (width >= 550px)  {
       font-size: 3rem;
     }
 
@@ -74,6 +74,7 @@ $colors: (
   0% {
     transform: rotateX(0deg);
   }
+
   100% {
     transform: rotateX(90deg);
   }
@@ -83,12 +84,15 @@ $colors: (
   0% {
     transform: translateX($offset * 0) translateY(0);
   }
+
   33% {
     transform: translateX($offset * -0.5) translateY(-100%);
   }
+
   66% {
     transform: translateX($offset * -1) translateY(-200%);
   }
+
   100% {
     transform: translateX($offset * -1.5) translateY(-300%);
   }

@@ -4,17 +4,15 @@
   box-sizing: border-box;
 }
 
-html { font-family: 'Inter', sans-serif; color: #fff }
+html { font-family: Inter, sans-serif; color: #fff }
+
 @supports (font-variation-settings: normal) {
   html { font-family: 'Inter var', sans-serif; }
 }
 
 body > canvas {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  inset: 0;
   z-index: 0;
 }
 
@@ -22,13 +20,6 @@ body > canvas {
   display: flex;
   height: 100vh;
   justify-content: center;
-}
-
-// Dat GUI
-// Tweakpane
-.dg.ac,
-.tp-dfwv {
-  z-index: 5 !important;
 }
 
 .flex {
@@ -66,6 +57,7 @@ h1.giant {
 
   &::before {
     @include glitchCopy;
+
     color: #fff;
     left: 10px;
     text-shadow: -10px 0 #c82222;
@@ -75,6 +67,7 @@ h1.giant {
 
   &::after {
     @include glitchCopy;
+
     color: #fff;
     left: -10px;
     text-shadow: -10px 0 #00fff9, 10px 5px #c82222;
@@ -86,6 +79,7 @@ h1.giant {
   0% {
     color: #333;
   }
+
   100% {
     color: #fff;
   }
@@ -93,9 +87,10 @@ h1.giant {
 
 @keyframes glitch-anim {
   $steps: 20;
+
   @for $i from 0 through $steps {
-    #{percentage($i*(1/$steps))} {
-      clip: rect(random(2000)+px, 9999px, random(1000)+px, 0);
+    #{percentage($i * (1 / $steps))} {
+      clip: rect(random(2000) + 0, 9999px, random(1000) + 0, 0);
 			transform: skew(calc(random(100) / 100) + deg);
     }
   }
@@ -103,9 +98,10 @@ h1.giant {
 
 @keyframes glitch-anim2 {
   $steps: 20;
+
   @for $i from 0 through $steps {
-    #{percentage($i*(1/$steps))} {
-      clip: rect(random(1000)+px, 9999px, random(2000)+px, 0);
+    #{percentage($i * (1 / $steps))} {
+      clip: rect(random(1000) + 0, 9999px, random(2000) + 0, 0);
 			transform: skew(calc(random(100) / 100) + deg);
     }
   }

@@ -158,6 +158,7 @@ nav.site-navigator {
         transform: translateX(0);
       }
     }
+
     @for $i from 1 to 10 {
       li:nth-child(#{$i}) {
         transition-delay: 50ms * $i;

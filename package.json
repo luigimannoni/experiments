@@ -28,6 +28,7 @@
   "scripts": {
     "lint:eslint": "eslint .",
     "lint:eslint:fix": "eslint . --fix",
+    "lint:stylelint:fix": "stylelint \"**/*.scss\" --fix",
     "lint:stylelint": "stylelint \"**/*.scss\"",
     "lint": "npm run lint:eslint && npm run lint:stylelint",
     "start": "HTTPS=true react-scripts start",
@@ -58,6 +59,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "raw-loader": "^4.0.2",
     "stylelint": "^15.5.0",
+    "stylelint-config-standard-scss": "^8.0.0",
     "stylelint-scss": "^4.6.0"
   }
 }
