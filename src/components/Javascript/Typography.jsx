@@ -1,12 +1,6 @@
 import React, { Component } from "react";
-import GUI from "../../../../libs/GUI";
-import "./style.scss";
 
 export default class Typography extends Component {
-  constructor(...args) {
-    super(...args);
-  }
-
   Element({ text }) {
     return (
       <div className="typography--element">
@@ -15,14 +9,6 @@ export default class Typography extends Component {
         </span>
       </div>
     );
-  }
-
-  componentDidMount() {
-    GUI.mount();
-  }
-
-  componentWillUnmount() {
-    GUI.unmount();
   }
 
   render() {

@@ -1,5 +1,5 @@
-import GpuProcessing from "./Experiments/GpuProcessing";
-import ShaderLayering from "./Experiments/ShaderLayering";
+import GpuProcessing from "./GpuProcessing";
+import ShaderLayering from "./ShaderLayering";
 
 const Babylon = {
   GpuProcessing,

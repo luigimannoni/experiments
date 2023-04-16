@@ -1,6 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import React from "react";
-import "./style.scss";
+import "./sass/ladder.scss";
 
 const LadderTypography = () => (
   <>

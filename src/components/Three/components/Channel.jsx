@@ -16,7 +16,8 @@ export default function Channel(props) {
   useFrame(() => {
     if (source) {
       const { streamData } = source.sample();
-      const channel = streamData[index];
+      // Shift the index by 16 to skip the first 4 bytes of the stream data
+      const channel = streamData[index + 4];
       const attrs = {
         scale: Math.max(0.01, (channel / 255) * 2),
         squeeze: (1 / 255) * (255 - channel / 2),
@@ -34,9 +35,9 @@ export default function Channel(props) {
       wireRef.current.scale.y = attrs.scale;
       wireRef.current.position.y = attrs.scale / 2;
 
-      ref.current.material.color.setHSL((0.27 / 128) * (255 - channel), 1, 0.5);
+      ref.current.material.color.setHSL((0.5 / 128) * (255 - channel), 1, 0.5);
       wireRef.current.material.color.setHSL(
-        (0.27 / 128) * (255 - channel),
+        (0.5 / 128) * (255 - channel),
         1,
         0.5
       );
@@ -49,8 +50,8 @@ export default function Channel(props) {
       wireRef.current.scale.z = 1;
       wireRef.current.scale.y = 0.01;
 
-      ref.current.material.color.setHSL((0.27 / 128) * 255, 1, 0.5);
-      wireRef.current.material.color.setHSL((0.27 / 128) * 255, 1, 0.5);
+      ref.current.material.color.setHSL((0.5 / 128) * 255, 1, 0.5);
+      wireRef.current.material.color.setHSL((0.5 / 128) * 255, 1, 0.5);
     }
   });
 

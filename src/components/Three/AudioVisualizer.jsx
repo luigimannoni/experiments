@@ -3,12 +3,12 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { BiPlayCircle } from "react-icons/bi";
 import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import { degToRad } from "three/src/math/MathUtils";
+import { Perf } from "r3f-perf";
+import Channel from "./components/Channel";
+import Ground from "./components/Ground";
+import Audio from "../../libs/audio";
 
-import Channel from "./Channel";
-import Ground from "./Ground";
-import Audio from "../../../../libs/Utils/audio";
-
-import "./styles.scss";
+import "./sass/audiovisualizer.scss";
 import { useControls, button } from "leva";
 
 export default function AudioVisualizer() {
@@ -78,6 +78,7 @@ export default function AudioVisualizer() {
   return (
     <>
       <Canvas camera={{ fov: 90, position: [-10, 2, -10] }}>
+        <Perf position="bottom-right" />
         <color attach="background" args={[0x050505]} />
         <ambientLight intensity={1} color={0xffffff} />
         {cubes.map((data, i) => {
@@ -109,10 +110,10 @@ export default function AudioVisualizer() {
         <fogExp2 args={[0x050505, 5, 20]} />
         <RotateCamera />
         <MentalBloom />
-        <EffectComposer multisampling={0}>
+        <EffectComposer multisampling={2}>
           <Bloom
             ref={bloomRef}
-            intensity={1}
+            intensity={0}
             kernelSize={2}
             luminanceThreshold={0}
             luminanceSmoothing={1}

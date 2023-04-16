@@ -19,26 +19,26 @@ $curve: linear;
     font-weight: 700;
     transform: rotate(-15deg);
     user-select: none;
+    white-space: nowrap;
 
     &:nth-child(odd) {
-      .typography--ticker--element-span {
+      .typography--ticker--element-span-wrap {
         animation: ticker-element ($duration * 2) $curve infinite;
       }
     }
 
     &:nth-child(even) {
-      .typography--ticker--element-span {
-        animation: ticker-element ($duration * 2) $curve infinite reverse;
+      .typography--ticker--element-span-wrap {
+        animation: ticker-element-reverse ($duration * 2) $curve infinite;
       }
     }
   }
 
-  &--element-span {
-    display: block;
+  &--element-span-wrap {
+    display: flex;
     position: relative;
-    width: auto;
-    line-height: 1;
-    white-space: nowrap;
+    width: max-content;
+    overflow: hidden;
 
     &::before,
     &::after {
@@ -55,14 +55,39 @@ $curve: linear;
       left: 100%;
     }
   }
+
+  &--element-span {
+    display: block;
+    position: relative;
+    width: auto;
+    line-height: 1;
+    white-space: nowrap;
+
+    &::before {
+      right: 100%;
+    }
+
+    &::after {
+      left: 100%;
+    }
+  }
 }
 
 
 @keyframes ticker-element {
   0% {
-    transform: translateX(100%);
+    transform: translateX(0%);
   }
   100% {
-    transform: translateX(-100%);
+    transform: translateX(-33%);
+  }
+}
+
+@keyframes ticker-element-reverse {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(33%);
   }
 }

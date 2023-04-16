@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import Matter from "matter-js";
 import MatterAttractors from "matter-attractors-f";
-import Pane from "../../../../libs/Pane";
-import Screen from "../../../../libs/Screen";
+import Screen from "../../libs/screen";
 
 export default class MatterRepulsor extends Component {
   constructor(...args) {
@@ -309,119 +308,118 @@ export default class MatterRepulsor extends Component {
 
     // Editor setup
 
-    Pane.mount();
-    const pane = Pane.interface();
+    // Pane.mount();
+    // const pane = Pane.interface();
 
-    const paneGrid = pane.addFolder({ title: "Grid settings" });
-    const paneRender = pane.addFolder({ title: "Render settings" });
-    const paneColors = pane.addFolder({ title: "Colors" });
+    // const paneGrid = pane.addFolder({ title: "Grid settings" });
+    // const paneRender = pane.addFolder({ title: "Render settings" });
+    // const paneColors = pane.addFolder({ title: "Colors" });
 
-    paneGrid
-      .addButton({ title: "Scale dots up" })
-      .on("click", updateFuncs.dotScaleUp);
-    paneGrid
-      .addButton({ title: "Scale dots down" })
-      .on("click", updateFuncs.dotScaleDown);
+    // paneGrid
+    //   .addButton({ title: "Scale dots up" })
+    //   .on("click", updateFuncs.dotScaleUp);
+    // paneGrid
+    //   .addButton({ title: "Scale dots down" })
+    //   .on("click", updateFuncs.dotScaleDown);
 
-    paneGrid
-      .addInput(settings, "force", {
-        min: 0,
-        max: 10,
-        step: 0.01,
-        label: "Force field",
-      })
-      .on("change", updateFuncs.dotsConstraints);
-    paneGrid
-      .addInput(settings, "stiffness", {
-        min: 0,
-        max: 0.015,
-        step: 0.0001,
-        label: "Stiffness",
-      })
-      .on("change", updateFuncs.dotsConstraints);
-    paneGrid
-      .addInput(settings, "damping", {
-        min: 0,
-        max: 1,
-        step: 0.0001,
-        label: "Damping",
-      })
-      .on("change", updateFuncs.dotsConstraints);
+    // paneGrid
+    //   .addInput(settings, "force", {
+    //     min: 0,
+    //     max: 10,
+    //     step: 0.01,
+    //     label: "Force field",
+    //   })
+    //   .on("change", updateFuncs.dotsConstraints);
+    // paneGrid
+    //   .addInput(settings, "stiffness", {
+    //     min: 0,
+    //     max: 0.015,
+    //     step: 0.0001,
+    //     label: "Stiffness",
+    //   })
+    //   .on("change", updateFuncs.dotsConstraints);
+    // paneGrid
+    //   .addInput(settings, "damping", {
+    //     min: 0,
+    //     max: 1,
+    //     step: 0.0001,
+    //     label: "Damping",
+    //   })
+    //   .on("change", updateFuncs.dotsConstraints);
 
-    paneRender.addInput(this.engine.timing, "timeScale", {
-      min: 1e-3,
-      max: 1.2,
-      step: 1e-3,
-      label: "Render speed",
-    });
-    paneRender.addInput(this.engine.gravity, "scale", {
-      min: 0,
-      max: 0.001,
-      step: 0.0001,
-      label: "Gravity force",
-    });
-    paneRender.addInput(this.engine, "gravity", {
-      x: {
-        min: -1,
-        max: 1,
-        step: 0.01,
-        label: "Gravity horiz",
-      },
-      y: {
-        min: -1,
-        max: 1,
-        step: 0.01,
-        label: "Gravity vert",
-      },
-    });
-    paneRender.addInput(settings, "randomForceMultiplier", {
-      min: 0,
-      max: 1,
-      step: 0.01,
-      label: "Random force",
-    });
+    // paneRender.addInput(this.engine.timing, "timeScale", {
+    //   min: 1e-3,
+    //   max: 1.2,
+    //   step: 1e-3,
+    //   label: "Render speed",
+    // });
+    // paneRender.addInput(this.engine.gravity, "scale", {
+    //   min: 0,
+    //   max: 0.001,
+    //   step: 0.0001,
+    //   label: "Gravity force",
+    // });
+    // paneRender.addInput(this.engine, "gravity", {
+    //   x: {
+    //     min: -1,
+    //     max: 1,
+    //     step: 0.01,
+    //     label: "Gravity horiz",
+    //   },
+    //   y: {
+    //     min: -1,
+    //     max: 1,
+    //     step: 0.01,
+    //     label: "Gravity vert",
+    //   },
+    // });
+    // paneRender.addInput(settings, "randomForceMultiplier", {
+    //   min: 0,
+    //   max: 1,
+    //   step: 0.01,
+    //   label: "Random force",
+    // });
 
-    paneColors
-      .addInput(settings, "backgroundGradientStart", {
-        view: "color",
-        label: "BG Gradient Start",
-      })
-      .on("change", updateFuncs.bgColor);
-    paneColors
-      .addInput(settings, "backgroundGradientEnd", {
-        view: "color",
-        label: "BG Gradient End",
-      })
-      .on("change", updateFuncs.bgColor);
-    paneColors
-      .addInput(settings, "backgroundGradientDegrees", {
-        min: 0,
-        max: 360,
-        step: 1,
-        label: "Gradient Deg",
-      })
-      .on("change", updateFuncs.bgColor);
-    paneColors
-      .addInput(settings, "dots", {
-        view: "color",
-        label: "Dot color",
-      })
-      .on("change", updateFuncs.dotsColor);
-    paneColors
-      .addInput(settings, "maskDot", {
-        label: "Transparent repulsor",
-      })
-      .on("change", updateFuncs.dotsColor);
+    // paneColors
+    //   .addInput(settings, "backgroundGradientStart", {
+    //     view: "color",
+    //     label: "BG Gradient Start",
+    //   })
+    //   .on("change", updateFuncs.bgColor);
+    // paneColors
+    //   .addInput(settings, "backgroundGradientEnd", {
+    //     view: "color",
+    //     label: "BG Gradient End",
+    //   })
+    //   .on("change", updateFuncs.bgColor);
+    // paneColors
+    //   .addInput(settings, "backgroundGradientDegrees", {
+    //     min: 0,
+    //     max: 360,
+    //     step: 1,
+    //     label: "Gradient Deg",
+    //   })
+    //   .on("change", updateFuncs.bgColor);
+    // paneColors
+    //   .addInput(settings, "dots", {
+    //     view: "color",
+    //     label: "Dot color",
+    //   })
+    //   .on("change", updateFuncs.dotsColor);
+    // paneColors
+    //   .addInput(settings, "maskDot", {
+    //     label: "Transparent repulsor",
+    //   })
+    //   .on("change", updateFuncs.dotsColor);
 
-    pane
-      .addButton({ title: "Fullscreen toggle" })
-      .on("click", updateFuncs.switchFullscreen);
+    // pane
+    //   .addButton({ title: "Fullscreen toggle" })
+    //   .on("click", updateFuncs.switchFullscreen);
 
-    updateFuncs.bgColor();
+    // updateFuncs.bgColor();
   }
 
   componentWillUnmount() {
-    Pane.unmount();
     Matter.Render.stop(this.renderer);
     Matter.World.clear(this.engine.world);
     Matter.Engine.clear(this.engine);
