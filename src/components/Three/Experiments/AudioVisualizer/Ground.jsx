@@ -1,13 +1,10 @@
-import React, { useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { Color } from 'three';
-import '../../../Materials/PerlinNoiseMaterial';
+import React, { useRef } from "react";
+import { useFrame } from "@react-three/fiber";
+import { Color } from "three";
+import "../../../Materials/PerlinNoiseMaterial";
 
 export default function Ground(props) {
-  const {
-    source = null,
-    color = new Color(0x111111),
-  } = props;
+  const { source = null, color = new Color(0x111111) } = props;
   const ref = useRef();
   const matRef = useRef();
   useFrame(() => {
@@ -27,10 +24,7 @@ export default function Ground(props) {
 
   return (
     <>
-      <mesh
-        {...props}
-        ref={ref}
-      >
+      <mesh {...props} ref={ref}>
         <planeGeometry args={[128, 128, 256, 256]} />
         <perlinNoiseMaterial
           ref={matRef}

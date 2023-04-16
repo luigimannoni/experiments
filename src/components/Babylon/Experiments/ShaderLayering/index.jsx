@@ -1,12 +1,11 @@
 import React from "react";
-import raw from "raw.macro";
 import * as BABYLON from "babylonjs";
 
 import Base from "../Base";
 
-const vertex = raw("./vertex.glsl");
-const fragment = raw("./fragment.glsl");
-const atmosphereFragment = raw("./atmosphereFragment.glsl");
+import vertex from "./vertex.glsl";
+import fragment from "./fragment.glsl";
+import atmosphereFragment from "./atmosphereFragment.glsl";
 
 export default class ShaderLayering extends Base {
   constructor(...args) {
@@ -180,23 +179,23 @@ export default class ShaderLayering extends Base {
     });
 
     // Adds GUI stuff
-    const gui = super.gui();
-    gui
-      .add(renderPipeline.imageProcessing, "contrast", 0.5, 3)
-      .name("Contrast");
-    gui
-      .add(renderPipeline.imageProcessing, "exposure", 0.5, 3)
-      .name("Exposure");
-    gui.add(renderPipeline, "fxaaEnabled").name("FXAA");
-    gui.add(renderPipeline, "bloomEnabled").name("Bloom");
-    gui.add(renderPipeline, "bloomWeight", 0, 2).name("Bloom Weight");
-    gui
-      .add(renderPipeline.imageProcessing, "toneMappingEnabled")
-      .name("Tone Mapping");
-    gui.add(renderPipeline.imageProcessing, "vignetteEnabled").name("Vignette");
-    gui
-      .add(renderPipeline.imageProcessing, "vignetteWeight", 0, 2)
-      .name("Vignette Weight");
+    // const gui = super.gui();
+    // gui
+    //   .add(renderPipeline.imageProcessing, "contrast", 0.5, 3)
+    //   .name("Contrast");
+    // gui
+    //   .add(renderPipeline.imageProcessing, "exposure", 0.5, 3)
+    //   .name("Exposure");
+    // gui.add(renderPipeline, "fxaaEnabled").name("FXAA");
+    // gui.add(renderPipeline, "bloomEnabled").name("Bloom");
+    // gui.add(renderPipeline, "bloomWeight", 0, 2).name("Bloom Weight");
+    // gui
+    //   .add(renderPipeline.imageProcessing, "toneMappingEnabled")
+    //   .name("Tone Mapping");
+    // gui.add(renderPipeline.imageProcessing, "vignetteEnabled").name("Vignette");
+    // gui
+    //   .add(renderPipeline.imageProcessing, "vignetteWeight", 0, 2)
+    //   .name("Vignette Weight");
   }
 
   componentWillUnmount() {

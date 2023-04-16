@@ -16,7 +16,7 @@ const Analyzer = (player) => {
     analyser.connect(audioCtx.destination);
   } catch (e) {
     // eslint-disable-next-line no-console
-    console.warn('AudioContext is not available', e);
+    console.warn("AudioContext is not available", e);
     return false;
   }
 
@@ -45,10 +45,7 @@ const Analyzer = (player) => {
     }
     volumeHi = totalHi;
 
-    const mental = Math.min(
-      Math.max(Math.tan(volumeHi / 6500) * 0.5),
-      2,
-    ) || 0;
+    const mental = Math.min(Math.max(Math.tan(volumeHi / 6500) * 0.5), 2) || 0;
 
     return {
       volume,

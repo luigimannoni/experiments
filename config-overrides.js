@@ -4,12 +4,10 @@ module.exports = function override(config, env) {
     config.plugins = [];
   }
 
-  config.module.rules.push(
-    {
-      test: /\.glsl$/i,
-      use: 'raw-loader',
-    },
-  );
+  config.module.rules.push({
+    test: /\.glsl$/i,
+    use: "raw-loader",
+  });
 
   return config;
 };

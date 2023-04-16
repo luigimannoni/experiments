@@ -1,4 +1,4 @@
-import * as StatsJS from 'stats.js';
+import * as StatsJS from "stats.js";
 
 let statsjs = null;
 
@@ -7,8 +7,8 @@ const Stats = {
     statsjs = new StatsJS();
     statsjs.showPanel(0);
     document.body.appendChild(statsjs.dom);
-    statsjs.dom.style.top = 'auto';
-    statsjs.dom.style.left = 'auto';
+    statsjs.dom.style.top = "auto";
+    statsjs.dom.style.left = "auto";
     statsjs.dom.style.bottom = 0;
     statsjs.dom.style.right = 0;
   },

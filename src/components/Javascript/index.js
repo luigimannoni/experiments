@@ -1,4 +1,4 @@
-import MatterRepulsor from './Experiments/MatterRepulsor';
+import MatterRepulsor from "./Experiments/MatterRepulsor";
 
 const Javascript = {
   MatterRepulsor,

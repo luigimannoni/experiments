@@ -1,24 +1,22 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/no-array-index-key */
-import React, { useState, useRef } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { BiPlayCircle } from 'react-icons/bi';
-import { useTweaks, makeButton } from 'use-tweaks';
-import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing';
-import { degToRad } from 'three/src/math/MathUtils';
+import React, { useState, useRef } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { BiPlayCircle } from "react-icons/bi";
+import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
+import { degToRad } from "three/src/math/MathUtils";
 
-import Channel from './Channel';
-import Ground from './Ground';
-import Audio from '../../../../libs/Utils/audio';
+import Channel from "./Channel";
+import Ground from "./Ground";
+import Audio from "../../../../libs/Utils/audio";
 
-import './styles.scss';
+import "./styles.scss";
+import { useControls, button } from "leva";
 
 export default function AudioVisualizer() {
   const trackList = {
-    'NIИ Ghosts 14': 'nin-ghosts-14.mp3',
-    'NIИ Ghosts 23': 'nin-ghosts-23.mp3',
-    'NIИ Ghosts 24': 'nin-ghosts-24.mp3',
-    'NIИ Ghosts 34': 'nin-ghosts-34.mp3',
+    "NIИ Ghosts 14": "nin-ghosts-14.mp3",
+    "NIИ Ghosts 23": "nin-ghosts-23.mp3",
+    "NIИ Ghosts 24": "nin-ghosts-24.mp3",
+    "NIИ Ghosts 34": "nin-ghosts-34.mp3",
   };
 
   const playerRef = useRef();
@@ -37,15 +35,14 @@ export default function AudioVisualizer() {
 
   const cubes = Array(64).fill();
 
-  const { source } = useTweaks({
+  const { source = "nin-ghosts-23.mp3" } = useControls({
     source: {
-      value: 'nin-ghosts-23.mp3',
       options: trackList,
     },
-    ...makeButton('Play', () => {
+    play: button(() => {
       playerRef.current.play();
     }),
-    ...makeButton('Stop', () => {
+    stop: button(() => {
       playerRef.current.pause();
     }),
   });
@@ -54,8 +51,8 @@ export default function AudioVisualizer() {
     // This one makes the camera move in and out
     useFrame(({ clock, camera }) => {
       const c = camera;
-      c.position.x = (Math.cos(clock.getElapsedTime() / 4) * 8) - 4;
-      c.position.z = (Math.sin(clock.getElapsedTime() / 4) * 8) - 4;
+      c.position.x = Math.cos(clock.getElapsedTime() / 4) * 8 - 4;
+      c.position.z = Math.sin(clock.getElapsedTime() / 4) * 8 - 4;
       if (audioSource) {
         const { mental } = audioSource.sample();
         c.position.y = 2 + 2 * mental;
@@ -72,7 +69,7 @@ export default function AudioVisualizer() {
     useFrame(({ clock, gl }) => {
       if (audioSource) {
         const { mental } = audioSource.sample();
-        bloomRef.current.intensity = (mental) + 0.2;
+        bloomRef.current.intensity = mental + 0.2;
       }
     });
     return null;
@@ -83,19 +80,22 @@ export default function AudioVisualizer() {
       <Canvas camera={{ fov: 90, position: [-10, 2, -10] }}>
         <color attach="background" args={[0x050505]} />
         <ambientLight intensity={1} color={0xffffff} />
-        {
-          cubes.map((data, i) => {
-            // set x and z position in a 8*8 grid
-            // with a padding of 2 units
-            const x = (i % 8) * 1.15 - 8;
-            const z = Math.floor(i / 8) * 1.15 - 8;
+        {cubes.map((data, i) => {
+          // set x and z position in a 8*8 grid
+          // with a padding of 2 units
+          const x = (i % 8) * 1.15 - 8;
+          const z = Math.floor(i / 8) * 1.15 - 8;
 
-            const position = [x, 0, z];
-            return (
-              <Channel key={i} index={i} position={position} source={audioSource} />
-            );
-          })
-        }
+          const position = [x, 0, z];
+          return (
+            <Channel
+              key={i}
+              index={i}
+              position={position}
+              source={audioSource}
+            />
+          );
+        })}
         <Ground
           position={[0, -2, 0]}
           rotation={[degToRad(-90), 0, 0]}
@@ -135,7 +135,9 @@ export default function AudioVisualizer() {
         <div className="player-controls--container">
           <button
             type="button"
-            onClick={() => { playerRef.current.play(); }}
+            onClick={() => {
+              playerRef.current.play();
+            }}
             className="player-controls-button"
           >
             <span>

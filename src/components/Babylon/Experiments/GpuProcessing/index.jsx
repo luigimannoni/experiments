@@ -1,11 +1,10 @@
 import React from "react";
-import raw from "raw.macro";
 import * as BABYLON from "babylonjs";
 
 import Base from "../Base";
 
-const vertex = raw("./vertex.glsl");
-const fragment = raw("./fragment.glsl");
+import vertex from "./vertex.glsl";
+import fragment from "./fragment.glsl";
 
 const COLORS = {
   TARGET: "#440000",

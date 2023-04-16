@@ -1,5 +1,4 @@
 import React from "react";
-import raw from "raw.macro";
 import * as THREE from "three";
 import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
@@ -10,8 +9,9 @@ import Base from "../Base";
 
 import Palette from "../../../../libs/Palette";
 
-const vertex = raw("./vertex.glsl");
-const fragment = raw("./fragment.glsl");
+import vertex from "./vertex.glsl";
+import fragment from "./fragment.glsl";
+import { useControls } from "leva";
 
 const COLORS = {
   LIGHT: Palette.Synth.lighter,
@@ -196,97 +196,108 @@ export default class Displacement extends Base {
     };
 
     // Adds Pane stuff
-    const pane = super.pane();
 
-    const paneShader = pane.addFolder({ title: "Shader uniforms" });
-    paneShader.addInput(uniforms.scale, "value", {
-      min: 0,
-      max: 2,
-      step: 0.01,
-      label: "Scale",
-    });
-    paneShader.addInput(uniforms.displacement, "value", {
-      min: 0,
-      max: 110,
-      label: "Displacement",
-    });
-    paneShader.addInput(uniforms.speed, "value", {
-      min: 10,
-      max: 50,
-      label: "Speed",
-    });
-    paneShader.addInput(uniforms.lowStep, "value", {
-      min: -2,
-      max: 0,
-      label: "Low step",
-    });
-    paneShader.addInput(uniforms.hiStep, "value", {
-      min: 0,
-      max: 2,
-      label: "High step",
-    });
+    // const data = useControls({
+    //   color: {
+    //     value: "#f00",
+    //     onChange: (v) => {
+    //       // imperatively update the world after Leva input changes
+    //       divRef.current.style.color = v;
+    //     },
+    //   },
+    // });
+    // const values = useControls({
+    //   scale: {
+    //     min: 0,
+    //     max: 2,
+    //     step: 0.01,
+    //     label: "Scale",
+    //   },
+    //   displacement: {
+    //     min: 0,
+    //     max: 110,
+    //     label: "Displacement",
+    //   },
+    //   speed: {
+    //     min: 10,
+    //     max: 50,
+    //     label: "Speed",
+    //   },
+    //   lowStep: {
+    //     min: -2,
+    //     max: 0,
+    //     label: "Low step",
+    //   },
+    //   hiStep: {
+    //     min: 0,
+    //     max: 2,
+    //     label: "High step",
+    //   },
+    // });
 
-    const paneColor = pane.addFolder({ title: "Color Settings" });
-    paneColor
-      .addInput(COLORS, "PLASMA", { view: "color", label: "Ball" })
-      .on("change", recolor);
-    const c1 = paneColor
-      .addInput(COLORS, "LIGHT_1", {
-        view: "color",
-        disabled: COLORS.EQUALIZE,
-        label: "Background Shadows",
-      })
-      .on("change", recolor);
-    const c2 = paneColor
-      .addInput(COLORS, "LIGHT_2", {
-        view: "color",
-        disabled: COLORS.EQUALIZE,
-        label: "Background Lights",
-      })
-      .on("change", recolor);
-    paneColor
-      .addInput(COLORS, "EQUALIZE", { label: "Equalize colors" })
-      .on("change", () => {
-        c1.disabled = COLORS.EQUALIZE;
-        c2.disabled = COLORS.EQUALIZE;
-        recolor();
-      });
+    // const paneShader = pane.addFolder({ title: "Shader uniforms" });
 
-    const paneBloom = pane.addFolder({ title: "Bloom Effect" });
-    const b1 = paneBloom.addInput(this.renderer, "toneMappingExposure", {
-      min: 0,
-      max: 1,
-      step: 0.001,
-      label: "Exposure",
-      disabled: BLOOM.ANIMATE,
-    });
-    paneBloom.addInput(bloomPass, "threshold", {
-      min: 0,
-      max: 1,
-      step: 0.0001,
-      label: "Threshold",
-    });
-    const b2 = paneBloom.addInput(bloomPass, "strength", {
-      min: 0,
-      max: 2,
-      step: 0.1,
-      label: "Strength",
-      disabled: BLOOM.ANIMATE,
-    });
-    const b3 = paneBloom.addInput(bloomPass, "radius", {
-      min: 0,
-      max: 2,
-      step: 0.1,
-      label: "Radius",
-      disabled: BLOOM.ANIMATE,
-    });
-    paneBloom
-      .addInput(BLOOM, "ANIMATE", { label: "Animate" })
-      .on("change", () => {
-        b1.disabled = BLOOM.ANIMATE;
-        b2.disabled = BLOOM.ANIMATE;
-        b3.disabled = BLOOM.ANIMATE;
-      });
+    // const paneColor = pane.addFolder({ title: "Color Settings" });
+    // paneColor
+    //   .addInput(COLORS, "PLASMA", { view: "color", label: "Ball" })
+    //   .on("change", recolor);
+    // const c1 = paneColor
+    //   .addInput(COLORS, "LIGHT_1", {
+    //     view: "color",
+    //     disabled: COLORS.EQUALIZE,
+    //     label: "Background Shadows",
+    //   })
+    //   .on("change", recolor);
+    // const c2 = paneColor
+    //   .addInput(COLORS, "LIGHT_2", {
+    //     view: "color",
+    //     disabled: COLORS.EQUALIZE,
+    //     label: "Background Lights",
+    //   })
+    //   .on("change", recolor);
+    // paneColor
+    //   .addInput(COLORS, "EQUALIZE", { label: "Equalize colors" })
+    //   .on("change", () => {
+    //     c1.disabled = COLORS.EQUALIZE;
+    //     c2.disabled = COLORS.EQUALIZE;
+    //     recolor();
+    //   });
+
+    // const paneBloom = pane.addFolder({ title: "Bloom Effect" });
+    // const b1 = paneBloom.addInput(this.renderer, "toneMappingExposure", {
+    //   min: 0,
+    //   max: 1,
+    //   step: 0.001,
+    //   label: "Exposure",
+    //   disabled: BLOOM.ANIMATE,
+    // });
+    // paneBloom.addInput(bloomPass, "threshold", {
+    //   min: 0,
+    //   max: 1,
+    //   step: 0.0001,
+    //   label: "Threshold",
+    // });
+    // const b2 = paneBloom.addInput(bloomPass, "strength", {
+    //   min: 0,
+    //   max: 2,
+    //   step: 0.1,
+    //   label: "Strength",
+    //   disabled: BLOOM.ANIMATE,
+    // });
+    // const b3 = paneBloom.addInput(bloomPass, "radius", {
+    //   min: 0,
+    //   max: 2,
+    //   step: 0.1,
+    //   label: "Radius",
+    //   disabled: BLOOM.ANIMATE,
+    // });
+    // paneBloom
+    //   .addInput(BLOOM, "ANIMATE", { label: "Animate" })
+    //   .on("change", () => {
+    //     b1.disabled = BLOOM.ANIMATE;
+    //     b2.disabled = BLOOM.ANIMATE;
+    //     b3.disabled = BLOOM.ANIMATE;
+    //   });
   }
 
   componentWillUnmount() {

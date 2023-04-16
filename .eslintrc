@@ -6,8 +6,7 @@
   "extends": [
     "prettier",
     "plugin:prettier/recommended",
-    "plugin:react-hooks/recommended",
-    "plugin:import/recommended"
+    "plugin:react-hooks/recommended"
   ],
   "parserOptions": {
     "ecmaFeatures": {
@@ -17,7 +16,7 @@
     "sourceType": "module"
   },
   "plugins": [
-    "react", "react-hooks", "import", "jest", "prettier"
+    "react", "react-hooks", "prettier"
   ],
   "rules": {
     "react/prop-types": "off",

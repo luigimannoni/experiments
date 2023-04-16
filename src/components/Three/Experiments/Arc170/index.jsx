@@ -1,12 +1,12 @@
-import React from 'react';
-import * as THREE from 'three';
-import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
+import React from "react";
+import * as THREE from "three";
+import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
 
-import Base from '../Base';
+import Base from "../Base";
 
 const BLOOM = {
   ANIMATE: true,
@@ -30,7 +30,7 @@ export default class Arc170 extends Base {
       75,
       window.innerWidth / window.innerHeight,
       10,
-      5000,
+      5000
     );
 
     camera.position.x = -1500;
@@ -47,15 +47,18 @@ export default class Arc170 extends Base {
     controls.maxDistance = 2000;
 
     // Skybox
-    const r = '/assets/skyboxes/nebula1024_';
+    const r = "/assets/skyboxes/nebula1024_";
     const urls = [
-      `${r}px.png`, `${r}nx.png`,
-      `${r}py.png`, `${r}ny.png`,
-      `${r}pz.png`, `${r}nz.png`,
+      `${r}px.png`,
+      `${r}nx.png`,
+      `${r}py.png`,
+      `${r}ny.png`,
+      `${r}pz.png`,
+      `${r}nz.png`,
     ];
 
     const textureCube = new THREE.CubeTextureLoader().load(urls);
-    textureCube.format = THREE.RGBFormat;
+    textureCube.format = THREE.RGBAFormat;
     textureCube.mapping = THREE.CubeReflectionMapping;
     textureCube.encoding = THREE.sRGBEncoding;
     scene.background = textureCube;
@@ -75,10 +78,13 @@ export default class Arc170 extends Base {
     let arc170 = null;
     // Model Mesh
     const loader = new GLTFLoader();
-    loader.load(`${process.env.PUBLIC_URL}/assets/arc170/scene.gltf`, (gltf) => {
-      [arc170] = gltf.scene.children;
-      scene.add(arc170);
-    });
+    loader.load(
+      `${process.env.PUBLIC_URL}/assets/arc170/scene.gltf`,
+      (gltf) => {
+        [arc170] = gltf.scene.children;
+        scene.add(arc170);
+      }
+    );
 
     // Post processing
     const renderPass = new RenderPass(scene, camera);
@@ -86,7 +92,7 @@ export default class Arc170 extends Base {
       new THREE.Vector2(window.innerWidth, window.innerHeight),
       1.5,
       0.4,
-      0.85,
+      0.85
     );
 
     bloomPass.threshold = BLOOM.THRES;
@@ -132,28 +138,45 @@ export default class Arc170 extends Base {
 
       composer.reset();
     };
-    window.addEventListener('resize', onWindowResize, false);
+    window.addEventListener("resize", onWindowResize, false);
 
     const pane = super.pane();
 
-    const paneBloom = pane.addFolder({ title: 'Bloom Effect' });
-    const b1 = paneBloom.addInput(this.renderer, 'toneMappingExposure', {
-      min: 0, max: 1, step: 0.001, label: 'Exposure', disabled: BLOOM.ANIMATE,
+    const paneBloom = pane.addFolder({ title: "Bloom Effect" });
+    const b1 = paneBloom.addInput(this.renderer, "toneMappingExposure", {
+      min: 0,
+      max: 1,
+      step: 0.001,
+      label: "Exposure",
+      disabled: BLOOM.ANIMATE,
     });
-    paneBloom.addInput(bloomPass, 'threshold', {
-      min: 0, max: 1, step: 0.0001, label: 'Threshold',
+    paneBloom.addInput(bloomPass, "threshold", {
+      min: 0,
+      max: 1,
+      step: 0.0001,
+      label: "Threshold",
     });
-    const b2 = paneBloom.addInput(bloomPass, 'strength', {
-      min: 0, max: 2, step: 0.1, label: 'Strength', disabled: BLOOM.ANIMATE,
+    const b2 = paneBloom.addInput(bloomPass, "strength", {
+      min: 0,
+      max: 2,
+      step: 0.1,
+      label: "Strength",
+      disabled: BLOOM.ANIMATE,
     });
-    const b3 = paneBloom.addInput(bloomPass, 'radius', {
-      min: 0, max: 2, step: 0.1, label: 'Radius', disabled: BLOOM.ANIMATE,
+    const b3 = paneBloom.addInput(bloomPass, "radius", {
+      min: 0,
+      max: 2,
+      step: 0.1,
+      label: "Radius",
+      disabled: BLOOM.ANIMATE,
     });
-    paneBloom.addInput(BLOOM, 'ANIMATE', { label: 'Animate' }).on('change', () => {
-      b1.disabled = BLOOM.ANIMATE;
-      b2.disabled = BLOOM.ANIMATE;
-      b3.disabled = BLOOM.ANIMATE;
-    });
+    paneBloom
+      .addInput(BLOOM, "ANIMATE", { label: "Animate" })
+      .on("change", () => {
+        b1.disabled = BLOOM.ANIMATE;
+        b2.disabled = BLOOM.ANIMATE;
+        b3.disabled = BLOOM.ANIMATE;
+      });
   }
 
   componentWillUnmount() {
