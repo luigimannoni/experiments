@@ -4,8 +4,10 @@
     "es2021": true
   },
   "extends": [
-    "plugin:react/recommended",
-    "airbnb"
+    "prettier",
+    "plugin:prettier/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:import/recommended"
   ],
   "parserOptions": {
     "ecmaFeatures": {
@@ -15,7 +17,7 @@
     "sourceType": "module"
   },
   "plugins": [
-    "react"
+    "react", "react-hooks", "import", "jest", "prettier"
   ],
   "rules": {
     "react/prop-types": "off",

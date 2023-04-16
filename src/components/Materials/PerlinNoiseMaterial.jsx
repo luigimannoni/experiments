@@ -1,45 +1,45 @@
-import { ShaderMaterial, Color } from 'three';
-import { extend } from '@react-three/fiber';
+import { ShaderMaterial, Color } from "three";
+import { extend } from "@react-three/fiber";
 
 export default class PerlinNoiseMaterial extends ShaderMaterial {
   constructor() {
     super({
       uniforms: {
         time: {
-          type: 'f',
+          type: "f",
           value: 0.0,
         },
         speed: {
-          type: 'f',
+          type: "f",
           value: 0.1,
         },
         elevation: {
-          type: 'f',
+          type: "f",
           value: 1,
         },
         noise_range: {
-          type: 'f',
+          type: "f",
           value: 0,
         },
         offset: {
-          type: 'f',
+          type: "f",
           value: 1,
         },
         perlin_passes: {
-          type: 'f',
+          type: "f",
           value: 1,
         },
         sombrero_amplitude: {
-          type: 'f',
+          type: "f",
           value: 0.3,
         },
         sombrero_frequency: {
-          type: 'f',
+          type: "f",
           value: 10.0,
         },
         line_color: {
-          type: 'c',
-          value: new Color('#ffffff'),
+          type: "c",
+          value: new Color("#ffffff"),
         },
       },
       vertexShader: `

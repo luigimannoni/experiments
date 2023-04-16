@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import Matter from 'matter-js';
-import MatterAttractors from 'matter-attractors-f';
-import Pane from '../../../../libs/Pane';
-import Screen from '../../../../libs/Screen';
+import React, { Component } from "react";
+import Matter from "matter-js";
+import MatterAttractors from "matter-attractors-f";
+import Pane from "../../../../libs/Pane";
+import Screen from "../../../../libs/Screen";
 
 export default class MatterRepulsor extends Component {
   constructor(...args) {
@@ -39,9 +39,9 @@ export default class MatterRepulsor extends Component {
 
     const settings = {
       backgroundGradientDegrees: 25,
-      backgroundGradientStart: '#2ba7fe',
-      backgroundGradientEnd: '#0a0059',
-      dots: '#ffffff',
+      backgroundGradientStart: "#2ba7fe",
+      backgroundGradientEnd: "#0a0059",
+      dots: "#ffffff",
       maskDot: false,
       randomForceMultiplier: 0,
       dotSize: 8,
@@ -66,8 +66,8 @@ export default class MatterRepulsor extends Component {
         height: worldsize.height,
         hasBounds: true,
         wireframes: false,
-        background: 'transparent',
-        pixelRatio: 'auto',
+        background: "transparent",
+        pixelRatio: "auto",
       },
       bounds,
     });
@@ -75,7 +75,7 @@ export default class MatterRepulsor extends Component {
     const compBodyOpts = {
       render: {
         fillStyle: settings.dots,
-        strokeStyle: 'white',
+        strokeStyle: "white",
         lineWidth: 0,
       },
     };
@@ -97,28 +97,28 @@ export default class MatterRepulsor extends Component {
         0 - boundaries / 2,
         worldsize.width * 2,
         boundaries,
-        wallOpts,
+        wallOpts
       ),
       Bodies.rectangle(
         worldsize.width / 2,
         worldsize.height + boundaries / 2,
         worldsize.width * 2,
         boundaries,
-        wallOpts,
+        wallOpts
       ),
       Bodies.rectangle(
         worldsize.width + boundaries / 2,
         worldsize.height / 2,
         boundaries,
         worldsize.height * 2,
-        wallOpts,
+        wallOpts
       ),
       Bodies.rectangle(
         0 - boundaries / 2,
         worldsize.height / 2,
         boundaries,
         worldsize.height * 2,
-        wallOpts,
+        wallOpts
       ),
     ];
 
@@ -126,8 +126,8 @@ export default class MatterRepulsor extends Component {
       attractors: [
         (bodyA, bodyB) => {
           const distance = {
-            x: (bodyA.position.x - bodyB.position.x),
-            y: (bodyA.position.y - bodyB.position.y),
+            x: bodyA.position.x - bodyB.position.x,
+            y: bodyA.position.y - bodyB.position.y,
           };
 
           const dir = {
@@ -145,8 +145,10 @@ export default class MatterRepulsor extends Component {
           };
 
           const angular = {
-            x: 1 - Math.sin(((Math.PI / 2) * ((100 / threshold) * pos.x)) / 100),
-            y: 1 - Math.sin(((Math.PI / 2) * ((100 / threshold) * pos.y)) / 100),
+            x:
+              1 - Math.sin(((Math.PI / 2) * ((100 / threshold) * pos.x)) / 100),
+            y:
+              1 - Math.sin(((Math.PI / 2) * ((100 / threshold) * pos.y)) / 100),
           };
           const finalAngular = angular.x * angular.y;
 
@@ -156,8 +158,18 @@ export default class MatterRepulsor extends Component {
           };
 
           return {
-            x: pos.x * dir.x * finalAngular * (settings.force * power * coeff.x) * -1,
-            y: pos.y * dir.y * finalAngular * (settings.force * power * coeff.y) * -1,
+            x:
+              pos.x *
+              dir.x *
+              finalAngular *
+              (settings.force * power * coeff.x) *
+              -1,
+            y:
+              pos.y *
+              dir.y *
+              finalAngular *
+              (settings.force * power * coeff.y) *
+              -1,
           };
         },
       ],
@@ -169,17 +181,17 @@ export default class MatterRepulsor extends Component {
       60,
       {
         render: {
-          fillStyle: '#ffffff',
+          fillStyle: "#ffffff",
           visible: true,
         },
         plugin,
-      },
+      }
     );
 
     const dotCompSize = settings.dotSize * 2 + stack.gap;
     const gridBalls = {
-      x: Math.floor((worldsize.width) / dotCompSize),
-      y: Math.floor((worldsize.height) / dotCompSize),
+      x: Math.floor(worldsize.width / dotCompSize),
+      y: Math.floor(worldsize.height / dotCompSize),
     };
 
     const gridPadding = {
@@ -194,7 +206,7 @@ export default class MatterRepulsor extends Component {
       gridBalls.y,
       stack.gap,
       stack.gap,
-      (x, y) => Bodies.circle(x, y, settings.dotSize, compBodyOpts),
+      (x, y) => Bodies.circle(x, y, settings.dotSize, compBodyOpts)
     );
 
     const bodyMap = {};
@@ -202,16 +214,22 @@ export default class MatterRepulsor extends Component {
     grid.bodies.forEach((body, i) => {
       bodyMap[grid.bodies[i].id] = i;
 
-      Composite.add(grid, Constraint.create({
-        bodyB: grid.bodies[i],
-        pointA: { x: grid.bodies[i].position.x, y: grid.bodies[i].position.y },
-        pointB: { x: 0, y: 0 },
-        stiffness: settings.stiffness,
-        damping: settings.damping,
-        render: {
-          visible: false,
-        },
-      }));
+      Composite.add(
+        grid,
+        Constraint.create({
+          bodyB: grid.bodies[i],
+          pointA: {
+            x: grid.bodies[i].position.x,
+            y: grid.bodies[i].position.y,
+          },
+          pointB: { x: 0, y: 0 },
+          stiffness: settings.stiffness,
+          damping: settings.damping,
+          render: {
+            visible: false,
+          },
+        })
+      );
     });
 
     // add mouse control
@@ -226,12 +244,7 @@ export default class MatterRepulsor extends Component {
       },
     });
 
-    World.add(this.engine.world, [
-      grid,
-      ...walls,
-      logo,
-      mouseConstraint,
-    ]);
+    World.add(this.engine.world, [grid, ...walls, logo, mouseConstraint]);
 
     Matter.Runner.run(this.engine);
     Render.run(this.renderer);
@@ -243,8 +256,14 @@ export default class MatterRepulsor extends Component {
         y: logo.position.y,
       };
       const force = {
-        x: Math.cos(time / 500) * Math.cos(time / 1500) * settings.randomForceMultiplier,
-        y: Math.sin(time / 1000) * Math.sin(time / 1500) * settings.randomForceMultiplier,
+        x:
+          Math.cos(time / 500) *
+          Math.cos(time / 1500) *
+          settings.randomForceMultiplier,
+        y:
+          Math.sin(time / 1000) *
+          Math.sin(time / 1500) *
+          settings.randomForceMultiplier,
       };
 
       requestAnimationFrame(setRandomForce);
@@ -259,7 +278,7 @@ export default class MatterRepulsor extends Component {
           grid.bodies[i].render.fillStyle = settings.dots;
         });
         if (settings.maskDot === true) {
-          logo.render.fillStyle = 'transparent';
+          logo.render.fillStyle = "transparent";
         } else {
           logo.render.fillStyle = settings.dots;
         }
@@ -293,64 +312,110 @@ export default class MatterRepulsor extends Component {
     Pane.mount();
     const pane = Pane.interface();
 
-    const paneGrid = pane.addFolder({ title: 'Grid settings' });
-    const paneRender = pane.addFolder({ title: 'Render settings' });
-    const paneColors = pane.addFolder({ title: 'Colors' });
+    const paneGrid = pane.addFolder({ title: "Grid settings" });
+    const paneRender = pane.addFolder({ title: "Render settings" });
+    const paneColors = pane.addFolder({ title: "Colors" });
 
-    paneGrid.addButton({ title: 'Scale dots up' }).on('click', updateFuncs.dotScaleUp);
-    paneGrid.addButton({ title: 'Scale dots down' }).on('click', updateFuncs.dotScaleDown);
+    paneGrid
+      .addButton({ title: "Scale dots up" })
+      .on("click", updateFuncs.dotScaleUp);
+    paneGrid
+      .addButton({ title: "Scale dots down" })
+      .on("click", updateFuncs.dotScaleDown);
 
-    paneGrid.addInput(settings, 'force', {
-      min: 0, max: 10, step: 0.01, label: 'Force field',
-    }).on('change', updateFuncs.dotsConstraints);
-    paneGrid.addInput(settings, 'stiffness', {
-      min: 0, max: 0.015, step: 0.0001, label: 'Stiffness',
-    }).on('change', updateFuncs.dotsConstraints);
-    paneGrid.addInput(settings, 'damping', {
-      min: 0, max: 1, step: 0.0001, label: 'Damping',
-    }).on('change', updateFuncs.dotsConstraints);
+    paneGrid
+      .addInput(settings, "force", {
+        min: 0,
+        max: 10,
+        step: 0.01,
+        label: "Force field",
+      })
+      .on("change", updateFuncs.dotsConstraints);
+    paneGrid
+      .addInput(settings, "stiffness", {
+        min: 0,
+        max: 0.015,
+        step: 0.0001,
+        label: "Stiffness",
+      })
+      .on("change", updateFuncs.dotsConstraints);
+    paneGrid
+      .addInput(settings, "damping", {
+        min: 0,
+        max: 1,
+        step: 0.0001,
+        label: "Damping",
+      })
+      .on("change", updateFuncs.dotsConstraints);
 
-    paneRender.addInput(this.engine.timing, 'timeScale', {
-      min: 1e-3, max: 1.2, step: 1e-3, label: 'Render speed',
+    paneRender.addInput(this.engine.timing, "timeScale", {
+      min: 1e-3,
+      max: 1.2,
+      step: 1e-3,
+      label: "Render speed",
     });
-    paneRender.addInput(this.engine.gravity, 'scale', {
-      min: 0, max: 0.001, step: 0.0001, label: 'Gravity force',
+    paneRender.addInput(this.engine.gravity, "scale", {
+      min: 0,
+      max: 0.001,
+      step: 0.0001,
+      label: "Gravity force",
     });
-    paneRender.addInput(this.engine, 'gravity', {
+    paneRender.addInput(this.engine, "gravity", {
       x: {
-        min: -1, max: 1, step: 0.01, label: 'Gravity horiz',
+        min: -1,
+        max: 1,
+        step: 0.01,
+        label: "Gravity horiz",
       },
       y: {
-        min: -1, max: 1, step: 0.01, label: 'Gravity vert',
+        min: -1,
+        max: 1,
+        step: 0.01,
+        label: "Gravity vert",
       },
     });
-    paneRender.addInput(settings, 'randomForceMultiplier', {
-      min: 0, max: 1, step: 0.01, label: 'Random force',
+    paneRender.addInput(settings, "randomForceMultiplier", {
+      min: 0,
+      max: 1,
+      step: 0.01,
+      label: "Random force",
     });
 
-    paneColors.addInput(settings, 'backgroundGradientStart', {
-      view: 'color',
-      label: 'BG Gradient Start',
-    }).on('change', updateFuncs.bgColor);
-    paneColors.addInput(settings, 'backgroundGradientEnd', {
-      view: 'color',
-      label: 'BG Gradient End',
-    }).on('change', updateFuncs.bgColor);
-    paneColors.addInput(settings, 'backgroundGradientDegrees', {
-      min: 0,
-      max: 360,
-      step: 1,
-      label: 'Gradient Deg',
-    }).on('change', updateFuncs.bgColor);
-    paneColors.addInput(settings, 'dots', {
-      view: 'color',
-      label: 'Dot color',
-    }).on('change', updateFuncs.dotsColor);
-    paneColors.addInput(settings, 'maskDot', {
-      label: 'Transparent repulsor',
-    }).on('change', updateFuncs.dotsColor);
+    paneColors
+      .addInput(settings, "backgroundGradientStart", {
+        view: "color",
+        label: "BG Gradient Start",
+      })
+      .on("change", updateFuncs.bgColor);
+    paneColors
+      .addInput(settings, "backgroundGradientEnd", {
+        view: "color",
+        label: "BG Gradient End",
+      })
+      .on("change", updateFuncs.bgColor);
+    paneColors
+      .addInput(settings, "backgroundGradientDegrees", {
+        min: 0,
+        max: 360,
+        step: 1,
+        label: "Gradient Deg",
+      })
+      .on("change", updateFuncs.bgColor);
+    paneColors
+      .addInput(settings, "dots", {
+        view: "color",
+        label: "Dot color",
+      })
+      .on("change", updateFuncs.dotsColor);
+    paneColors
+      .addInput(settings, "maskDot", {
+        label: "Transparent repulsor",
+      })
+      .on("change", updateFuncs.dotsColor);
 
-    pane.addButton({ title: 'Fullscreen toggle' }).on('click', updateFuncs.switchFullscreen);
+    pane
+      .addButton({ title: "Fullscreen toggle" })
+      .on("click", updateFuncs.switchFullscreen);
 
     updateFuncs.bgColor();
   }
@@ -367,13 +432,10 @@ export default class MatterRepulsor extends Component {
     this.renderer.context = null;
     this.renderer.textures = {};
 
-    document.body.style = '';
+    document.body.style = "";
   }
 
   render() {
-    return (
-      <>
-      </>
-    );
+    return <></>;
   }
 }

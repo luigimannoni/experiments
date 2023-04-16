@@ -1,17 +1,17 @@
-import React from 'react';
-import raw from 'raw.macro';
-import * as THREE from 'three';
-import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
+import React from "react";
+import raw from "raw.macro";
+import * as THREE from "three";
+import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
 
-import Base from '../Base';
+import Base from "../Base";
 
-import Palette from '../../../../libs/Palette';
+import Palette from "../../../../libs/Palette";
 
-const vertex = raw('./vertex.glsl');
-const fragment = raw('./fragment.glsl');
+const vertex = raw("./vertex.glsl");
+const fragment = raw("./fragment.glsl");
 
 const COLORS = {
   LIGHT: Palette.Synth.lighter,
@@ -43,7 +43,7 @@ export default class Displacement extends Base {
       75,
       window.innerWidth / window.innerHeight,
       0.1,
-      1000,
+      1000
     );
 
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -62,7 +62,7 @@ export default class Displacement extends Base {
       new THREE.MeshStandardMaterial({
         color: COLORS.LIGHT_2,
         side: THREE.BackSide,
-      }),
+      })
     );
     scene.add(background);
 
@@ -88,27 +88,27 @@ export default class Displacement extends Base {
         value: 1.0,
       },
       speed: {
-        type: 'f',
+        type: "f",
         value: 20.0,
       },
       displacement: {
-        type: 'f',
+        type: "f",
         value: 12.0,
       },
       lowStep: {
-        type: 'f',
+        type: "f",
         value: -1,
       },
       hiStep: {
-        type: 'f',
+        type: "f",
         value: 1,
       },
       vNoise: {
-        type: 'f',
+        type: "f",
         value: 0,
       },
       color: {
-        type: 'c',
+        type: "c",
         value: new THREE.Color(COLORS.PLASMA),
       },
     };
@@ -121,8 +121,8 @@ export default class Displacement extends Base {
 
     // Sphere Glass Outer
     const Blob = new THREE.Mesh(
-      new THREE.DodecahedronGeometry(46, 3),
-      BlobShader,
+      new THREE.DodecahedronBufferGeometry(46, 64),
+      BlobShader
     );
     scene.add(Blob);
 
@@ -131,7 +131,7 @@ export default class Displacement extends Base {
       new THREE.Vector2(window.innerWidth, window.innerHeight),
       1.5,
       0.4,
-      0.85,
+      0.85
     );
 
     bloomPass.threshold = BLOOM.THRES;
@@ -182,7 +182,7 @@ export default class Displacement extends Base {
 
       composer.reset();
     };
-    window.addEventListener('resize', onWindowResize, false);
+    window.addEventListener("resize", onWindowResize, false);
 
     const recolor = () => {
       uniforms.color.value = new THREE.Color(COLORS.PLASMA);
@@ -198,43 +198,95 @@ export default class Displacement extends Base {
     // Adds Pane stuff
     const pane = super.pane();
 
-    const paneShader = pane.addFolder({ title: 'Shader uniforms' });
-    paneShader.addInput(uniforms.scale, 'value', {
-      min: 0, max: 2, step: 0.01, label: 'Scale',
+    const paneShader = pane.addFolder({ title: "Shader uniforms" });
+    paneShader.addInput(uniforms.scale, "value", {
+      min: 0,
+      max: 2,
+      step: 0.01,
+      label: "Scale",
     });
-    paneShader.addInput(uniforms.displacement, 'value', { min: 0, max: 110, label: 'Displacement' });
-    paneShader.addInput(uniforms.speed, 'value', { min: 10, max: 50, label: 'Speed' });
-    paneShader.addInput(uniforms.lowStep, 'value', { min: -2, max: 0, label: 'Low step' });
-    paneShader.addInput(uniforms.hiStep, 'value', { min: 0, max: 2, label: 'High step' });
+    paneShader.addInput(uniforms.displacement, "value", {
+      min: 0,
+      max: 110,
+      label: "Displacement",
+    });
+    paneShader.addInput(uniforms.speed, "value", {
+      min: 10,
+      max: 50,
+      label: "Speed",
+    });
+    paneShader.addInput(uniforms.lowStep, "value", {
+      min: -2,
+      max: 0,
+      label: "Low step",
+    });
+    paneShader.addInput(uniforms.hiStep, "value", {
+      min: 0,
+      max: 2,
+      label: "High step",
+    });
 
-    const paneColor = pane.addFolder({ title: 'Color Settings' });
-    paneColor.addInput(COLORS, 'PLASMA', { view: 'color', label: 'Ball' }).on('change', recolor);
-    const c1 = paneColor.addInput(COLORS, 'LIGHT_1', { view: 'color', disabled: COLORS.EQUALIZE, label: 'Background Shadows' }).on('change', recolor);
-    const c2 = paneColor.addInput(COLORS, 'LIGHT_2', { view: 'color', disabled: COLORS.EQUALIZE, label: 'Background Lights' }).on('change', recolor);
-    paneColor.addInput(COLORS, 'EQUALIZE', { label: 'Equalize colors' }).on('change', () => {
-      c1.disabled = COLORS.EQUALIZE;
-      c2.disabled = COLORS.EQUALIZE;
-      recolor();
-    });
+    const paneColor = pane.addFolder({ title: "Color Settings" });
+    paneColor
+      .addInput(COLORS, "PLASMA", { view: "color", label: "Ball" })
+      .on("change", recolor);
+    const c1 = paneColor
+      .addInput(COLORS, "LIGHT_1", {
+        view: "color",
+        disabled: COLORS.EQUALIZE,
+        label: "Background Shadows",
+      })
+      .on("change", recolor);
+    const c2 = paneColor
+      .addInput(COLORS, "LIGHT_2", {
+        view: "color",
+        disabled: COLORS.EQUALIZE,
+        label: "Background Lights",
+      })
+      .on("change", recolor);
+    paneColor
+      .addInput(COLORS, "EQUALIZE", { label: "Equalize colors" })
+      .on("change", () => {
+        c1.disabled = COLORS.EQUALIZE;
+        c2.disabled = COLORS.EQUALIZE;
+        recolor();
+      });
 
-    const paneBloom = pane.addFolder({ title: 'Bloom Effect' });
-    const b1 = paneBloom.addInput(this.renderer, 'toneMappingExposure', {
-      min: 0, max: 1, step: 0.001, label: 'Exposure', disabled: BLOOM.ANIMATE,
+    const paneBloom = pane.addFolder({ title: "Bloom Effect" });
+    const b1 = paneBloom.addInput(this.renderer, "toneMappingExposure", {
+      min: 0,
+      max: 1,
+      step: 0.001,
+      label: "Exposure",
+      disabled: BLOOM.ANIMATE,
     });
-    paneBloom.addInput(bloomPass, 'threshold', {
-      min: 0, max: 1, step: 0.0001, label: 'Threshold',
+    paneBloom.addInput(bloomPass, "threshold", {
+      min: 0,
+      max: 1,
+      step: 0.0001,
+      label: "Threshold",
     });
-    const b2 = paneBloom.addInput(bloomPass, 'strength', {
-      min: 0, max: 2, step: 0.1, label: 'Strength', disabled: BLOOM.ANIMATE,
+    const b2 = paneBloom.addInput(bloomPass, "strength", {
+      min: 0,
+      max: 2,
+      step: 0.1,
+      label: "Strength",
+      disabled: BLOOM.ANIMATE,
     });
-    const b3 = paneBloom.addInput(bloomPass, 'radius', {
-      min: 0, max: 2, step: 0.1, label: 'Radius', disabled: BLOOM.ANIMATE,
+    const b3 = paneBloom.addInput(bloomPass, "radius", {
+      min: 0,
+      max: 2,
+      step: 0.1,
+      label: "Radius",
+      disabled: BLOOM.ANIMATE,
     });
-    paneBloom.addInput(BLOOM, 'ANIMATE', { label: 'Animate' }).on('change', () => {
-      b1.disabled = BLOOM.ANIMATE;
-      b2.disabled = BLOOM.ANIMATE;
-      b3.disabled = BLOOM.ANIMATE;
-    });
+    paneBloom
+      .addInput(BLOOM, "ANIMATE", { label: "Animate" })
+      .on("change", () => {
+        b1.disabled = BLOOM.ANIMATE;
+        b2.disabled = BLOOM.ANIMATE;
+        b3.disabled = BLOOM.ANIMATE;
+      });
   }
 
   componentWillUnmount() {

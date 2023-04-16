@@ -1,7 +1,7 @@
-import { Component } from 'react';
-import Stats from '../../../libs/Stats';
-import GUI from '../../../libs/GUI';
-import Pane from '../../../libs/Pane';
+import { Component } from "react";
+import Stats from "../../../libs/Stats";
+import GUI from "../../../libs/GUI";
+import Pane from "../../../libs/Pane";
 
 export default class Base extends Component {
   constructor({ tweakpane = true }) {
@@ -13,8 +13,6 @@ export default class Base extends Component {
     Stats.mount();
     if (this.tweakpane) {
       Pane.mount();
-    } else {
-      GUI.mount();
     }
   }
 
@@ -22,8 +20,6 @@ export default class Base extends Component {
     Stats.unmount();
     if (this.tweakpane) {
       Pane.unmount();
-    } else {
-      GUI.unmount();
     }
     cancelAnimationFrame(this.raf);
   }
