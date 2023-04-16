@@ -20,13 +20,6 @@ Below a list of the experiments contained in this repository and hosted on githu
 
   Music visualizer using AudioContext APIs. Uses an `<audio>` tag to load and play the source and read the audiostream from.
 
-### Babylonjs
-
-- [GPU Image Post Processing](https://experiments.luigimannoni.com/#/babylon/gpu-processing)
-
-  Apply postprocessing effects to different image channels using GPU calculations on a shader instead of thread-blocking Javascript/CPU processing.
-
-
 ### Javascript
 
 - [MatterJS Repulsor](https://experiments.luigimannoni.com/#/javascript/matter-repulsor)
