@@ -44,17 +44,18 @@ export default function InteractiveShaders() {
   };
 
   const options = useControls({
-    shaderMode: 0,
+    // shaderMode: 0,
     iterations: {
+      label: "Iterations",
       value: 2,
       onChange: (v) => material.setInt("iterations", v),
       min: 1,
       max: 4,
       step: 1,
     },
-    vIterations: 2,
-    channel1: imageList.Leaves,
-    channel2: imageList.Plants,
+    // vIterations: 2,
+    // channel1: imageList.Leaves,
+    // channel2: imageList.Plants,
     speed: {
       label: "Time speed",
       value: 1.0,
@@ -63,16 +64,16 @@ export default function InteractiveShaders() {
       max: 5,
       step: 0.1,
     },
-    target: {
-      label: "Base color",
-      value: COLORS.TARGET,
-      onChange: (v) => material.setColor3("target", Color3.FromHexString(v)),
-    },
-    wave: {
-      label: "Overlay color",
-      value: COLORS.WAVE,
-      onChange: (v) => material.setColor3("wave", Color3.FromHexString(v)),
-    },
+    // target: {
+    //   label: "Base color",
+    //   value: COLORS.TARGET,
+    //   onChange: (v) => material.setColor3("target", Color3.FromHexString(v)),
+    // },
+    // wave: {
+    //   label: "Overlay color",
+    //   value: COLORS.WAVE,
+    //   onChange: (v) => material.setColor3("wave", Color3.FromHexString(v)),
+    // },
     scale: {
       value: [1, 1],
       onChange: (v) => material.setVector2("scale", new Vector2(v[0], v[1])),
