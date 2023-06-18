@@ -124,18 +124,18 @@ export default function InteractiveShaders() {
       channel2: new Texture(options.channel2, scene, false, false),
     };
 
-    material.setInt("mode", options.shaderMode);
+    // material.setInt("mode", options.shaderMode);
     material.setInt("iterations", options.iterations);
-    material.setInt("vIterations", options.vIterations);
+    // material.setInt("vIterations", options.vIterations);
     material.setFloat("speed", options.speed);
-    material.setFloat("filterRed", options.filterRed);
-    material.setFloat("filterGreen", options.filterGreen);
-    material.setFloat("filterBlue", options.filterBlue);
+    // material.setFloat("filterRed", options.filterRed);
+    // material.setFloat("filterGreen", options.filterGreen);
+    // material.setFloat("filterBlue", options.filterBlue);
 
-    material.setTexture("channel1", texture.channel1, scene);
-    material.setTexture("channel2", texture.channel2, scene);
-    material.setColor3("target", Color3.FromHexString(COLORS.TARGET));
-    material.setColor3("wave", Color3.FromHexString(COLORS.WAVE));
+    // material.setTexture("channel1", texture.channel1, scene);
+    // material.setTexture("channel2", texture.channel2, scene);
+    // material.setColor3("target", Color3.FromHexString(COLORS.TARGET));
+    // material.setColor3("wave", Color3.FromHexString(COLORS.WAVE));
 
     material.setVector2("scale", new Vector2(options.scale, options.scale));
 
