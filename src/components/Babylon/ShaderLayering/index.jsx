@@ -1,7 +1,7 @@
 import React from "react";
-import * as BABYLON from "babylonjs";
+import * as BABYLON from "@babylonjs/core";
 
-import Base from "../Base";
+import Base from "../SceneComponent";
 
 import vertex from "./vertex.glsl";
 import fragment from "./fragment.glsl";

@@ -1,9 +1,9 @@
-import GpuProcessing from "./GpuProcessing";
-import ShaderLayering from "./ShaderLayering";
+import InteractiveShaders from "./InteractiveShaders";
+// import ShaderLayering from "./ShaderLayering";
 
 const Babylon = {
-  GpuProcessing,
-  ShaderLayering,
+  InteractiveShaders,
+  // ShaderLayering,
 };
 
 export default Babylon;

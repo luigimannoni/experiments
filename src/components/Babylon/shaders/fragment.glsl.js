@@ -1,3 +1,4 @@
+export default `
 precision mediump float;
 varying vec2 vUV;
 uniform sampler2D channel1;
@@ -8,7 +9,7 @@ uniform vec3 wave;
 uniform float time;
 uniform float speed;
 uniform int mode;
-uniform int hIterations;
+uniform int iterations;
 uniform int vIterations;
 uniform float filterRed;
 uniform float filterGreen;
@@ -25,7 +26,7 @@ vec4 blurred() {
 
   vec4 color1;
   vec4 color2;
-  int r = hIterations;
+  int r = iterations;
   int c = vIterations;
   float d = 0.;
   float offset = 0.02;
@@ -78,8 +79,8 @@ vec4 simpleEdgeDetection() {
 
 vec4 mirror() {
   vec4 color = texture2D(channel1, vUV);
-  float nextX = vUV.x + cos(time);        
-  float nextY = vUV.y + sin(time);        
+  float nextX = vUV.x + cos(time);
+  float nextY = vUV.y + sin(time);
   vec2 coords = vec2(nextX, nextY);
 
   vec4 pixel = texture2D(channel1, coords);
@@ -88,7 +89,7 @@ vec4 mirror() {
 }
 
 vec4 colorFilter() {
-  vec4 color = texture2D(channel1, vUV);        
+  vec4 color = texture2D(channel1, vUV);
   return color;
 }
 
@@ -161,7 +162,7 @@ vec4 water() {
 	float c = 1.0;
 	float inten = .002;
 
-	for (int n = 0; n < MAX_ITER; n++) 
+	for (int n = 0; n < MAX_ITER; n++)
 	{
 		float t = (time / 3.) * (1.0 - (3.5 / float(n+1)));
 		i = p + vec2(cos(t - i.x) + sin(t + i.y), sin(t - i.y) + cos(t + i.x));
@@ -171,63 +172,38 @@ vec4 water() {
 	c = 0.17-pow(c, 0.2);
 	vec3 colour = vec3(pow(abs(c), 8.0));
   colour = clamp(colour + wave, 0.0, 1.0);
-  return vec4(colour, 1.);  
+  return vec4(colour, 1.);
+}
+
+vec3 palette( float t ) {
+  vec3 a = vec3(0.660, 0.560, 0.680);
+  vec3 b = vec3(0.718, 0.438, 0.720);
+  vec3 c = vec3(0.520, 0.800, 0.520);
+  vec3 d = vec3(-0.430, -0.397, -0.083);
+
+  return a + b*cos( 6.28318*(c*t+d) );
 }
 
 void main(void) {
-  float x = vUV.x;
-  vec4 finalFragColor = texture2D(channel1, vUV); 
+  float computedTime = time * speed;
+  vec2 uv = vUV - .5;
+  vec3 finalColor = vec3(0.);
+  for (int i = 0; i < iterations; i++) {
+    uv = fract(uv * scale) - .5;
 
-  if (mode == 1) {
-    // Channel 1 only
-    finalFragColor = texture2D(channel1, vUV);
-  } else if (mode == 2) {
-    // Channel 2 only
-    finalFragColor = texture2D(channel2, vUV);
-  } else if (mode == 3) {
-    // Blurred
-    finalFragColor = blurred();
-  } else if (mode == 4) {
-    // Greyscale
-    finalFragColor = greyScaleSimple();
-  } else if (mode == 5) {
-    // Greyscale weight
-    finalFragColor = greyScaleWeighted();
-  } else if (mode == 6) {
-    // Greyscale weight
-    finalFragColor = maxOut();
-  } else if (mode == 7) {
-    // Greyscale weight
-    finalFragColor = transition();
-  } else if (mode == 8) {
-    // Greyscale weight
-    finalFragColor = move();
-  } else if (mode == 9) {
-    // Greyscale weight
+    float d = length(uv);
 
-  } else if (mode == 10) {
-    // Greyscale weight
-    finalFragColor = simpleEdgeDetection();
-  } else if (mode == 11) {
-    // Greyscale weight
-    finalFragColor = invert();
-  } else if (mode == 12) {
-    // Greyscale weight
-    finalFragColor = mirror();
-  } else {
-    // Crossfade sine wave
-    vec4 color1 = texture2D(channel1, vUV);
-    vec4 color2 = texture2D(channel2, vUV);
-    float multiplier = 1.;
-    float curve = cos((x + fract(time * speed)) * ((PI * 2.))) * multiplier + (multiplier / 2.);
+    vec3 col = palette(d + computedTime);
 
-    finalFragColor = mix(color1, color2, clamp(curve, 0., 1.));    
+    float factor = 8.;
+    d = sin(d * factor + computedTime) / factor;
+    d = abs(d);
+
+    d = .015 / d; // smoothstep(.0, .1, d);
+
+    finalColor += col *= d;
   }
 
-  // Color Filter Pass
-  finalFragColor.r = clamp(finalFragColor.r, 0., filterRed);
-  finalFragColor.g = clamp(finalFragColor.g, 0., filterGreen);
-  finalFragColor.b = clamp(finalFragColor.b, 0., filterBlue);
-
-  gl_FragColor = finalFragColor;
+  gl_FragColor = vec4(finalColor, 1.0);
 }
+`;

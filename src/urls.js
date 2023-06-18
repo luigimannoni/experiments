@@ -29,8 +29,8 @@ const three = [
 
 const babylon = [
   {
-    name: "Shader GPU Post Processing",
-    path: "/babylon/gpu-processing",
+    name: "GPU Shaders in Babylon",
+    path: "/babylon/interactive-shaders",
     component: "Experiment",
   },
   // {
@@ -72,11 +72,11 @@ const urls = [
     children: three,
     icon: () => <SiThreedotjs size="18" />,
   },
-  // {
-  //   name: "Babylon",
-  //   children: babylon,
-  //   icon: () => <HiOutlineCubeTransparent size="18" />,
-  // },
+  {
+    name: "Babylon",
+    children: babylon,
+    icon: () => <HiOutlineCubeTransparent size="18" />,
+  },
   {
     name: "Javascript",
     children: javascript,

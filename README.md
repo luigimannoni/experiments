@@ -20,6 +20,12 @@ Below a list of the experiments contained in this repository and hosted on githu
 
   Music visualizer using AudioContext APIs. Uses an `<audio>` tag to load and play the source and read the audiostream from.
 
+### BabylonJS
+
+- [Interactive Shaders](https://experiments.luigimannoni.com/#/babylon/interactive-shaders)
+
+  Interactive Fragment shader applied on a BabylonJS 6 scene.
+
 ### Javascript
 
 - [MatterJS Repulsor](https://experiments.luigimannoni.com/#/javascript/matter-repulsor)

@@ -89,7 +89,7 @@ h1.giant {
   $steps: 20;
 
   @for $i from 0 through $steps {
-    #{percentage($i * (1 / $steps))} {
+    #{percentage($i * calc(1 / $steps))} {
       clip: rect(random(2000) + 0, 9999px, random(1000) + 0, 0);
 			transform: skew(calc(random(100) / 100) + deg);
     }
@@ -100,7 +100,7 @@ h1.giant {
   $steps: 20;
 
   @for $i from 0 through $steps {
-    #{percentage($i * (1 / $steps))} {
+    #{percentage($i * calc(1 / $steps))} {
       clip: rect(random(1000) + 0, 9999px, random(2000) + 0, 0);
 			transform: skew(calc(random(100) / 100) + deg);
     }
